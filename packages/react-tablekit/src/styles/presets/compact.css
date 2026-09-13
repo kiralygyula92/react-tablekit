@@ -1,0 +1,17 @@
+/* GENERATED from src/themes/index.ts by `pnpm gen:tokens`. Do not edit by hand. */
+@layer tablekit.theme {
+  :where(.tk-root, .tk-portal)[data-theme='compact'] {
+    --tk-font-size: 13px;
+    --tk-cell-px: 12px;
+    --tk-cell-px-sm: 8px;
+    --tk-cell-py: 6px;
+    --tk-header-py: 6px;
+    --tk-header-py-sm: 6px;
+    --tk-toolbar-py: 8px;
+    --tk-control-height: 32px;
+    --tk-checkbox-size: 18px;
+    --tk-pagination-padding: 6px 12px;
+    --tk-page-item-size: 32px;
+    --tk-page-item-padding: 6px 10px;
+  }
+}

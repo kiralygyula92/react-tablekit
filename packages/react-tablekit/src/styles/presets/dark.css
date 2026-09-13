@@ -1,0 +1,47 @@
+/* GENERATED from src/themes/index.ts by `pnpm gen:tokens`. Do not edit by hand. */
+@layer tablekit.theme {
+  :where(.tk-root, .tk-portal)[data-theme='dark'] {
+    color-scheme: dark;
+    --tk-color-surface: #0F1115;
+    --tk-color-surface-muted: #161A20;
+    --tk-color-surface-raised: #1B2028;
+    --tk-color-surface-subtle: #1B2028;
+    --tk-color-text: #E6E8EB;
+    --tk-color-text-muted: #9AA1AC;
+    --tk-color-text-disabled: #6B7280;
+    --tk-color-text-on-accent: #0F1115;
+    --tk-color-border: #262B33;
+    --tk-color-border-strong: #3A414C;
+    --tk-color-accent: #4DA3FF;
+    --tk-color-accent-soft: #4DA3FF26;
+    --tk-color-accent-border: #4DA3FF80;
+    --tk-color-danger: #FF6B61;
+    --tk-color-danger-soft: #FF6B6126;
+    --tk-color-danger-border: #FF6B6180;
+    --tk-color-highlight: #5C4A00;
+    --tk-row-hover-bg: #1B2028;
+    --tk-row-selected-bg: #13263B;
+    --tk-row-selected-hover-bg: #17304A;
+    --tk-row-striped-bg: #13161B;
+    --tk-pinned-shadow-left: 4px 0 6px -4px rgb(0 0 0 / 0.6);
+    --tk-pinned-shadow-right: -4px 0 6px -4px rgb(0 0 0 / 0.6);
+    --tk-overlay-bg: rgb(15 17 21 / 0.6);
+    --tk-checkbox-border: #4B5563;
+    --tk-tooltip-bg: #E6E8EB;
+    --tk-tooltip-color: #0F1115;
+    --tk-page-item-color: #9AA1AC;
+    --tk-page-item-hover-bg: #1B2028;
+    --tk-page-item-active-bg: #1B2028;
+    --tk-page-item-active-color: #E6E8EB;
+    --tk-page-item-active-border: #262B33;
+    --tk-page-item-active-hover-bg: #262B33;
+    --tk-page-nav-border: #3A414C;
+    --tk-page-nav-color: #E6E8EB;
+    --tk-page-nav-icon: #9AA1AC;
+    --tk-page-nav-hover-border: #E6E8EB;
+    --tk-page-nav-hover-bg: #1B2028;
+    --tk-page-nav-disabled-border: #262B33;
+    --tk-page-nav-disabled-color: #6B7280;
+    --tk-page-nav-disabled-icon: #4B5563;
+  }
+}

@@ -1,0 +1,3 @@
+/* Dev entry mirroring dist/base.css (used by the site via a Vite alias). */
+@layer tablekit.base, tablekit.theme;
+@import './base.css';

@@ -1,0 +1,131 @@
+{
+  "name": "react-tablekit",
+  "version": "1.0.0",
+  "description": "Headless-core React data table: client & server modes, slots, handler middleware, CSS-variable theming. Zero runtime dependencies.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./core": {
+      "import": {
+        "types": "./dist/core/index.d.ts",
+        "default": "./dist/core/index.js"
+      },
+      "require": {
+        "types": "./dist/core/index.d.cts",
+        "default": "./dist/core/index.cjs"
+      }
+    },
+    "./meta": {
+      "import": {
+        "types": "./dist/meta.d.ts",
+        "default": "./dist/meta.js"
+      },
+      "require": {
+        "types": "./dist/meta.d.cts",
+        "default": "./dist/meta.cjs"
+      }
+    },
+    "./styles.css": "./dist/styles.css",
+    "./base.css": "./dist/base.css",
+    "./presets/classic.css": "./dist/presets/classic.css",
+    "./presets/dark.css": "./dist/presets/dark.css",
+    "./presets/compact.css": "./dist/presets/compact.css",
+    "./locales/*": {
+      "import": {
+        "types": "./dist/locales/*.d.ts",
+        "default": "./dist/locales/*.js"
+      },
+      "require": {
+        "types": "./dist/locales/*.d.cts",
+        "default": "./dist/locales/*.cjs"
+      }
+    },
+    "./package.json": "./package.json",
+    "./presets/minimal.css": "./dist/presets/minimal.css"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "react",
+    "table",
+    "datagrid",
+    "data-table",
+    "headless",
+    "typescript",
+    "pagination",
+    "sorting",
+    "filtering",
+    "virtualization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiralygyula92/react-tablekit.git",
+    "directory": "packages/react-tablekit"
+  },
+  "homepage": "https://kiralygyula92.github.io/react-tablekit/",
+  "bugs": "https://github.com/kiralygyula92/react-tablekit/issues",
+  "scripts": {
+    "build": "node scripts/clean.mjs && tsup && node scripts/build-css.mjs",
+    "dev": "tsup --watch",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "size": "size-limit",
+    "check:package": "node scripts/verify-dist.mjs && publint --strict && node scripts/attw.mjs",
+    "lint:css-tokens": "node scripts/check-css-tokens.mjs",
+    "docs:json": "typedoc --json dist/api.json",
+    "docs:check": "node scripts/docs-check.mjs",
+    "prepublishOnly": "pnpm build",
+    "gen:tokens": "node scripts/gen-tokens.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=18.2",
+    "react-dom": ">=18.2"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@size-limit/preset-small-lib": "^13.0.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/node": "^22.18.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitest/coverage-v8": "^5.0.0",
+    "axe-core": "^4.13.0",
+    "fast-check": "^4.10.0",
+    "jsdom": "^30.0.1",
+    "lightningcss": "^1.33.0",
+    "publint": "^0.3.24",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "size-limit": "^13.0.3",
+    "tsup": "^8.5.1",
+    "typedoc": "^0.28.20",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.0",
+    "vitest-axe": "^0.1.0"
+  }
+}

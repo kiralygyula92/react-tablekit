@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Lint, typecheck, test, build, size, package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm --filter react-tablekit lint:css-tokens
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm size
+      - run: pnpm check:package
+      - name: Changeset present for library changes
+        if: github.event_name == 'pull_request'
+        run: |
+          if git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q '^packages/react-tablekit/src/'; then
+            git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -q '^\.changeset/.*\.md$' \
+              || (echo "::error::Library source changed but no changeset was added (run 'pnpm changeset')." && exit 1)
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: apps/site/dist
+
+  e2e:
+    name: E2E (${{ github.event_name == 'push' && 'all browsers' || 'chromium' }})
+    runs-on: ubuntu-latest
+    env:
+      E2E_ALL_BROWSERS: ${{ github.event_name == 'push' && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: pnpm --filter site exec playwright install --with-deps ${{ env.E2E_ALL_BROWSERS == '1' && 'chromium firefox webkit' || 'chromium' }}
+      - run: pnpm e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/site/playwright-report

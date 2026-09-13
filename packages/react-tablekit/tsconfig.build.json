@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": [],
+    "noEmit": false,
+    // tsup's d.ts bundler injects the deprecated `baseUrl`; TS 6 errors on it without this.
+    "ignoreDeprecations": "6.0"
+  },
+  // Node types are not a dependency; `process.env.NODE_ENV` is declared minimally instead.
+  "include": ["src", "types/env.d.ts"]
+}

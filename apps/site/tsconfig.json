@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["vite/client", "node"],
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "react-tablekit": ["../../packages/react-tablekit/src/index.ts"],
+      "react-tablekit/core": ["../../packages/react-tablekit/src/core/index.ts"],
+      "react-tablekit/meta": ["../../packages/react-tablekit/src/meta.ts"],
+      "react-tablekit/locales/*": ["../../packages/react-tablekit/src/locales/*"]
+    }
+  },
+  "include": ["src", "e2e", "vite.config.ts", "vitest.config.ts", "playwright.config.ts"]
+}

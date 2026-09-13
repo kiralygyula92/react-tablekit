@@ -1,0 +1,24 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.vite/
+
+# Generated from the library's TypeDoc output by `apps/site/scripts/build-api.mjs`
+# on every site build; committing it would let the API pages drift from the source.
+apps/site/src/generated/
+.turbo/
+.DS_Store
+*.log
+*.tgz
+
+# Playwright
+apps/site/test-results/
+apps/site/playwright-report/
+apps/site/blob-report/
+apps/site/playwright/.cache/
+
+# Env
+.env
+.env.*
+!.env.example

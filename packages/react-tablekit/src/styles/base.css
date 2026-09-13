@@ -1,0 +1,236 @@
+/* Structural rules only (layout, sticky/pinning, overlay positioning, visually-hidden).
+   Never contains colours or visual sizes; those live in theme.css and read --tk-* tokens. */
+@layer tablekit.base {
+  .tk-root {
+    position: relative;
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  .tk-root *,
+  .tk-root *::before,
+  .tk-root *::after {
+    box-sizing: inherit;
+  }
+
+  .tk-visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Container: the positioned scroll box (overlay and sticky cells live inside it). */
+  .tk-container {
+    position: relative;
+    overflow: auto;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Separate borders so sticky cells keep their borders (07 §6). */
+  .tk-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+  }
+
+  .tk-row {
+    --tk-row-bg: var(--tk-row-bg-default);
+  }
+
+  /* Pinned (frozen) columns: sticky with per-cell offsets, background from the row state (B19). */
+  .tk-cell[data-pinned],
+  .tk-header-cell[data-pinned],
+  .tk-footer-cell[data-pinned] {
+    position: sticky;
+    z-index: var(--tk-z-pinned, 1);
+  }
+  .tk-cell[data-pinned='left'],
+  .tk-header-cell[data-pinned='left'],
+  .tk-footer-cell[data-pinned='left'] {
+    inset-inline-start: var(--tk-pin-offset, 0px);
+  }
+  .tk-cell[data-pinned='right'],
+  .tk-header-cell[data-pinned='right'],
+  .tk-footer-cell[data-pinned='right'] {
+    inset-inline-end: var(--tk-pin-offset, 0px);
+  }
+
+  /* Sticky header / footer (fixes B14). Pinned header cells stick on both axes. */
+  .tk-head[data-sticky] .tk-header-cell,
+  .tk-head[data-sticky] .tk-filter-row-cell {
+    position: sticky;
+    top: 0;
+    z-index: var(--tk-z-header, 2);
+  }
+  .tk-head[data-sticky] .tk-header-cell[data-pinned] {
+    z-index: var(--tk-z-pinned-header, 3);
+  }
+  .tk-foot[data-sticky] .tk-footer-cell {
+    position: sticky;
+    bottom: 0;
+    z-index: var(--tk-z-header, 2);
+  }
+  .tk-foot[data-sticky] .tk-footer-cell[data-pinned] {
+    z-index: var(--tk-z-pinned-header, 3);
+  }
+
+  /* Refetch overlay: covers the body only, from the bottom of the header (fixes B6/B11). */
+  .tk-overlay {
+    position: absolute;
+    inset: var(--tk-head-height, 0px) 0 0 0;
+    display: grid;
+    place-items: center;
+    z-index: var(--tk-z-overlay, 10);
+    pointer-events: none;
+  }
+  .tk-overlay[data-blocking] {
+    pointer-events: auto;
+  }
+  .tk-body[data-blocked] {
+    pointer-events: none;
+  }
+
+  .tk-sort-button,
+  .tk-group-toggle {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+  }
+  .tk-header-cell__content {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    vertical-align: middle;
+  }
+
+  /* Detail panels: grid-rows animation; full-width panels stick to the left edge (05 §6.1). */
+  .tk-detail-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+  }
+  .tk-detail-panel[data-open] {
+    grid-template-rows: 1fr;
+  }
+  .tk-detail-panel__inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .tk-detail-panel[data-full-width] {
+    position: sticky;
+    left: 0;
+    width: var(--tk-container-width, 100%);
+  }
+  .tk-detail-row[hidden] {
+    display: none;
+  }
+
+  .tk-spinner {
+    display: inline-block;
+    flex: none;
+  }
+  .tk-spinner svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    animation: tk-rotate 1.4s linear infinite;
+  }
+  .tk-spinner circle {
+    stroke-dasharray: 80px, 200px;
+    stroke-dashoffset: 0;
+    animation: tk-dash 1.4s ease-in-out infinite;
+  }
+
+  .tk-checkbox {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    vertical-align: middle;
+  }
+  .tk-checkbox__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: inherit;
+    z-index: 1;
+  }
+
+  .tk-truncate,
+  .tk-truncated {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+  }
+  .tk-truncate[data-lines],
+  .tk-truncated[data-lines] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+  }
+
+  .tk-multiline,
+  .tk-two-line {
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  .tk-tooltip,
+  .tk-popover,
+  .tk-menu {
+    z-index: var(--tk-z-popover, 1300);
+  }
+
+  @keyframes tk-rotate {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes tk-dash {
+    0% {
+      stroke-dasharray: 1px, 200px;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -15px;
+    }
+    100% {
+      stroke-dasharray: 100px, 200px;
+      stroke-dashoffset: -125px;
+    }
+  }
+  @keyframes tk-shimmer {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tk-root *,
+    .tk-tooltip,
+    .tk-popover,
+    .tk-menu {
+      transition: none !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}

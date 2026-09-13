@@ -1,0 +1,17 @@
+/* GENERATED from src/themes/index.ts by `pnpm gen:tokens`. Do not edit by hand. */
+@layer tablekit.theme {
+  :where(.tk-root, .tk-portal)[data-theme='classic'] {
+    --tk-font-family: "Open Sans Variable", "Open Sans", Arial, sans-serif;
+    --tk-color-text-muted: #717680;
+    --tk-sort-icon-idle-opacity: 0;
+    --tk-row-hover-bg: transparent;
+    --tk-row-selected-hover-bg: #EAF6FF;
+    --tk-container-border: 1px solid #E9EAEB;
+    --tk-table-min-width: 650px;
+    --tk-pinned-shadow-left: none;
+    --tk-pinned-shadow-right: none;
+    --tk-overlay-bg: rgba(255,255,255,0.7);
+    --tk-spinner-color: #2196F3;
+    --tk-focus-ring: 0 0 0 2px #FFFFFF, 0 0 0 4px #2196F3;
+  }
+}

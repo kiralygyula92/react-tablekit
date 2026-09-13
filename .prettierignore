@@ -1,0 +1,12 @@
+dist
+coverage
+pnpm-lock.yaml
+apps/site/public/mockServiceWorker.js
+apps/site/playwright-report
+apps/site/test-results
+docs/*.md
+.changeset/*.md
+# Generated from the JS theme objects by `pnpm gen:tokens`; formatting them breaks the token test.
+packages/react-tablekit/src/styles/tokens.css
+packages/react-tablekit/src/styles/presets
+apps/site/e2e/__screenshots__

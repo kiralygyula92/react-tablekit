@@ -1,0 +1,8 @@
+/* GENERATED from src/themes/index.ts by `pnpm gen:tokens`. Do not edit by hand. */
+@layer tablekit.theme {
+  :where(.tk-root, .tk-portal)[data-theme='minimal'] {
+    --tk-header-bg: transparent;
+    --tk-radius: 0px;
+    --tk-container-border: none;
+  }
+}
