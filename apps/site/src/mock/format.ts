@@ -3,8 +3,8 @@ import type { Address, PhoneType } from './types';
 const PHONE_ORDER: Record<PhoneType, number> = { Work: 1, Mobile: 2, Home: 3, Unknown: 4 };
 
 /**
- * Skimmer `renderPhoneList` semantics (01 §4.9): grouped and sorted by type (Work, Mobile, Home,
- * Unknown), numbered within a type ("Mobile 2") when a type repeats.
+ * Phone list formatting: grouped and sorted by type (Work, Mobile, Home, Unknown), and numbered
+ * within a type ("Mobile 2") when that type appears more than once.
  */
 export function formatPhoneLines(phones: { number: string; phoneType: PhoneType }[]): string[] {
   const sorted = [...phones].sort((a, b) => PHONE_ORDER[a.phoneType] - PHONE_ORDER[b.phoneType]);
@@ -19,8 +19,8 @@ export function formatPhoneLines(phones: { number: string; phoneType: PhoneType 
   });
 }
 
-/** Skimmer short address format: "City, ST 12345". */
+/** Short address format: "City, ST 12345". */
 export function getShortFormatAddress(address: Address | undefined): string {
   if (!address) return '';
-  return `${address.city}, ${address.adminArea1} ${address.postalCode}`;
+  return `${address.city}, ${address.region} ${address.postalCode}`;
 }

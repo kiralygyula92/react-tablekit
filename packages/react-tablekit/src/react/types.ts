@@ -67,7 +67,7 @@ export interface PaginationDisplayOptions {
   align?: 'space-between' | 'center' | 'start' | 'end';
 }
 
-/** Options for the compact variant (Skimmer mobile). */
+/** Options for the compact variant, used on small screens. */
 export interface CompactPaginationOptions {
   /** @default 0 */
   siblingCount?: number;

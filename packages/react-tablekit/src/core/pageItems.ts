@@ -4,7 +4,7 @@ const range = (start: number, end: number): number[] =>
   end < start ? [] : Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
 /**
- * The corrected Skimmer rule (05 §4.4, fixes B1): boundary pages, two extra pages near the
+ * The classic rule (05 §4.4): boundary pages, two extra pages near the
  * edges, siblings in the middle; an ellipsis only replaces two or more hidden pages.
  */
 function classicItems(c: number, n: number, s: number, b: number): PageItem[] {
@@ -70,7 +70,7 @@ function page(index: number, current: number): PageItem {
 
 /**
  * Pure pagination item generator (0-based). `algorithm` is `'classic'` (default, the corrected
- * Skimmer rule), `'stable'` (constant slot count) or a custom function.
+ * classic rule), `'stable'` (constant slot count) or a custom function.
  *
  * @example
  * ```ts

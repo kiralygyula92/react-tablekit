@@ -252,7 +252,7 @@ declare module 'react-tablekit' {
 
 `icons: Partial<TableIcons>` with keys: `sortAsc, sortDesc, sortNone, filter, filterActive, search, clear, columns, density, export, expand, collapse, expandAll, collapseAll, dragHandle, pinLeft, pinRight, unpin, hide, more, first, prev, next, last, check, indeterminate, spinner, error, info, close, chevronDown`. Each is a `ReactNode` or a `ComponentType<{ className?: string; 'aria-hidden'?: boolean }>`. The defaults are in-house inline SVGs (16px, `currentColor`).
 
-The classic preset maps `prev`/`next` to arrow icons (MUI `ArrowBack`/`ArrowForward`-like) for parity.
+The classic preset maps `prev`/`next` to arrow icons .
 
 ## 8. Localization and formatting
 
@@ -290,7 +290,7 @@ interface TableLocalization {
 - `formatters`: `number(value, column)`, `date(value, column)`, `rowRange(from, to, total)`, `page(n)` (default `Intl` using `locale`).
 - `locale?: string` (default `navigator.language` on the client and `'en-US'` on the server).
 - Shipped locales: `en` (default), `hu`, `de`, `es` (examples; community-extensible).
-- **i18next integration** (Skimmer): wrap once with `<TableLocaleProvider localization={useTablekitI18n()} />`, where the hook maps keys to `t('table.*')`. The docs show this recipe.
+- **i18next integration**: wrap once with `<TableLocaleProvider localization={useTablekitI18n()} />`, where the hook maps keys to `t('table.*')`. The docs show this recipe.
 
 ## 9. Composable parts (layout freedom)
 
@@ -299,9 +299,9 @@ const table = useDataTable({ data, columns, dataSource, ... });
 
 <DataTable.Root table={table}>
   <PageHeader>
-    <h3>All Customers</h3>
-    <DataTable.Search />                       {/* in the page header, like Skimmer */}
-    <Button onClick={add}>Add customer</Button>
+    <h3>All accounts</h3>
+    <DataTable.Search />                       {/* in the page header */}
+    <Button onClick={add}>Add account</Button>
   </PageHeader>
   <DataTable.ActiveFilterChips />
   <DataTable.Container>

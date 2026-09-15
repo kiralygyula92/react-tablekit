@@ -31,7 +31,7 @@ describe('<DataTable> rendering', () => {
     expect(container.querySelectorAll('colgroup col')).toHaveLength(5);
     const headers = within(table).getAllByRole('columnheader');
     expect(headers.map((h) => h.textContent)).toEqual(['Name', 'Age', 'City', 'Joined', 'Active']);
-    // first data cell is a row header (Skimmer behaviour)
+    // first data cell is a row header
     expect(within(table).getAllByRole('rowheader')[0]).toHaveTextContent('Zoë Adams');
     expect(bodyRows(container)).toHaveLength(6);
   });
@@ -245,12 +245,10 @@ describe('states (03 §8)', () => {
     const { container } = renderTable({
       data: [],
       toolbar: false,
-      emptyStateContent: 'Please select a service location',
+      emptyStateContent: 'Please choose a site first',
     });
     expect(container.querySelector('.tk-state')).toHaveAttribute('data-state', 'custom');
-    expect(container.querySelector('.tk-state')).toHaveTextContent(
-      'Please select a service location',
-    );
+    expect(container.querySelector('.tk-state')).toHaveTextContent('Please choose a site first');
   });
 
   it('B7 regression: the refetch overlay blocks interaction and the table is aria-busy', async () => {

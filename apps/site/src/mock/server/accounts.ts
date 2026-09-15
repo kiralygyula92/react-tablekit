@@ -1,11 +1,11 @@
-import { formatCustomerName, getCustomerBodiesOfWater } from '../data/customers';
-import type { Customer, ListingCriteria, PagedResponse, SearchCustomerRequest } from '../types';
+import { formatAccountName, getAccountAssets } from '../data/accounts';
+import type { Account, ListingCriteria, PagedResponse, SearchAccountRequest } from '../types';
 
 export const DEFAULT_PAGE_SIZE = 10;
 export const MAX_PAGE_SIZE = 100;
 
 /**
- * Normalizes listing criteria the way the Skimmer backend does, so it can be echoed back.
+ * Normalizes the listing criteria so the server can echo them back.
  * Inputs come from untrusted JSON, so non-finite values fall back to the defaults.
  */
 export function normalizeListingCriteria(
@@ -29,32 +29,32 @@ export function fold(value: string): string {
   return value.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 }
 
-function customerSearchText(c: Customer): string {
-  const parts: string[] = [formatCustomerName(c), c.displayName.companyName ?? ''];
-  const addr = c.billingAddress;
-  if (addr) parts.push(addr.address1, addr.city, addr.adminArea1, addr.postalCode);
-  for (const e of c.contactInformation?.emailAddresses ?? []) parts.push(e.email);
-  for (const p of c.contactInformation?.phoneNumbers ?? []) parts.push(p.number);
-  for (const s of c.serviceLocations ?? []) parts.push(s.address.address1, s.address.city);
+function accountSearchText(a: Account): string {
+  const parts: string[] = [formatAccountName(a), a.displayName.companyName ?? ''];
+  const addr = a.billingAddress;
+  if (addr) parts.push(addr.address1, addr.city, addr.region, addr.postalCode);
+  for (const e of a.contactInformation?.emailAddresses ?? []) parts.push(e.email);
+  for (const p of a.contactInformation?.phoneNumbers ?? []) parts.push(p.number);
+  for (const s of a.sites ?? []) parts.push(s.address.address1, s.address.city);
   return fold(parts.join(' '));
 }
 
-const sortAccessors: Record<string, (c: Customer) => string | number> = {
-  id: (c) => c.identifiers.id,
-  customerName: (c) => fold(`${c.displayName.lastName} ${c.displayName.firstName}`),
-  companyName: (c) => fold(c.displayName.companyName ?? ''),
-  bodiesOfWater: (c) => getCustomerBodiesOfWater(c).length,
+const sortAccessors: Record<string, (a: Account) => string | number> = {
+  id: (a) => a.identifiers.id,
+  accountName: (a) => fold(`${a.displayName.lastName} ${a.displayName.firstName}`),
+  companyName: (a) => fold(a.displayName.companyName ?? ''),
+  assets: (a) => getAccountAssets(a).length,
 };
 
 /**
- * The Skimmer `POST /api/customers/search` contract:
+ * `POST /api/accounts/search`:
  * `{ queryCriteria, listingCriteria }` → `{ items, totalItemCount, requestCriteria }`.
  * Multi-word queries match when every word matches (AND).
  */
-export function searchCustomers(
-  customers: readonly Customer[],
-  request: SearchCustomerRequest,
-): PagedResponse<Customer> {
+export function searchAccounts(
+  accounts: readonly Account[],
+  request: SearchAccountRequest,
+): PagedResponse<Account> {
   const criteria = normalizeListingCriteria(request.listingCriteria);
   const words = fold(request.queryCriteria?.trim() ?? '')
     .split(/\s+/)
@@ -62,9 +62,9 @@ export function searchCustomers(
 
   let matches =
     words.length === 0
-      ? [...customers]
-      : customers.filter((c) => {
-          const text = customerSearchText(c);
+      ? [...accounts]
+      : accounts.filter((a) => {
+          const text = accountSearchText(a);
           return words.every((w) => text.includes(w));
         });
 

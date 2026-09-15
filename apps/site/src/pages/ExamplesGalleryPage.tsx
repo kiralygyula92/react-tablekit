@@ -25,8 +25,7 @@ export function ExamplesGalleryPage() {
       </label>
       {visible.length === 0 ? (
         <p className="site-muted" data-testid="examples-empty">
-          No examples yet. They are added milestone by milestone, starting with the Skimmer parity
-          pages.
+          No examples match that tag.
         </p>
       ) : (
         <ul className="site-feature-grid">

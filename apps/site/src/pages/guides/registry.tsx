@@ -77,7 +77,7 @@ export const GUIDES: Guide[] = [
           correcting a page that no longer exists — is handled for you.
         </p>
         <Code>{`const source = createRestDataSource({
-  url: '/api/customers/search',
+  url: '/api/accounts/search',
   method: 'POST',
   mapQuery: (q) => ({
     queryCriteria: q.globalFilter,
@@ -945,58 +945,6 @@ col.display({ id: 'actions', static: true })`}</Code>
         </p>
         <p>
           See <Example slug="localization">localization</Example>.
-        </p>
-      </>
-    ),
-  },
-  {
-    slug: 'migration-skimmer',
-    title: 'Migrating from the Skimmer table',
-    lead: 'A field-by-field path from the old TableConfig to ColumnDef, and what changes on the way.',
-    body: (
-      <>
-        <p>
-          The old component took a <code>TableConfig</code> with a columns array whose shape maps
-          almost one to one onto <code>ColumnDef</code>. The <code>classic</code> preset reproduces
-          the old appearance exactly, so a migration can change the code without changing the
-          screen.
-        </p>
-        <Code>{`import { classicTheme } from 'react-tablekit';
-import 'react-tablekit/presets/classic.css';
-
-<DataTable theme={classicTheme} … />`}</Code>
-        <h2>Field mapping</h2>
-        <ul>
-          <li>
-            <code>field</code> → the accessor key, or <code>accessorFn</code> for a computed value.
-          </li>
-          <li>
-            <code>title</code> → <code>header</code>; <code>sortable</code> →{' '}
-            <code>enableSorting</code>; <code>getSortValue</code> → <code>sortValue</code>.
-          </li>
-          <li>
-            <code>render</code> → <code>cell</code>, which now receives a context object rather than
-            positional arguments.
-          </li>
-          <li>
-            <code>width</code> stays <code>width</code>; a fixed pixel width is <code>size</code>.
-          </li>
-          <li>
-            <code>frozen</code> → <code>pin</code>, which also accepts responsive values.
-          </li>
-        </ul>
-        <h2>What is different on purpose</h2>
-        <p>
-          Server queries are normalized rather than hand-assembled per screen, so debouncing,
-          aborting, race handling and out-of-range pages are no longer each screen&apos;s problem.
-          Selection uses an exclusion model, so &ldquo;all matching&rdquo; works across pages the
-          client has never seen. The bugs listed in the old implementation notes — the overlay
-          covering the header, the lost page reset, the duplicated requests — are fixed rather than
-          reproduced; the parity examples are checked against screenshots so nothing else moved.
-        </p>
-        <p>
-          See the four parity examples, starting with{' '}
-          <Example slug="parity-customer-list">the customer list</Example>.
         </p>
       </>
     ),

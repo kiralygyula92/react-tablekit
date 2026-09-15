@@ -19,7 +19,7 @@ type SortableRow = Row<unknown> & {
 
 /**
  * Reads the (cached) sort value of a row for a column. Honours `columnDef.sortValue`
- * (Skimmer `getSortValue`).
+ * (the column's `sortValue`).
  */
 export function getSortValue<TData>(row: Row<TData>, columnId: string): unknown {
   const r = row as unknown as SortableRow;

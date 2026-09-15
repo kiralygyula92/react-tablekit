@@ -1,8 +1,8 @@
 import { createRandom, type Random } from '../prng';
-import type { Address, BodyOfWater, Customer, PhoneType, ServiceLocation } from '../types';
+import type { Account, Address, Asset, AssetKind, PhoneType, Site } from '../types';
 
-export const CUSTOMER_COUNT = 235;
-export const CUSTOMER_SEED = 20240611;
+export const ACCOUNT_COUNT = 235;
+export const ACCOUNT_SEED = 20240611;
 
 const FIRST_NAMES = [
   'James',
@@ -89,24 +89,24 @@ const LAST_NAMES = [
 const COMPANY_PREFIXES = [
   'Blue',
   'Crystal',
-  'Sunset',
-  'Palm',
-  'Aqua',
+  'Summit',
+  'Northwind',
+  'Vertex',
   'Coastal',
   'Desert',
   'Golden',
   'Clear',
-  'Summit',
+  'Apex',
 ] as const;
 const COMPANY_SUFFIXES = [
-  'Pools',
+  'Logistics',
   'Properties',
-  'Resorts',
-  'HOA',
+  'Industries',
+  'Cooperative',
   'Holdings',
   'Management',
-  'Spa & Wellness',
-  'Villas',
+  'Systems',
+  'Networks',
 ] as const;
 
 const STREETS = [
@@ -126,7 +126,7 @@ const STREETS = [
   'Willow Ct',
 ] as const;
 
-const CITIES: readonly (readonly [city: string, state: string, zipPrefix: number])[] = [
+const CITIES: readonly (readonly [city: string, region: string, zipPrefix: number])[] = [
   ['Phoenix', 'AZ', 850],
   ['Scottsdale', 'AZ', 852],
   ['Tucson', 'AZ', 857],
@@ -143,19 +143,19 @@ const CITIES: readonly (readonly [city: string, state: string, zipPrefix: number
   ['Henderson', 'NV', 890],
 ];
 
-const BOW_TYPES = ['Pool', 'Spa', 'Fountain', 'Pond'] as const;
-const SURFACES = ['Plaster', 'Pebble', 'Tile', 'Vinyl', 'Fiberglass'] as const;
-const SANITIZERS = ['Chlorine', 'Salt', 'Bromine', 'Biguanide', 'Mineral'] as const;
-const CLASSIFICATIONS = ['Residential', 'Commercial', 'HOA'] as const;
-const LOCATIONS = ['Indoor', 'Outdoor'] as const;
-const GROUND_LEVELS = ['In-ground', 'Above-ground'] as const;
-const FILTERS = ['Sand', 'Cartridge', 'DE'] as const;
-const BUILDERS = ['Blue Haven', 'Premier Pools', 'Anthony & Sylvan', 'Paddock', 'California Pools'];
+const ASSET_KINDS: readonly AssetKind[] = ['Server', 'Switch', 'Sensor', 'Gateway'];
+const ENCLOSURES = ['Steel', 'Aluminium', 'Polymer', 'Composite', 'Fibreglass'] as const;
+const POWER_SOURCES = ['Mains', 'Solar', 'Battery', 'Generator', 'Hybrid'] as const;
+const TIERS = ['Standard', 'Business', 'Critical'] as const;
+const PLACEMENTS = ['Indoor', 'Outdoor'] as const;
+const MOUNTINGS = ['Rack', 'Wall'] as const;
+const COOLING = ['Passive', 'Fan', 'Liquid'] as const;
+const VENDORS = ['Northwind', 'Vertex Labs', 'Helios', 'Paddock', 'Meridian'];
 const NOTES = [
-  'Gate code 4471. Dog in the back yard, please close the gate.',
-  'Customer prefers morning visits.',
-  'Heater was replaced in spring; check pressure gauge.',
-  'Algae issues in late summer; monitor phosphates closely every visit.',
+  'Gate code 4471. Access is through the service corridor, please lock up.',
+  'Site contact prefers morning visits.',
+  'Power supply was replaced in spring; check the intake pressure.',
+  'Throughput dips in late summer; monitor the queue depth closely every visit.',
   'Key under the mat.',
 ];
 const PHONE_TYPES: readonly PhoneType[] = ['Work', 'Mobile', 'Home', 'Unknown'];
@@ -165,11 +165,11 @@ function pad(n: number, width: number): string {
 }
 
 function makeAddress(r: Random): Address {
-  const [city, state, zipPrefix] = r.pick(CITIES);
+  const [city, region, zipPrefix] = r.pick(CITIES);
   const address: Address = {
     address1: `${r.int(100, 9999)} ${r.pick(STREETS)}`,
     city,
-    adminArea1: state,
+    region,
     postalCode: `${zipPrefix}${pad(r.int(0, 99), 2)}`,
     country: 'US',
   };
@@ -181,57 +181,57 @@ function makePhone(r: Random): string {
   return `(${r.int(201, 989)}) ${r.int(200, 999)}-${pad(r.int(0, 9999), 4)}`;
 }
 
-let bodyOfWaterSeq = 0;
+let assetSeq = 0;
 
-function makeBodyOfWater(r: Random, customerId: string): BodyOfWater {
-  bodyOfWaterSeq += 1;
-  const type = r.pick(BOW_TYPES);
-  const bow: BodyOfWater = {
-    id: `bow_${pad(bodyOfWaterSeq, 4)}`,
-    type,
-    gallons: type === 'Spa' ? r.int(3, 12) * 100 : r.int(5, 40) * 1000,
-    customerId,
+function makeAsset(r: Random, accountId: string): Asset {
+  assetSeq += 1;
+  const kind = r.pick(ASSET_KINDS);
+  const asset: Asset = {
+    id: `as_${pad(assetSeq, 4)}`,
+    kind,
+    capacity: kind === 'Sensor' ? r.int(3, 12) * 100 : r.int(5, 40) * 1000,
+    accountId,
   };
   // Optional fields are sometimes missing on purpose (exercises the "-" fallback).
   if (r.chance(0.5))
-    bow.name = r.pick(['Main pool', 'Back spa', 'Lap pool', 'Koi pond', 'Front fountain']);
-  if (r.chance(0.85)) bow.surfaceType = r.pick(SURFACES);
-  if (r.chance(0.9)) bow.sanitizer = r.pick(SANITIZERS);
-  if (r.chance(0.85)) bow.classification = r.pick(CLASSIFICATIONS);
-  if (r.chance(0.8)) bow.location = r.pick(LOCATIONS);
-  if (r.chance(0.8)) bow.groundLevel = r.pick(GROUND_LEVELS);
-  if (r.chance(0.75)) bow.filter = r.pick(FILTERS);
+    asset.name = r.pick(['Primary node', 'Backup node', 'Edge relay', 'Cold store', 'Front desk']);
+  if (r.chance(0.85)) asset.enclosure = r.pick(ENCLOSURES);
+  if (r.chance(0.9)) asset.powerSource = r.pick(POWER_SOURCES);
+  if (r.chance(0.85)) asset.tier = r.pick(TIERS);
+  if (r.chance(0.8)) asset.placement = r.pick(PLACEMENTS);
+  if (r.chance(0.8)) asset.mounting = r.pick(MOUNTINGS);
+  if (r.chance(0.75)) asset.coolingType = r.pick(COOLING);
   if (r.chance(0.7)) {
-    bow.buildDateUTC = new Date(
+    asset.installedAtUTC = new Date(
       Date.UTC(r.int(1985, 2023), r.int(0, 11), r.int(1, 28)),
     ).toISOString();
   }
-  if (r.chance(0.6)) bow.builder = r.pick(BUILDERS);
-  if (r.chance(0.4)) bow.notes = r.pick(NOTES);
-  return bow;
+  if (r.chance(0.6)) asset.vendor = r.pick(VENDORS);
+  if (r.chance(0.4)) asset.notes = r.pick(NOTES);
+  return asset;
 }
 
-function makeServiceLocation(r: Random, customerId: string, index: number): ServiceLocation {
-  const bodyCount = r.chance(0.1) ? 0 : r.int(1, r.chance(0.15) ? 6 : 2);
+function makeSite(r: Random, accountId: string, index: number): Site {
+  const assetCount = r.chance(0.1) ? 0 : r.int(1, r.chance(0.15) ? 6 : 2);
   return {
-    identifiers: { id: `${customerId}_sl${index + 1}` },
+    identifiers: { id: `${accountId}_st${index + 1}` },
     address: makeAddress(r),
-    bodiesOfWater: Array.from({ length: bodyCount }, () => makeBodyOfWater(r, customerId)),
+    assets: Array.from({ length: assetCount }, () => makeAsset(r, accountId)),
   };
 }
 
-function makeCustomer(r: Random, index: number): Customer {
-  const id = `c_${pad(index + 1, 4)}`;
+function makeAccount(r: Random, index: number): Account {
+  const id = `a_${pad(index + 1, 4)}`;
   const firstName = r.pick(FIRST_NAMES);
   const lastName = r.pick(LAST_NAMES);
-  const customer: Customer = {
+  const account: Account = {
     identifiers: { id },
     displayName: { firstName, lastName },
   };
   if (r.chance(0.55)) {
-    customer.displayName.companyName = `${r.pick(COMPANY_PREFIXES)} ${r.pick(COMPANY_SUFFIXES)}`;
+    account.displayName.companyName = `${r.pick(COMPANY_PREFIXES)} ${r.pick(COMPANY_SUFFIXES)}`;
   }
-  if (r.chance(0.92)) customer.billingAddress = makeAddress(r);
+  if (r.chance(0.92)) account.billingAddress = makeAddress(r);
 
   if (r.chance(0.95)) {
     const emailCount = r.chance(0.1) ? 0 : r.int(1, 3);
@@ -241,7 +241,7 @@ function makeCustomer(r: Random, index: number): Customer {
       .replace(/\p{M}/gu, '')
       .replace(/[^A-Za-z.]/g, '')
       .toLowerCase();
-    customer.contactInformation = {
+    account.contactInformation = {
       emailAddresses: Array.from({ length: emailCount }, (_, i) => ({
         email: i === 0 ? `${handle}@example.com` : `${handle}${i + 1}@mail.example.org`,
       })),
@@ -253,28 +253,26 @@ function makeCustomer(r: Random, index: number): Customer {
   }
 
   if (r.chance(0.93)) {
-    const locationCount = r.int(1, r.chance(0.2) ? 3 : 1);
-    customer.serviceLocations = Array.from({ length: locationCount }, (_, i) =>
-      makeServiceLocation(r, id, i),
-    );
+    const siteCount = r.int(1, r.chance(0.2) ? 3 : 1);
+    account.sites = Array.from({ length: siteCount }, (_, i) => makeSite(r, id, i));
   }
-  return customer;
+  return account;
 }
 
-/** Generates the deterministic customer dataset (235 customers → 24 pages at size 10). */
-export function generateCustomers(count = CUSTOMER_COUNT, seed = CUSTOMER_SEED): Customer[] {
+/** Generates the deterministic account dataset (235 accounts → 24 pages at size 10). */
+export function generateAccounts(count = ACCOUNT_COUNT, seed = ACCOUNT_SEED): Account[] {
   const r = createRandom(seed);
-  bodyOfWaterSeq = 0;
-  return Array.from({ length: count }, (_, i) => makeCustomer(r, i));
+  assetSeq = 0;
+  return Array.from({ length: count }, (_, i) => makeAccount(r, i));
 }
 
-/** All bodies of water of a customer, across service locations. */
-export function getCustomerBodiesOfWater(customer: Customer): BodyOfWater[] {
-  return (customer.serviceLocations ?? []).flatMap((s) => s.bodiesOfWater);
+/** All assets of an account, across its sites. */
+export function getAccountAssets(account: Account): Asset[] {
+  return (account.sites ?? []).flatMap((s) => s.assets);
 }
 
-/** "First Last" display name as used by the Skimmer lists. */
-export function formatCustomerName(customer: Customer): string {
-  const { firstName, lastName } = customer.displayName;
+/** "First Last" display name. */
+export function formatAccountName(account: Account): string {
+  const { firstName, lastName } = account.displayName;
   return [firstName, lastName].filter(Boolean).join(' ');
 }

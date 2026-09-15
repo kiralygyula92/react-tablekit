@@ -35,7 +35,7 @@ describe('row selection (05 §5)', () => {
     expect(table.getSelectedCount()).toBe(0);
   });
 
-  it('single selection (radio semantics, the Skimmer modal)', () => {
+  it('single selection (radio semantics, as in a picker dialog)', () => {
     const table = makeTable({ enableRowSelection: true, enableMultiRowSelection: false });
     table.getRow('p1')!.toggleSelected();
     table.getRow('p2')!.toggleSelected();

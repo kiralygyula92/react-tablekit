@@ -42,7 +42,7 @@ Option 2: an in-house engine.
 
 - We own correctness. Mitigations: ≥ 90% line / 85% branch coverage on `core`, property tests
   (client vs simulated-server equivalence, sort stability, pagination invariants) and a named
-  regression test for every Skimmer bug B1–B19.
+  regression test for every known bug B1–B19.
 - The design borrows TanStack's proven concepts (feature objects, memoized row-model stages,
   `Updater`, controlled/uncontrolled slices), which keeps migration familiar for its users. No code
   is copied.

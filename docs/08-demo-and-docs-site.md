@@ -16,7 +16,6 @@ A single Vite + React 19 + React Router 7 app serves three things: the **example
 /docs/guides/customization      06 levels 0–8, with an example per level
 /docs/guides/theming            07, presets, dark mode, Tailwind recipe, unstyled
 /docs/guides/localization       Locales, i18next recipe, formatters
-/docs/guides/migration-skimmer  10 §3, the Skimmer TableConfig → ColumnDef guide
 /examples                       Gallery grid (filterable by tag), each card links to an example page
 /examples/:slug                 Example page (live demo + source tabs + "Open in playground")
 /playground                     Full-options playground
@@ -52,18 +51,19 @@ The page shows: title and description; the live demo (resizable preview frame wi
 
 ## 3. Examples (all required for v1.0)
 
-### 3.1 Parity examples: the 1:1 Skimmer screens (theme `classic`, mock server)
+### 3.1 Showcase examples: full application screens (theme `classic`, mock server)
 
-These have the highest priority. Each is visually compared against baseline screenshots (09 §3).
+These have the highest priority: they show the table in the context it is actually used in,
+rather than one feature at a time. Each is visually compared against baseline screenshots (09 §3).
 
-| Slug | Replicates | Must show |
-|---|---|---|
-| `parity-customer-list` | 01 §5.1 Customer List | Page header (title "All Customers", search with the Ctrl+K chip via `<DataTable.Search/>`, "Add customer" button); 8 columns with exact widths; two-line addresses; email/phone lists; the service-location stack; the right-aligned count; the edit action pinned right (responsive); server pagination (numbered/compact); the initial "Loading..." row; the refetch overlay; the empty state "No customers found"; search debounce 300ms with min length 3 and page reset |
-| `parity-pool-list` | 01 §5.2 | The PoolTags chip list with max 3 and `+N`; clickable chips (open a demo dialog); the microscope action opening the selection dialog (next row) |
-| `parity-water-test-history` | 01 §5.3 | 18 columns, horizontal scroll, the pinned right actions (resend, view report, disabled states), chemical values weight 600 |
-| `parity-body-of-water-selection` | 01 §5.4 | Inside a dialog: a precondition empty state ("Please select a service location" until a select is chosen), client sort on 10 columns, client pagination, single selection by row click and checkbox, the selected row colour under the pinned action cell, `maxHeight 400` with a **sticky header** (improvement) |
+| Slug | Must show |
+|---|---|
+| `showcase-account-list` | Page header (title, search with the Ctrl+K chip via `<DataTable.Search/>`, an "Add account" button); 8 columns with percentage widths; two-line addresses; email/phone lists; the site stack; the right-aligned count; the edit action pinned right; server pagination (numbered/compact); the initial "Loading..." row; the refetch overlay; the empty state; search debounce 300ms with min length 3 and page reset |
+| `showcase-asset-list` | A chip list with max 3 and `+N`; clickable chips (open a demo dialog); a row action opening a dialog |
+| `showcase-readings` | 18 columns, horizontal scroll, server sorting, pinned right actions (resend, view report) with per-row disabled states |
+| `showcase-asset-picker` | As it would appear in a dialog: client sort and pagination, single selection by row click and radio, the selected row colour under the pinned action cell, `maxHeight 400` with a **sticky header** |
 
-A "Parity mode" toggle on these pages switches between `classic` and `light`, to show the modern defaults with the same config.
+A theme toggle on these pages switches between `classic` and `light`, to show the modern defaults with the same configuration.
 
 ### 3.2 Feature examples
 
@@ -114,7 +114,7 @@ A "Parity mode" toggle on these pages switches between `classic` and `light`, to
 
 ## 4. Playground (`/playground`)
 
-- **Left:** a control panel generated from a schema (`playgroundSchema.ts`), grouped by feature: data (dataset picker: customers / pools / water tests / 10k generated / tree; row count), mode (client/server/hybrid, latency, fail rate), every `enable*` flag, pagination options, filter display mode, selection, expansion, pinning editor (drag columns into left/center/right), theme preset + density + colour scheme, localization, and a slot demo toggle.
+- **Left:** a control panel with two parts. **Setup** holds what is not a prop: the dataset (people / accounts / 10k generated / tree), row count, in-memory data vs. a simulated API (latency, failure rate), preset, language and initial page size/density. **Props** holds a control for **every prop of `<DataTable>` whose type allows one**, generated at build time from the package's TypeDoc output (`scripts/build-api.mjs` → `playground.json`), so it can never fall behind the component: booleans, string unions, numbers and strings, mixed unions (`boolean | 'auto'`), `ResponsiveValue<T>`, lists such as `pagination.pageSizeOptions` (with an off state for `false`), and the fields of the `pagination`, `compactPagination` and `responsive` option objects. Every control has a "default" state in which the prop is not passed, shown next to the documented default. Props that cannot be toggled (callbacks, render functions, registries, data) are listed as code only. A filter box, a "changed only" switch and per-prop reset keep ~150 controls usable, and an error boundary keeps any combination from breaking the page.
 - **Centre:** the live table.
 - **Right:** tabs for **Code** (generated TSX reflecting only non-default options, with a copy button), **State**, **Query log** and **Handler log**.
 - The state of the controls is serialized into the URL hash, so it's shareable.
@@ -140,32 +140,29 @@ A "Parity mode" toggle on these pages switches between `classic` and `light`, to
 - **Seeded generator** (a tiny PRNG such as mulberry32; no faker needed, although `@faker-js/faker` is acceptable as a site-only devDependency) producing domain-faithful data:
 
 ```ts
-interface Customer {
+interface Account {
   identifiers: { id: string };
   displayName: { firstName: string; lastName: string; companyName?: string };
-  billingAddress?: Address;                       // { address1, address2?, city, adminArea1 (state), postalCode, country }
+  billingAddress?: Address;                       // { address1, address2?, city, region, postalCode, country }
   contactInformation?: { emailAddresses: { email: string }[];
                          phoneNumbers: { number: string; phoneType: 'Work'|'Mobile'|'Home'|'Unknown' }[] };
-  serviceLocations?: { identifiers: { id: string }; address: Address;
-                       bodiesOfWater: BodyOfWater[] }[];
+  sites?: { identifiers: { id: string }; address: Address; assets: Asset[] }[];
 }
-interface BodyOfWater {
-  id: string; name?: string; type: 'Pool'|'Spa'|'Fountain'|'Pond'; gallons: number;
-  surfaceType?: string; sanitizer?: string; classification?: string; location?: string;
-  groundLevel?: string; filter?: string; buildDateUTC?: string; builder?: string; notes?: string; customerId: string;
+interface Asset {
+  id: string; name?: string; kind: 'Server'|'Switch'|'Sensor'|'Gateway'; capacity: number;
+  enclosure?: string; powerSource?: string; tier?: string; placement?: string;
+  mounting?: string; coolingType?: string; installedAtUTC?: string; vendor?: string; notes?: string; accountId: string;
 }
-interface WaterTestHistoryItem {
-  id: string; date: string; pdfUrl?: string; pdfId?: string; treatmentPlanId?: string;
-  pH: number; totalChlorine: number; freeChlorine: number; salt: number; cyanuricAcid: number;
-  totalAlkalinity: number; calciumHardness: number; totalDissolvedSolids: number; phosphates: number;
-  iron: number; totalBromine: number; borate: number; copper: number; biguanide: number;
-  biguanideShock: number; waterTemperature: number;
+interface Reading {
+  id: string; date: string; reportUrl?: string; reportId?: string; workOrderId?: string;
+  // sixteen numeric metrics, so the table is wider than any viewport
+  loadFactor: number; inputVoltage: number; outputVoltage: number; throughput: number; /* … */ temperature: number;
 }
 ```
 
-  The datasets are: 235 customers (so there are 24 pages at size 10, which exercises ellipses), pool lists built from those customers, 57 water tests per pool, and generic datasets (10k people, 100k rows, an org tree, orders for grouping). Some fields are intentionally missing, to exercise the `-` fallbacks.
+  The datasets are: 235 accounts (so there are 24 pages at size 10, which exercises ellipses), the assets of those accounts, 57 readings per asset, and generic datasets (10k people, 100k rows, an org tree, orders for grouping). Some fields are intentionally missing, to exercise the `-` fallbacks.
 
-- **Mock server:** MSW handlers at `/api/customers/search` (POST, Skimmer's `{ queryCriteria, listingCriteria }` contract, responding `{ items, totalItemCount, requestCriteria }`), `/api/pools/:id/history`, `/api/generic/:dataset` (the generic `TableQuery` contract) and `/api/generic/:dataset/facets/:column`. The latency is configurable (default 400ms ±200) and an error rate can be injected from the demo UI. All handlers reuse the library's `filterFns`/`sortingFns` via `createLocalDataSource` logic, so server and client results match.
+- **Mock server:** MSW handlers at `/api/accounts/search` (POST, a `{ queryCriteria, listingCriteria }` contract, responding `{ items, totalItemCount, requestCriteria }`), `/api/assets/:id/readings`, `/api/generic/:dataset` (the generic `TableQuery` contract) and `/api/generic/:dataset/facets/:column`. The latency is configurable (default 400ms ±200) and an error rate can be injected from the demo UI. All handlers reuse the library's `filterFns`/`sortingFns` via `createLocalDataSource` logic, so server and client results match.
 
 ## 8. Site quality bar
 

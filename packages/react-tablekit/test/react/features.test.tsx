@@ -141,13 +141,13 @@ describe('cell building blocks (04 §9)', () => {
     const onDelete = vi.fn();
     render(
       <>
-        <ChipList items={['Pool', 'Spa', 'Pond', 'Fountain', 'Lake']} />
+        <ChipList items={['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon']} />
         <Chip label="Click" onClick={onClick} color="#123456" textColor="#fff" />
         <Chip label="Delete me" onDelete={onDelete} deleteLabel="Remove chip" />
       </>,
     );
     expect(screen.getByText('+2')).toBeInTheDocument();
-    expect(screen.queryByText('Lake')).toBeNull();
+    expect(screen.queryByText('Epsilon')).toBeNull();
     const click = screen.getByRole('button', { name: 'Click' });
     click.focus();
     await user.keyboard('{Enter}');
@@ -156,7 +156,7 @@ describe('cell building blocks (04 §9)', () => {
     expect(onDelete).toHaveBeenCalled();
   });
 
-  it('TruncatedText, MultiLineList, TwoLineText render the Skimmer cell visuals', async () => {
+  it('TruncatedText, MultiLineList, TwoLineText render their cell layouts', async () => {
     const user = userEvent.setup();
     render(
       <>
@@ -306,7 +306,7 @@ describe('toolbar, filters and chips (05 §3, §18)', () => {
     expect(rowIds(row.container)).toEqual(['p2']);
   });
 
-  it('autocomplete multi-select (the Skimmer TableFilterToolbar equivalent)', async () => {
+  it('autocomplete multi-select (an ARIA combobox)', async () => {
     const user = userEvent.setup();
     const { container } = renderTable({
       multiSelectDisplay: 'autocomplete',
@@ -564,20 +564,20 @@ describe('selection, expansion, grouping rendering (05 §5–7)', () => {
         { accessorKey: 'name', header: 'Name', headerTooltip: 'Full legal name', truncate: true },
         {
           accessorKey: 'city',
-          header: 'Service location',
-          headerShort: { base: 'Svc', sm: undefined },
+          header: 'Location',
+          headerShort: { base: 'Loc', sm: undefined },
         },
       ],
     });
     window.innerWidth = 1024;
     expect(container.querySelector('thead')).toHaveAttribute('data-sticky');
-    expect(screen.getByText('Svc')).toBeInTheDocument();
+    expect(screen.getByText('Loc')).toBeInTheDocument();
     await user.hover(container.querySelector<HTMLElement>('.tk-header-tooltip')!);
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Full legal name');
     expect(container.querySelector('.tk-truncate')).toBeInTheDocument();
   });
 
-  it('B14 regression: the header sticks inside a max-height scroll container (Skimmer modal)', () => {
+  it('B14 regression: the header sticks inside a max-height scroll container (a picker dialog)', () => {
     const { container } = renderTable({
       toolbar: false,
       enableStickyHeader: true,

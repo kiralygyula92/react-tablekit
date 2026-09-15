@@ -147,13 +147,23 @@ function memberOf(child) {
  *
  * Own members win over inherited ones, which is what an override means.
  */
-function collectMembers(node, declarations, seen = new Set()) {
-  if (!node || seen.has(node)) return [];
+function collectMembers(node, declarations) {
+  return [...collectChildren(node, declarations).values()]
+    .map(memberOf)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * The raw reflection nodes behind {@link collectMembers}, keyed by name. The API pages turn them
+ * into display strings; the playground needs the structured types to decide which control fits.
+ */
+function collectChildren(node, declarations, seen = new Set()) {
+  const byName = new Map();
+  if (!node || seen.has(node)) return byName;
   seen.add(node);
 
-  const own = (node.children ?? [])
-    .filter((child) => child.kind === KIND.property || child.kind === KIND.method)
-    .map(memberOf);
+  const isMember = (child) => child.kind === KIND.property || child.kind === KIND.method;
+  const own = (node.children ?? []).filter(isMember);
 
   /** The literal key names of `Omit` / `Pick`'s second type argument. */
   const keysOf = (type) => {
@@ -173,14 +183,10 @@ function collectMembers(node, declarations, seen = new Set()) {
    */
   const membersFrom = (type) => {
     if (!type) return [];
-    if (type.type === 'reflection') {
-      return (type.declaration?.children ?? [])
-        .filter((child) => child.kind === KIND.property || child.kind === KIND.method)
-        .map(memberOf);
-    }
+    if (type.type === 'reflection') return (type.declaration?.children ?? []).filter(isMember);
     if (type.type !== 'reference') return [];
     if (declarations.has(type.name)) {
-      return collectMembers(declarations.get(type.name), declarations, seen);
+      return [...collectChildren(declarations.get(type.name), declarations, seen).values()];
     }
     const args = type.typeArguments ?? [];
     switch (type.name) {
@@ -209,9 +215,8 @@ function collectMembers(node, declarations, seen = new Set()) {
       : membersFrom(node.type)),
   ];
 
-  const byName = new Map();
   for (const member of [...inherited, ...own]) byName.set(member.name, member);
-  return [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
+  return byName;
 }
 
 /** Flattens one declaration into `{ name, kind, description, members, signatures }`. */
@@ -253,6 +258,8 @@ if (!existsSync(API_JSON)) {
     const file = resolve(OUT_DIR, `${page}.json`);
     if (!existsSync(file)) writeFileSync(file, '[]\n');
   }
+  const playground = resolve(OUT_DIR, 'playground.json');
+  if (!existsSync(playground)) writeFileSync(playground, '{ "controls": [], "codeOnly": [] }\n');
   console.warn(
     '[build-api] dist/api.json not found — run `pnpm docs:json` first. Pages left as is.',
   );
@@ -297,6 +304,194 @@ for (const { page, symbols } of PAGES) {
   console.log(`[build-api] ${page}.json (${found.length} symbols, ${documented} documented)`);
 }
 console.log(`[build-api] ${total} symbols written to src/generated/api`);
+
+/* ── playground schema ──────────────────────────────────────────────────────
+   Every prop of <DataTable> becomes a playground control when its type allows one, so the
+   playground can never fall behind the component. Props whose type is a function, a component
+   or arbitrary data are listed as "code only" instead of being silently left out. */
+
+/** Named type aliases (`DataMode`, `Breakpoint`, `PaginationVariant`) → their types. */
+const aliases = new Map();
+for (const module of root.children ?? []) {
+  for (const child of module.children ?? []) {
+    if (child.kind === KIND.typeAlias && child.type && !aliases.has(child.name)) {
+      aliases.set(child.name, child.type);
+    }
+  }
+}
+
+/** Option objects that are expanded into their own controls (`pagination.pageSizeOptions`). */
+const NESTED = {
+  pagination: { type: 'PaginationDisplayOptions', group: 'Pagination options' },
+  compactPagination: { type: 'CompactPaginationOptions', group: 'Compact pagination options' },
+  responsive: { type: 'ResponsiveOptions', group: 'Responsive options' },
+};
+
+/** Props the playground itself supplies, so a control for them would only break the demo. */
+const MANAGED = new Set([
+  'data',
+  'dataSource',
+  'columns',
+  'getRowId',
+  'theme',
+  'localization',
+  'initialState',
+  'state',
+  'table',
+  'tableRef',
+]);
+
+/** Breaks a type down into the atoms a control can represent. */
+function atomsOf(type, depth = 0) {
+  if (!type || depth > 6) return [{ kind: 'other' }];
+  switch (type.type) {
+    case 'intrinsic':
+      if (type.name === 'boolean') return [{ kind: 'bool' }];
+      if (type.name === 'number') return [{ kind: 'num' }];
+      if (type.name === 'string') return [{ kind: 'str' }];
+      return [{ kind: 'other' }];
+    case 'literal':
+      return type.value === null ? [] : [{ kind: 'lit', value: type.value }];
+    case 'union':
+      return type.types.flatMap((t) => atomsOf(t, depth + 1));
+    case 'array':
+      return type.elementType?.type === 'intrinsic' && type.elementType.name === 'number'
+        ? [{ kind: 'numList' }]
+        : [{ kind: 'other' }];
+    case 'reference': {
+      if (type.name === 'ResponsiveValue') return atomsOf(type.typeArguments?.[0], depth + 1);
+      if (type.name === 'ReactNode' || type.name === 'Renderable') return [{ kind: 'node' }];
+      if (aliases.has(type.name)) return atomsOf(aliases.get(type.name), depth + 1);
+      return [{ kind: 'other' }];
+    }
+    default:
+      return [{ kind: 'other' }];
+  }
+}
+
+/**
+ * An `@default` tag as display text. TypeDoc wraps a lone code value in a fence (`` ```ts\n'auto'\n``` ``)
+ * and inline code in single backticks, neither of which belongs in a control's hint.
+ */
+function cleanDefault(text) {
+  if (text === undefined) return undefined;
+  return text
+    .replace(/^`{2,3}\w*\n?/, '')
+    .replace(/\n?`{2,3}$/, '')
+    .replace(/^`([^`]*)`$/, '$1')
+    .trim();
+}
+
+/** Parses an `@default` tag into a real value when it is a plain literal. */
+function parseDefault(text) {
+  const raw = cleanDefault(text);
+  if (raw === undefined) return undefined;
+  if (raw === 'true' || raw === 'false') return raw === 'true';
+  if (/^-?\d+(\.\d+)?$/.test(raw)) return Number(raw);
+  const quoted = /^['"](.*)['"]$/.exec(raw);
+  return quoted ? quoted[1] : undefined;
+}
+
+/** Picks a playground group from the prop name. */
+function groupOf(name) {
+  const rules = [
+    [
+      /^(dataMode|paginationMode|sortingMode|filterMode|searchMode|groupingMode|facetingMode)$|^manual|^rowCount$|^pageCount$/,
+      'Data modes',
+    ],
+    [/search|globalFilter|highlight/i, 'Search'],
+    [/filter|facet/i, 'Filtering'],
+    [/sort/i, 'Sorting'],
+    [/select/i, 'Selection'],
+    [/expand|subRow|detail/i, 'Expansion'],
+    [/group|aggregat/i, 'Grouping'],
+    [/virtual|overscan|estimateRow|maxHeight|minWidth|maxWidth|sticky/i, 'Layout and scrolling'],
+    [/column|pin|resiz|order|hiding|header|footer/i, 'Columns'],
+    [/pagination|page/i, 'Pagination'],
+    [/loading|skeleton|empty|error|overlay|fetch/i, 'States'],
+    [/export|csv|clipboard/i, 'Export'],
+    [/keyboard|hotkey|aria|announce|caption/i, 'Keyboard and accessibility'],
+    [/toolbar|density/i, 'Toolbar'],
+    [/theme|color|unstyled|bordered|striped|hover|^dir$|noWrap|rowNumber/i, 'Appearance'],
+  ];
+  return rules.find(([pattern]) => pattern.test(name))?.[1] ?? 'Other';
+}
+
+/** Decides the control for one member, or returns undefined when it cannot have one. */
+function controlOf(path, child, group) {
+  const atoms = atomsOf(child.type).filter((a) => a.kind !== 'other');
+  const has = (kind) => atoms.some((a) => a.kind === kind);
+  const literals = atoms.filter((a) => a.kind === 'lit').map((a) => a.value);
+  const allowFalse = literals.includes(false);
+  const base = {
+    path,
+    group,
+    type: typeString(child.type),
+    description: commentText(child.comment) || commentText(child.signatures?.[0]?.comment),
+  };
+  const defaultText = blockTag(child.comment, '@default');
+  if (defaultText !== undefined) base.defaultText = cleanDefault(defaultText);
+  const parsed = parseDefault(defaultText);
+  if (parsed !== undefined) base.default = parsed;
+
+  if (has('numList')) return { ...base, kind: 'numberList', allowFalse };
+  if (has('str') || has('node')) return { ...base, kind: 'text', allowFalse, numeric: has('num') };
+  const options = [
+    ...(has('bool') ? [true, false] : []),
+    ...literals.filter((v) => typeof v !== 'boolean' || !has('bool')),
+  ].filter((v, i, all) => all.indexOf(v) === i);
+  if (options.length > 0 && literals.some((v) => typeof v !== 'boolean')) {
+    return { ...base, kind: 'select', options };
+  }
+  if (has('bool')) return { ...base, kind: 'boolean' };
+  if (has('num')) return { ...base, kind: 'number' };
+  return undefined;
+}
+
+const tableProps = collectChildren(declarations.get('DataTableProps'), declarations);
+const controls = [];
+const codeOnly = [];
+for (const [name, child] of [...tableProps].sort(([a], [b]) => a.localeCompare(b))) {
+  if (MANAGED.has(name)) continue;
+  if (child.kind === KIND.method) {
+    codeOnly.push({ name, type: 'function', description: commentText(child.comment) });
+    continue;
+  }
+  const nested = NESTED[name];
+  if (nested && declarations.has(nested.type)) {
+    for (const [subName, sub] of collectChildren(declarations.get(nested.type), declarations)) {
+      const path = `${name}.${subName}`;
+      const control = controlOf(path, sub, nested.group);
+      if (control) controls.push(control);
+      else
+        codeOnly.push({
+          name: path,
+          type: typeString(sub.type),
+          description: commentText(sub.comment),
+        });
+    }
+    continue;
+  }
+  const control = controlOf(name, child, groupOf(name));
+  if (control) controls.push(control);
+  else
+    codeOnly.push({ name, type: typeString(child.type), description: commentText(child.comment) });
+}
+
+writeFileSync(
+  resolve(OUT_DIR, 'playground.json'),
+  `${JSON.stringify({ controls, codeOnly }, null, 2)}\n`,
+);
+console.log(
+  `[build-api] playground.json (${controls.length} controls, ${codeOnly.length} code-only props)`,
+);
+
+// The playground's promise is "every prop you can express as a control". A collapse in that
+// number means type resolution broke, which would otherwise ship as a near-empty panel.
+if (controls.length < 100) {
+  console.error(`[build-api] only ${controls.length} playground controls — type resolution broke`);
+  process.exit(1);
+}
 
 // A page whose symbols resolve but document nothing renders a heading and no content. That used
 // to pass every gate silently, so it fails the build instead.

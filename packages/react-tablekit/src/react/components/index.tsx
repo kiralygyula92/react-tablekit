@@ -15,7 +15,7 @@ import type { Placement, RowAction, SlotPropsMap } from '../types';
 import { cx } from '../utils';
 
 /**
- * Cell building blocks (04 §9). They reproduce the Skimmer cell visuals and honour slot
+ * Cell building blocks (04 §9). They cover the layouts tables need repeatedly and honour slot
  * overrides when rendered inside a table (they also work standalone).
  */
 
@@ -51,7 +51,7 @@ export interface ActionButtonProps {
   style?: CSSProperties;
 }
 
-/** The Skimmer icon action button with a tooltip on top. */
+/** An icon action button with a tooltip on top. */
 export function ActionButton({
   icon,
   label,
@@ -190,7 +190,7 @@ export function Chip(props: ChipProps) {
 /** Props of {@link ChipList}. */
 export interface ChipListProps<T> {
   items: T[];
-  /** @default 3 (Skimmer PoolTags) */
+  /** @default 3 */
   maxVisible?: number;
   /** Renders one chip; without it each item is shown with `getLabel`. */
   renderChip?: (item: T, index: number) => ReactNode;
@@ -201,7 +201,7 @@ export interface ChipListProps<T> {
   className?: string;
 }
 
-/** Wrapping chip list with a `+N` overflow chip (Skimmer PoolTags). */
+/** Wrapping chip list with a `+N` overflow chip. */
 export function ChipList<T>({
   items,
   maxVisible = 3,
@@ -230,7 +230,7 @@ export function ChipList<T>({
 /** Props of {@link TruncatedText}. */
 export interface TruncatedTextProps {
   text: string | null | undefined;
-  /** Truncate after N characters (Skimmer notes: 30). */
+  /** Truncate after N characters. */
   maxChars?: number;
   /** Or clamp to N lines with CSS. */
   lines?: number;
@@ -240,7 +240,7 @@ export interface TruncatedTextProps {
   empty?: ReactNode;
 }
 
-/** Truncated text with the full value in a tooltip (Skimmer notes cell). */
+/** Truncated text with the full value in a tooltip. */
 export function TruncatedText({
   text,
   maxChars,
@@ -280,7 +280,7 @@ export interface MultiLineListProps {
   empty?: ReactNode;
 }
 
-/** One item per line (Skimmer emails / phones lists). */
+/** One item per line, for lists such as emails or phone numbers. */
 export function MultiLineList({ items, gap = 4, empty = '-' }: MultiLineListProps) {
   if (!items.length) return <>{empty}</>;
   return (
@@ -304,7 +304,7 @@ export interface TwoLineTextProps {
   empty?: ReactNode;
 }
 
-/** A strong first line and a muted second line (Skimmer address cell). */
+/** A strong first line and a muted second line, for an address or a similar pair. */
 export function TwoLineText({
   primary,
   secondary,

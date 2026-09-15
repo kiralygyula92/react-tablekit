@@ -111,7 +111,7 @@ test.describe('states', () => {
     await expect(page.locator('.tk-skeleton').first()).toBeVisible();
 
     await select.selectOption('loading');
-    // The English locale spells it "Loading..." (Skimmer parity).
+    // The English locale spells it "Loading...".
     await expect(page.getByRole('cell', { name: /^Loading/ })).toBeVisible();
 
     // Scoped to the table: the select options mention the same words.

@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { createRestDataSource, DataTable, useDataTable, type DataSource } from 'react-tablekit';
 import { mockFetch } from '../../mock/ready';
-import type { PagedResponse, WaterTestHistoryItem } from '../../mock/types';
-import { ParityPage, useParityTheme } from '../ParityFrame';
-import { waterTestColumns, type WaterTestMeta } from './columns';
+import type { PagedResponse, Reading } from '../../mock/types';
+import { ShowcasePage, useShowcaseTheme } from '../ShowcaseFrame';
+import { readingColumns, type ReadingsMeta } from './columns';
 
-const BODY_OF_WATER_ID = 'bow_0001';
+const ASSET_ID = 'as_0001';
 
-/** `GET /api/pools/:id/history` with Skimmer's listing criteria as query parameters. */
-const historyDataSource: DataSource<WaterTestHistoryItem> = createRestDataSource<
-  WaterTestHistoryItem,
-  PagedResponse<WaterTestHistoryItem>
+/** `GET /api/assets/:id/readings` with the listing criteria as query parameters. */
+const readingsDataSource: DataSource<Reading> = createRestDataSource<
+  Reading,
+  PagedResponse<Reading>
 >({
-  url: `/api/pools/${BODY_OF_WATER_ID}/history`,
+  url: `/api/assets/${ASSET_ID}/readings`,
   method: 'GET',
   mapQuery: (q) => ({
     pageNumber: q.pagination.pageIndex,
@@ -43,46 +43,46 @@ const historyDataSource: DataSource<WaterTestHistoryItem> = createRestDataSource
       signal: req.signal,
     });
     if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-    return (await res.json()) as PagedResponse<WaterTestHistoryItem>;
+    return (await res.json()) as PagedResponse<Reading>;
   },
 });
 
 /**
- * Skimmer water-test history, 1:1 (01 §5.3): server mode, 18 columns inside a horizontal scroll,
- * chemical values at weight 600, and pinned right actions whose disabled states follow the row
- * (resend needs a `pdfId`, view report needs a `pdfUrl`).
+ * A deliberately wide table: 18 columns inside a horizontal scroll, sorted on the server, with
+ * pinned right actions whose disabled states follow the row — "Resend" needs a report id and
+ * "View report" needs a URL, and plenty of rows have neither.
  */
-export default function ParityWaterTestHistory() {
-  const { theme, toggle } = useParityTheme();
+export default function ShowcaseReadings() {
+  const { theme, toggle } = useShowcaseTheme();
   const [message, setMessage] = useState<string | null>(null);
-  const meta: WaterTestMeta = {
-    onResend: (t) => setMessage(`Resending the report of ${t.date}…`),
-    onViewReport: (t) => setMessage(`Opening ${t.pdfUrl ?? 'the report'}…`),
+  const meta: ReadingsMeta = {
+    onResend: (r) => setMessage(`Resending the report of ${r.date}…`),
+    onViewReport: (r) => setMessage(`Opening ${r.reportUrl ?? 'the report'}…`),
   };
 
-  const table = useDataTable<WaterTestHistoryItem>({
-    columns: waterTestColumns,
-    dataSource: historyDataSource,
-    getRowId: (t) => t.id,
+  const table = useDataTable<Reading>({
+    columns: readingColumns,
+    dataSource: readingsDataSource,
+    getRowId: (r) => r.id,
     sortingMode: 'server',
     initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
     theme,
     meta,
     toolbar: false,
     enableGlobalFilter: false,
-    'aria-label': 'water test history table',
-    emptyStateContent: 'No water tests found',
+    'aria-label': 'reading history table',
+    emptyStateContent: 'No readings found',
     localization: { loading: 'Loading...' },
   });
 
   return (
-    <ParityPage>
+    <ShowcasePage>
       {toggle}
       <DataTable.Root table={table}>
-        <header className="parity-header">
-          <h3 className="parity-title">Water test history</h3>
+        <header className="showcase-header">
+          <h3 className="showcase-title">Reading history</h3>
         </header>
-        <div className="parity-content">
+        <div className="showcase-content">
           <DataTable.Container />
           <DataTable.Pagination />
         </div>
@@ -90,6 +90,6 @@ export default function ParityWaterTestHistory() {
       <p className="site-muted" role="status">
         {message ?? 'Pick an action on any row.'}
       </p>
-    </ParityPage>
+    </ShowcasePage>
   );
 }

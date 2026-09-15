@@ -42,8 +42,7 @@ export function VersioningPage() {
       </p>
       <p>
         The <strong>classic</strong> preset is the exception: its values are frozen. It exists to
-        reproduce the original Skimmer tables pixel for pixel, and a retuned token would break that
-        guarantee.
+        reproduce a dense, compact look exactly, and a retuned token would break that guarantee.
       </p>
 
       <h2>Deprecations</h2>

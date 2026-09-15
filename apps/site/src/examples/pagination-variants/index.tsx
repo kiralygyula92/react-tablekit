@@ -12,7 +12,7 @@ const render = (items: PageItem[]) =>
     .map((i) => (i.type === 'page' ? (i.selected ? `[${i.index + 1}]` : String(i.index + 1)) : '…'))
     .join(' ');
 
-/** Algorithm visualizer: classic (corrected Skimmer rule, B1) vs stable (constant width, B17). */
+/** Algorithm visualizer: classic (boundary + window rule) vs stable (constant width, B17). */
 function Visualizer() {
   const [pageCount, setPageCount] = useState(24);
   const [pageIndex, setPageIndex] = useState(0);

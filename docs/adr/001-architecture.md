@@ -6,10 +6,11 @@
 
 ## Context
 
-The Skimmer Retail app has four tables that each re-implement ~300 lines of rendering, loading,
-pagination and sticky-column logic around MUI (01 §2, bug B3). The replacement must:
+Application code tends to re-implement the same few hundred lines of table rendering, loading,
+pagination and sticky-column logic per screen, usually on top of a component framework. A
+standalone library must:
 
-- reproduce those tables 1:1 (the `classic` preset) and go well beyond them;
+- cover that dense, compact look as one of its presets (`classic`) and go well beyond it;
 - run every data feature in client **and** server mode;
 - let consumers override anything visible or interactive without forking;
 - ship with zero runtime dependencies, be SSR-safe and tree-shakeable.

@@ -6,31 +6,31 @@ interface SearchBody {
   listingCriteria?: { pageNumber: number; pageSize: number };
 }
 
-/** Records every customer-search request body the table sends. */
+/** Records every account-search request body the table sends. */
 function recordSearches(page: Page): SearchBody[] {
   const bodies: SearchBody[] = [];
   page.on('request', (req: Request) => {
-    if (req.method() === 'POST' && req.url().endsWith('/api/customers/search')) {
+    if (req.method() === 'POST' && req.url().endsWith('/api/accounts/search')) {
       bodies.push(JSON.parse(req.postData() ?? '{}') as SearchBody);
     }
   });
   return bodies;
 }
 
-const table = (page: Page) => page.getByRole('table', { name: 'customer list table' });
+const table = (page: Page) => page.getByRole('table', { name: 'account list table' });
 const dataRows = (page: Page) => table(page).locator('tbody tr[data-row-id]');
 const search = (page: Page) => page.getByRole('searchbox', { name: 'Search' });
 
 async function open(page: Page, latency = 0) {
   const bodies = recordSearches(page);
-  await page.goto(`/examples/parity-customer-list?mockLatency=${latency}`);
+  await page.goto(`/examples/showcase-account-list?mockLatency=${latency}`);
   await expect(dataRows(page)).toHaveCount(10);
   return bodies;
 }
 
-test('initial load shows the "Loading..." row, then 10 customers from page 0', async ({ page }) => {
+test('initial load shows the "Loading..." row, then 10 accounts from page 0', async ({ page }) => {
   const bodies = recordSearches(page);
-  await page.goto('/examples/parity-customer-list?mockLatency=1000');
+  await page.goto('/examples/showcase-account-list?mockLatency=1000');
   await expect(table(page).getByRole('cell', { name: 'Loading...' })).toBeVisible();
   await expect(dataRows(page)).toHaveCount(10);
   expect(bodies).toEqual([{ queryCriteria: '', listingCriteria: { pageNumber: 0, pageSize: 10 } }]);
@@ -63,7 +63,7 @@ test('searching resets to the first page', async ({ page }) => {
     'page',
   );
 
-  // Matches every customer with an email, so the result still has several pages.
+  // Matches every account with an email, so the result still has several pages.
   await search(page).fill('example');
   await expect
     .poll(() => bodies.at(-1))
@@ -95,7 +95,7 @@ test('refetching shows a blocking overlay below the header and keeps the rows', 
   await expect(overlay).toBeVisible();
   await expect(overlay).toHaveAttribute('data-blocking', 'true');
   await expect(dataRows(page)).toHaveCount(10);
-  // The overlay starts at the bottom of the header row (fixes B6/B11).
+  // The overlay starts at the bottom of the header row, never covering it.
   const [overlayBox, headBox] = await Promise.all([
     overlay.boundingBox(),
     table(page).locator('thead').boundingBox(),
@@ -110,10 +110,10 @@ test('refetching shows a blocking overlay below the header and keeps the rows', 
   );
 });
 
-test('no matches shows "No customers found"', async ({ page }) => {
+test('no matches shows "No accounts found"', async ({ page }) => {
   await open(page);
   await search(page).fill('zzzz-nobody');
-  await expect(table(page).getByText('No customers found')).toBeVisible();
+  await expect(table(page).getByText('No accounts found')).toBeVisible();
   await expect(dataRows(page)).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Clear all' })).toHaveCount(0);
 });

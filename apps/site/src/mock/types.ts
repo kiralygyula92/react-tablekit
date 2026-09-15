@@ -1,41 +1,45 @@
-// Domain types mirroring the Skimmer Retail API (docs/08 §7, docs/01 §3).
+// Domain types for the demo mock server. A generic asset-management domain: accounts own sites,
+// sites hold assets, and assets accumulate readings over time.
 
 export interface Address {
   address1: string;
   address2?: string;
   city: string;
   /** State / region. */
-  adminArea1: string;
+  region: string;
   postalCode: string;
   country: string;
 }
 
 export type PhoneType = 'Work' | 'Mobile' | 'Home' | 'Unknown';
 
-export interface BodyOfWater {
+export type AssetKind = 'Server' | 'Switch' | 'Sensor' | 'Gateway';
+
+export interface Asset {
   id: string;
   name?: string;
-  type: 'Pool' | 'Spa' | 'Fountain' | 'Pond';
-  gallons: number;
-  surfaceType?: string;
-  sanitizer?: string;
-  classification?: string;
-  location?: string;
-  groundLevel?: string;
-  filter?: string;
-  buildDateUTC?: string;
-  builder?: string;
+  kind: AssetKind;
+  /** Rated throughput in units/hour. */
+  capacity: number;
+  enclosure?: string;
+  powerSource?: string;
+  tier?: string;
+  placement?: string;
+  mounting?: string;
+  coolingType?: string;
+  installedAtUTC?: string;
+  vendor?: string;
   notes?: string;
-  customerId: string;
+  accountId: string;
 }
 
-export interface ServiceLocation {
+export interface Site {
   identifiers: { id: string };
   address: Address;
-  bodiesOfWater: BodyOfWater[];
+  assets: Asset[];
 }
 
-export interface Customer {
+export interface Account {
   identifiers: { id: string };
   displayName: { firstName: string; lastName: string; companyName?: string };
   billingAddress?: Address;
@@ -43,34 +47,35 @@ export interface Customer {
     emailAddresses: { email: string }[];
     phoneNumbers: { number: string; phoneType: PhoneType }[];
   };
-  serviceLocations?: ServiceLocation[];
+  sites?: Site[];
 }
 
-export interface WaterTestHistoryItem {
+/** One telemetry sample for an asset: 16 numeric metrics plus an optional report. */
+export interface Reading {
   id: string;
   date: string;
-  pdfUrl?: string;
-  pdfId?: string;
-  treatmentPlanId?: string;
-  pH: number;
-  totalChlorine: number;
-  freeChlorine: number;
-  salt: number;
-  cyanuricAcid: number;
-  totalAlkalinity: number;
-  calciumHardness: number;
-  totalDissolvedSolids: number;
-  phosphates: number;
-  iron: number;
-  totalBromine: number;
-  borate: number;
-  copper: number;
-  biguanide: number;
-  biguanideShock: number;
-  waterTemperature: number;
+  reportUrl?: string;
+  reportId?: string;
+  workOrderId?: string;
+  loadFactor: number;
+  inputVoltage: number;
+  outputVoltage: number;
+  throughput: number;
+  errorRate: number;
+  queueDepth: number;
+  memoryUsed: number;
+  diskUsed: number;
+  packetLoss: number;
+  jitter: number;
+  latency: number;
+  uptimeDays: number;
+  fanSpeed: number;
+  powerDraw: number;
+  peakDraw: number;
+  temperature: number;
 }
 
-/** Skimmer's server paging contract (`types/apiInterfaces.ts`). */
+/** The server's paging contract. */
 export interface ListingCriteria {
   ascending?: boolean;
   pageNumber: number;
@@ -78,7 +83,7 @@ export interface ListingCriteria {
   sortColumn?: string;
 }
 
-export interface SearchCustomerRequest {
+export interface SearchAccountRequest {
   listingCriteria?: Partial<ListingCriteria>;
   queryCriteria?: string;
 }

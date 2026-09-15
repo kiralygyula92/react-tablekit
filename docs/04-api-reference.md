@@ -93,7 +93,7 @@ export type * from './core/types';
 | `enableFacetedValues` | `true` | |
 | `enablePagination` | `true` | |
 | `enableRowSelection` | `false` | `boolean \| (row) => boolean` |
-| `enableMultiRowSelection` | `true` | `false` = single (the Skimmer modal) |
+| `enableMultiRowSelection` | `true` | `false` = single (radio semantics) |
 | `enableSubRowSelection` | `true` | |
 | `selectAllMode` | `'page'` | `'page' \| 'all'` |
 | `selectOnRowClick` | `false` | |
@@ -137,8 +137,8 @@ export type * from './core/types';
 | `maxWidth` | `number \| string \| ResponsiveValue` | `'100%'` | |
 | `density` | `'compact' \| 'standard' \| 'comfortable'` | `'standard'` | Also a state slice |
 | `bordered` | `'outer' \| 'rows' \| 'all' \| 'none'` | `'outer'` + rows | |
-| `firstColumnAsRowHeader` | `boolean` | `true` | First cell rendered as `<th scope="row">` (Skimmer behaviour) |
-| `noWrap` | `boolean` | `true` | `white-space: nowrap` in cells (Skimmer behaviour) |
+| `firstColumnAsRowHeader` | `boolean` | `true` | First cell rendered as `<th scope="row">` |
+| `noWrap` | `boolean` | `true` | `white-space: nowrap` in cells |
 | `loadingDisplay` | `'text' \| 'skeleton' \| 'spinner'` | `'skeleton'` | Initial-load visual |
 | `skeletonRowCount` | `number` | `pageSize` | |
 | `loadingOverlayBlocksInteraction` | `boolean` | `true` | |
@@ -167,12 +167,12 @@ interface PaginationDisplayOptions {
   position?: 'bottom' | 'top' | 'both';                            // default 'bottom'
   pageSizeOptions?: number[] | false;                               // default false (classic) / [10, 25, 50, 100]
   showRowRange?: boolean;                                           // "11–20 of 235"; default false (classic) / true
-  showFirstLast?: boolean | ResponsiveValue<boolean>;               // default { base: true, md: false } (classic parity)
+  showFirstLast?: boolean | ResponsiveValue<boolean>;               // default { base: true, md: false } in classic
   showPrevNextLabels?: boolean | ResponsiveValue<boolean>;          // default { base: false, md: true }
   siblingCount?: number;                                            // default 1
   boundaryCount?: number;                                           // default 2
   pageItemsAlgorithm?: 'classic' | 'stable' | ((args: PageItemsArgs) => PageItem[]); // default 'classic'
-  hideOnSinglePage?: boolean;                                       // default true (Skimmer parity)
+  hideOnSinglePage?: boolean;                                       // default true
   align?: 'space-between' | 'center' | 'start' | 'end';             // default 'space-between'
 }
 type PaginationVariant = 'numbered' | 'compact' | 'simple' | 'loadMore' | 'infinite' | 'none';
@@ -292,7 +292,7 @@ Common fields:
 | `accessorKey` | `DeepKeys<TData>` | none | Dot paths supported (`'billingAddress.city'`) |
 | `accessorFn` | `(row: TData, index: number) => TValue` | none | |
 | `header` | `ReactNode \| ((ctx: HeaderContext) => ReactNode)` | `id` humanized | |
-| `headerShort` | `ReactNode \| ResponsiveValue<ReactNode>` | none | Replaces Skimmer `xsLabel`; e.g. `{ base: 'Svc', sm: undefined }` |
+| `headerShort` | `ReactNode \| ResponsiveValue<ReactNode>` | none | E.g. e.g. `{ base: 'Svc', sm: undefined }` |
 | `headerTooltip` | `ReactNode` | none | Info icon with tooltip in the header |
 | `cell` | `ReactNode \| ((ctx: CellContext<TData, TValue>) => ReactNode)` | formatted value | |
 | `footer` | `ReactNode \| ((ctx: HeaderContext) => ReactNode)` | none | |
@@ -302,10 +302,10 @@ Common fields:
 | `verticalAlign` | `'top' \| 'middle' \| 'bottom'` | `'middle'` | |
 | `type` | `'text' \| 'number' \| 'date' \| 'datetime' \| 'boolean' \| 'custom'` | auto | Drives default align, format, sort, filter variant |
 | `format` | `(value: TValue, row: TData) => string` | by `type` | Display + search + export string |
-| `renderFallbackValue` | `ReactNode` | `'-'` in classic, `'—'` default | Shown for `null`/`undefined`/`''` (Skimmer dash) |
+| `renderFallbackValue` | `ReactNode` | `'-'` in classic, `'—'` default | Shown for `null`/`undefined`/`''` |
 | **Sizing** | | | |
 | `size` | `number` (px) | `150` | Used when resizing is enabled / fixed layout |
-| `width` | `number \| string` | none | CSS width, supports `'15%'` (Skimmer) |
+| `width` | `number \| string` | none | CSS width, supports `'15%'` |
 | `minSize` / `minWidth` | `number` / `number \| string` | `40` / none | |
 | `maxSize` / `maxWidth` | `number` / `number \| string` | none | |
 | `grow` | `boolean \| number` | none | Flex-grow share in grid layout |
@@ -318,9 +318,9 @@ Common fields:
 | `enableResizing` | `boolean` | `true` | |
 | `static` | `boolean` | `false` | **Shortcut:** `lockPin + enableHiding:false + enableOrdering:false + enableResizing:false + enableColumnActions:false`. Combine with `pin` for a frozen, locked column |
 | **Sorting** | | | |
-| `enableSorting` | `boolean` | table value | Skimmer `sortable` |
+| `enableSorting` | `boolean` | table value | Whether the column can be sorted |
 | `sortingFn` | `SortingFnName \| SortingFn<TData>` | auto | |
-| `sortValue` | `(row: TData) => unknown` | accessor value | Skimmer `getSortValue` |
+| `sortValue` | `(row: TData) => unknown` | accessor value | Overrides the value used for sorting |
 | `sortDescFirst` | `boolean \| 'auto'` | table value | |
 | `sortUndefined` | `'first' \| 'last' \| false \| 1 \| -1` | `'last'` | |
 | `invertSorting` | `boolean` | `false` | For ranks/"lower is better" |
@@ -331,7 +331,7 @@ Common fields:
 | `filterVariant` | `'text' \| 'select' \| 'multiSelect' \| 'number' \| 'range' \| 'rangeSlider' \| 'date' \| 'dateRange' \| 'boolean' \| 'custom'` | by `type` | |
 | `filterFn` | `FilterFnName \| FilterFn<TData>` | by variant | |
 | `filterOperators` | `FilterOperator[]` | by variant | Operators offered in the UI |
-| `filterOptions` | `FilterOption[] \| ((ctx) => FilterOption[] \| Promise<FilterOption[]>)` | faceted | `FilterOption = { value; label; color?: string; textColor?: string; icon?: ReactNode; count?: number }` (Skimmer `background`/`lightText` → `color`/`textColor`) |
+| `filterOptions` | `FilterOption[] \| ((ctx) => FilterOption[] \| Promise<FilterOption[]>)` | faceted | `FilterOption = { value; label; color?: string; textColor?: string; icon?: ReactNode; count?: number }` |
 | `filterServerKey` | `string` | `id` | |
 | `renderFilter` | `(ctx: FilterRenderContext) => ReactNode` | none | Custom filter input |
 | `getSearchValue` | `(row: TData) => string` | `format(value)` | What global search matches against |
@@ -373,7 +373,7 @@ interface CellContext<TData, TValue> {
 const col = createColumnHelper<Customer>();
 const columns = [
   col.accessor('displayName.companyName', { header: 'Company name', renderFallbackValue: '-' }),
-  col.accessor((r) => r.serviceLocations?.length ?? 0, { id: 'bodiesOfWater', type: 'number' }),
+  col.accessor((r) => r.sites?.length ?? 0, { id: 'siteCount', type: 'number' }),
   col.display({ id: 'actions', cell: ({ row }) => <ActionButton ... />, pin: 'right', static: true }),
   col.group({ header: 'Contact', columns: [/* ... */] }),
 ];
@@ -490,16 +490,16 @@ focusCell(rowId, columnId); scrollToRow(rowId, opts?);
 
 ## 9. Cell building blocks (styled, optional)
 
-These reproduce the Skimmer cell visuals so parity examples are short:
+These cover the cell layouts tables need repeatedly, so examples stay short:
 
 | Component | Props | Reproduces |
 |---|---|---|
-| `ActionButton` | `icon: ReactNode; label: string (tooltip + aria-label); onClick; disabled?; tooltipPlacement?; color?: 'primary' \| 'danger' \| 'neutral'; stopPropagation? (default true)` | Skimmer icon button + tooltip |
+| `ActionButton` | `icon: ReactNode; label: string (tooltip + aria-label); onClick; disabled?; tooltipPlacement?; color?: 'primary' \| 'danger' \| 'neutral'; stopPropagation? (default true)` | Icon button with a tooltip |
 | `RowActionsMenu` | `actions: { label; icon?; onClick; disabled?; danger?; hidden? }[]; inlineCount?: number` | The first N are inline and the rest go in a kebab menu |
 | `Tooltip` | `content; placement; delay?; children` | Dark tooltip (no dependency, portal + positioning) |
 | `Checkbox` | `checked; indeterminate; onChange; disabled; aria-label` | 22px themed checkbox |
 | `Chip` | `label; color?; textColor?; borderColor?; onClick?; onDelete?; size?` | |
-| `ChipList` | `items; maxVisible (3); renderChip?; overflowLabel?: (n) => string` | PoolTags `+N` |
+| `ChipList` | `items; maxVisible (3); renderChip?; overflowLabel?: (n) => string` | Chips with a `+N` overflow |
 | `TruncatedText` | `text; maxChars? \| lines?; tooltip? (true)` | Notes cell |
 | `MultiLineList` | `items: ReactNode[]; gap?; empty?: ReactNode` | Emails/phones lists |
 | `TwoLineText` | `primary; secondary; primaryWeight? (600)` | Address cell |
@@ -513,8 +513,8 @@ These reproduce the Skimmer cell visuals so parity examples are short:
 ```ts
 declare module 'react-tablekit' {
   interface ColumnMeta<TData, TValue> { exportHeader?: string; }
-  interface TableMeta<TData> { onEditCustomer?: (c: TData) => void; }
+  interface TableMeta<TData> { onEditRow?: (c: TData) => void; }
 }
 ```
 
-`options.meta` (a `TableMeta`) is available in every render context as `table.options.meta`. This is the recommended way to pass handlers (like `onEditCustomer`) into column definitions without recreating columns (it fixes the Skimmer pattern of rebuilding the config when handlers change).
+`options.meta` (a `TableMeta`) is available in every render context as `table.options.meta`. This is the recommended way to pass handlers (like `onEditRow`) into column definitions without recreating columns (so the column config is not rebuilt whenever a handler changes).

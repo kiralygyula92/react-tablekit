@@ -8,8 +8,8 @@ export interface ExampleMeta {
   tags: string[];
   features?: string[];
   related?: string[];
-  /** Parity examples reproduce a Skimmer screen 1:1 with the classic preset. */
-  parity?: boolean;
+  /** Showcase examples render with the dense `classic` preset rather than the defaults. */
+  usesClassicTheme?: boolean;
 }
 
 export interface ExampleEntry extends ExampleMeta {
@@ -34,40 +34,40 @@ export function defineExample(meta: ExampleMeta): ExampleEntry {
 /** All examples, in gallery order. */
 export const examples: ExampleEntry[] = [
   defineExample({
-    slug: 'parity-customer-list',
-    title: 'Parity: Customer List',
+    slug: 'showcase-account-list',
+    title: 'Showcase: account list',
     description:
-      'The Skimmer Customer List, 1:1 with the classic preset: server pagination against the mock API, search in the page header (Ctrl+K, 300ms debounce, min 3 chars), two-line addresses and a pinned edit action.',
-    tags: ['parity', 'server', 'search', 'pagination', 'pinning'],
+      'A full application screen with the dense classic preset: server pagination against the mock API, search in the page header (Ctrl+K, 300ms debounce, min 3 chars), two-line addresses and a pinned edit action.',
+    tags: ['showcase', 'server', 'search', 'pagination', 'pinning'],
     related: ['client-vs-server', 'pagination-variants'],
-    parity: true,
+    usesClassicTheme: true,
   }),
   defineExample({
-    slug: 'parity-pool-list',
-    title: 'Parity: Pool List',
+    slug: 'showcase-asset-list',
+    title: 'Showcase: asset list',
     description:
-      'The Skimmer Pool List, 1:1 with the classic preset: the PoolTags chip list (max 3 plus +N) with clickable chips, and the microscope action that opens the body-of-water dialog.',
-    tags: ['parity', 'server', 'chips', 'pinning'],
-    related: ['parity-customer-list', 'client-vs-server'],
-    parity: true,
+      'The same screen with a chip list in its widest column: at most three chips plus a +N overflow, each one a button, and a row action that opens a dialog.',
+    tags: ['showcase', 'server', 'chips', 'pinning'],
+    related: ['showcase-account-list', 'client-vs-server'],
+    usesClassicTheme: true,
   }),
   defineExample({
-    slug: 'parity-water-test-history',
-    title: 'Parity: Water-test history',
+    slug: 'showcase-readings',
+    title: 'Showcase: reading history',
     description:
-      'The Skimmer water-test history, 1:1: 18 columns in a horizontal scroll, chemical values at weight 600, and pinned right actions whose disabled states follow the row.',
-    tags: ['parity', 'server', 'pinning', 'wide'],
-    related: ['parity-pool-list', 'parity-body-of-water-selection'],
-    parity: true,
+      'A deliberately wide table: 18 columns in a horizontal scroll, sorted on the server, with pinned right actions whose disabled states follow the row.',
+    tags: ['showcase', 'server', 'pinning', 'wide'],
+    related: ['showcase-asset-list', 'showcase-asset-picker'],
+    usesClassicTheme: true,
   }),
   defineExample({
-    slug: 'parity-body-of-water-selection',
-    title: 'Parity: Body-of-water selection',
+    slug: 'showcase-asset-picker',
+    title: 'Showcase: asset picker',
     description:
-      'The Skimmer selection modal, 1:1: the one client-mode table, with single selection by row click, client sorting and paging, and a sticky header inside a 400px scroll area.',
-    tags: ['parity', 'client', 'selection', 'sticky'],
-    related: ['row-selection', 'parity-pool-list'],
-    parity: true,
+      'A picker as it would appear in a dialog: client mode throughout, single selection by row click or radio, and a sticky header inside a 400px scroll area.',
+    tags: ['showcase', 'client', 'selection', 'sticky'],
+    related: ['row-selection', 'showcase-asset-list'],
+    usesClassicTheme: true,
   }),
   defineExample({
     slug: 'row-selection',
@@ -75,7 +75,7 @@ export const examples: ExampleEntry[] = [
     description:
       'Multi and single selection, range selection with Shift+click, row-click selection, disabled rows, and a selection bar with bulk actions.',
     tags: ['selection', 'client'],
-    related: ['parity-body-of-water-selection', 'row-overrides'],
+    related: ['showcase-asset-picker', 'row-overrides'],
   }),
   defineExample({
     slug: 'detail-panels',
@@ -219,7 +219,7 @@ export const examples: ExampleEntry[] = [
     description:
       'Numbered, compact, simple and load-more pagination side by side, with the page-size selector, row range and a visualizer comparing the classic and stable page-item algorithms.',
     tags: ['pagination', 'client'],
-    related: ['basic', 'parity-customer-list'],
+    related: ['basic', 'showcase-account-list'],
   }),
   defineExample({
     slug: 'global-search',
@@ -290,7 +290,7 @@ export const examples: ExampleEntry[] = [
     description:
       'The same dataset twice: computed in the browser on the left, served by a simulated server with latency on the right. Identical interactions produce identical rows.',
     tags: ['server', 'client', 'data-source'],
-    related: ['parity-customer-list'],
+    related: ['showcase-account-list'],
   }),
   defineExample({
     slug: 'column-types',

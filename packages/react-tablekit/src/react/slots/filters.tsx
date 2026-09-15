@@ -100,7 +100,7 @@ function MultiSelectList({
   );
 }
 
-/** Autocomplete with chips (the Skimmer `TableFilterToolbar` equivalent): ARIA combobox. */
+/** Autocomplete with chips: an ARIA combobox. */
 function MultiSelectAutocomplete({
   id,
   label,

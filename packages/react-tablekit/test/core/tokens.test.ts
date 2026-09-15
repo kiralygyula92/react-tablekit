@@ -82,7 +82,7 @@ describe('design tokens (07 §3)', () => {
       ...[...body.matchAll(/\b(?:rgb|rgba|hsl|hsla)\(/g)].map((m) => m[0]),
     ]);
     expect(literals).toEqual([]);
-    // The Skimmer values B16 hard-coded now come from tokens.
+    // The values that were once hard-coded now come from tokens.
     for (const name of ['--tk-page-item-color', '--tk-page-item-size-compact'])
       expect(Object.values(TOKEN_VARS)).toContain(name);
   });
@@ -106,7 +106,7 @@ describe('design tokens (07 §3)', () => {
     }
   });
 
-  it('classic reproduces the Skimmer palette (01 §8)', () => {
+  it('classic exposes its frozen palette', () => {
     const vars = toCssVars(presets.classic);
     expect(vars['--tk-color-border']).toBe('#E9EAEB');
     expect(vars['--tk-header-color']).toBe('var(--tk-color-text-muted)');
@@ -148,8 +148,8 @@ describe('colour contrast (05 §16)', () => {
       const t = presets[name];
       expect(contrast(t.color.text, t.color.surface)).toBeGreaterThanOrEqual(4.5);
       expect(contrast(t.color.textMuted, t.color.surface)).toBeGreaterThanOrEqual(4.5);
-      // Classic's frozen Skimmer header pair #717680 on #FAFAFA is 4.37:1 (the spec's ≈4.6 is off);
-      // it is a documented parity exception. Every other preset meets AA.
+      // Classic's frozen header pair #717680 on #FAFAFA is 4.37:1 (the spec's ≈4.6 is off);
+      // it is a documented exception. Every other preset meets AA.
       expect(contrast(t.color.textMuted, t.color.surfaceMuted)).toBeGreaterThanOrEqual(
         name === 'classic' ? 4.3 : 4.5,
       );

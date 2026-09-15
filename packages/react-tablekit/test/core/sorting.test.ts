@@ -161,7 +161,7 @@ describe('sorting functions (B18)', () => {
   });
 
   it('B18 regression: mixed and null values sort by a typed, locale-aware comparator', () => {
-    // Skimmer compared with `<`/`>`: nulls landed anywhere and "Zoë" sorted after "z".
+    // A naive `<`/`>` comparison lets nulls land anywhere and sorts "Zoë" after "z".
     const asc = makeTable({ initialState: { sorting: [{ id: 'age', desc: false }] } });
     const desc = makeTable({ initialState: { sorting: [{ id: 'age', desc: true }] } });
     const ages = (t: ReturnType<typeof makeTable>) =>
@@ -222,7 +222,7 @@ describe('sortUndefined', () => {
 });
 
 describe('sortValue, invertSorting, custom registry', () => {
-  it('sortValue overrides the value used for sorting (Skimmer getSortValue)', () => {
+  it('sortValue overrides the value used for sorting ', () => {
     const table = makeTable({
       columns: [{ accessorKey: 'name', sortValue: (p) => p.name.length }],
       initialState: { sorting: [{ id: 'name', desc: false }] },

@@ -13,9 +13,9 @@ test.describe('MSW mock server', () => {
     await expect(page.locator('html')).toHaveAttribute('data-mock-ready', 'true');
   });
 
-  test('serves the Skimmer customer search contract', async ({ page }) => {
+  test('serves the account search contract', async ({ page }) => {
     const res = await page.evaluate(async () => {
-      const r = await fetch('/api/customers/search', {
+      const r = await fetch('/api/accounts/search', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -27,13 +27,13 @@ test.describe('MSW mock server', () => {
     });
     expect(res.totalItemCount).toBe(235);
     expect(res.items).toHaveLength(10);
-    expect(res.items[0]?.identifiers.id).toBe('c_0011');
+    expect(res.items[0]?.identifiers.id).toBe('a_0011');
     expect(res.requestCriteria).toEqual({ pageNumber: 1, pageSize: 10 });
   });
 
   test('filters by queryCriteria', async ({ page }) => {
     const res = await page.evaluate(async () => {
-      const r = await fetch('/api/customers/search', {
+      const r = await fetch('/api/accounts/search', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ queryCriteria: 'zzzz-nobody' }),
@@ -43,9 +43,9 @@ test.describe('MSW mock server', () => {
     expect(res.totalItemCount).toBe(0);
   });
 
-  test('serves water-test history pages', async ({ page }) => {
+  test('serves reading history pages', async ({ page }) => {
     const res = await page.evaluate(async () => {
-      const r = await fetch('/api/pools/bow_0001/history?pageNumber=5&pageSize=10');
+      const r = await fetch('/api/assets/as_0001/readings?pageNumber=5&pageSize=10');
       return (await r.json()) as PagedResponse;
     });
     expect(res.totalItemCount).toBe(57);

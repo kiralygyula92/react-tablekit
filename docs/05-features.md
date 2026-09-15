@@ -14,7 +14,7 @@ Each feature lists its **behaviour**, **UI**, **client/server semantics** (detai
 - The auto sort function is chosen from the first non-null value: string → `text`, number → `basic`, Date or ISO date → `datetime`, boolean → `boolean`.
 - `sortUndefined` controls where null and undefined values go, regardless of direction (default `'last'`).
 - Sorting is stable: ties keep their original order, and sub-rows are sorted inside their parents.
-- `sortValue(row)` overrides the value used for sorting (Skimmer's `getSortValue`).
+- `sortValue(row)` overrides the value used for sorting (the column's `sortValue`).
 
 **UI**
 - The header label is wrapped in a `<button class="tk-sort-button">`, so the whole label area is clickable.
@@ -36,7 +36,7 @@ Each feature lists its **behaviour**, **UI**, **client/server semantics** (detai
 - `searchHotkey` (e.g. `'mod+k'`) focuses and selects this table's input. The listener is bound on the table root's `ownerDocument`. It is ignored when focus is already inside another text field (unless the hotkey includes `mod`) and when another tablekit instance with the same hotkey is more recently focused/hovered. A hint chip (`Ctrl+K` / `⌘K` by platform) is shown when `showSearchHotkeyHint`.
 - Changing the search resets the page (per `resetPageOn`).
 
-**Parity (classic)**: input width `500px` on desktop and `100%` below `md`, a magnifying-glass start icon, the `Ctrl+K` chip at the end, `searchMinLength: 3`, `searchDebounceMs: 300`. It can be rendered **outside** the table via `<DataTable.Search table={table} />` (composable part) so it sits in a page header like Skimmer's.
+**Classic preset**: input width `500px` on desktop and `100%` below `md`, a magnifying-glass start icon, the `Ctrl+K` chip at the end, `searchMinLength: 3`, `searchDebounceMs: 300`. It can be rendered **outside** the table via `<DataTable.Search table={table} />` (composable part) so it can sit in a page header.
 
 **Tests**: debounce timing; min length; reset to page 0; diacritic-insensitive matching; hotkey scoping with 2 tables on a page; highlight correctness with regex-special characters.
 
@@ -55,7 +55,7 @@ Also, `enableColumnActions` adds a "Filter…" entry in each header menu that op
 
 ### 3.2 Active filter chips
 
-When `showActiveFilterChips` is on, a chip row below the toolbar (or inline in it) shows `"{Column}: {value summary}"` for each active filter, plus the global search as `"Search: smith"`. Each chip has a remove (×) button, and there's a "Clear all" link. Chips use `FilterOption.color/textColor` when the value is an option that defines colours (replicating Skimmer's `TableFilterToolbar` chips with `background` and `lightText`).
+When `showActiveFilterChips` is on, a chip row below the toolbar (or inline in it) shows `"{Column}: {value summary}"` for each active filter, plus the global search as `"Search: smith"`. Each chip has a remove (×) button, and there's a "Clear all" link. Chips use `FilterOption.color/textColor` when the value is an option that defines colours.
 
 ### 3.3 Variants (default input per variant)
 
@@ -63,7 +63,7 @@ When `showActiveFilterChips` is on, a chip row below the toolbar (or inline in i
 |---|---|---|
 | `text` | Text input + optional operator dropdown | `includesString` |
 | `select` | Single select (options from `filterOptions` or facets, with counts) | `equals` |
-| `multiSelect` | Checkbox list with search inside, or an autocomplete with chips (`multiSelectDisplay: 'list' \| 'autocomplete'`). The autocomplete is the Skimmer `TableFilterToolbar` equivalent | `arrIncludesSome` |
+| `multiSelect` | Checkbox list with search inside, or an autocomplete with chips (`multiSelectDisplay: 'list' \| 'autocomplete'`) | `arrIncludesSome` |
 | `number` | Number input + operator | `equals`/`gt`/... |
 | `range` | Two number inputs (min/max) | `inNumberRange` |
 | `rangeSlider` | A dual-thumb slider over the faceted min/max | `inNumberRange` |
@@ -90,14 +90,14 @@ All variants in client mode; serialization to `TableQuery` in server mode; autoR
 
 | Variant | Rendering |
 |---|---|
-| `numbered` | Skimmer desktop: `[← Previous] … page buttons … [Next →]`, `space-between` |
-| `compact` | Skimmer mobile: `[«] [‹] 1 2 … 9 10 [›] [»]`, centred, icon-only prev/next, first/last buttons, `siblingCount 0` |
+| `numbered` | Desktop: `[← Previous] … page buttons … [Next →]`, `space-between` |
+| `compact` | Mobile: `[«] [‹] 1 2 … 9 10 [›] [»]`, centred, icon-only prev/next, first/last buttons, `siblingCount 0` |
 | `simple` | `[‹] 11–20 of 235 [›]` + optional page-size select. Required for cursor pagination |
 | `loadMore` | A "Load more (215 remaining)" button below the rows; rows accumulate |
 | `infinite` | Loads the next page when a sentinel row enters the viewport (IntersectionObserver). Works with virtualization |
 | `none` | No UI. State still applies |
 
-Responsive: the variant accepts `ResponsiveValue`. The classic default is `{ base: 'compact', md: 'numbered' }`, where `md` = 960px. That matches Skimmer's `useIsMobile`.
+Responsive: the variant accepts `ResponsiveValue`. The classic default is `{ base: 'compact', md: 'numbered' }`, where `md` = 960px.
 
 ### 4.2 Page size selector
 `pageSizeOptions: [10, 25, 50, 100]`. It renders "Rows per page: [10 ▾]". Changing it keeps the first visible row on screen (`pageIndex = floor(firstRowIndex / newSize)`), or resets to 0 in server mode when `resetPageOn` includes `'pageSize'`.
@@ -109,7 +109,7 @@ Responsive: the variant accepts `ResponsiveValue`. The classic default is `{ bas
 
 Pure function `getPageItems({ pageIndex: c, pageCount: n, siblingCount: s = 1, boundaryCount: b = 2, algorithm })`, 0-based.
 
-**`'classic'` (default, the Skimmer rule corrected):**
+**`'classic'` (default):**
 ```
 if n <= 2b + 3 (= 7 by default): return all pages 0..n-1
 pages = {0..b-1} ∪ {n-b..n-1}
@@ -153,9 +153,9 @@ The table above (unit); `stable` slot constancy for n=50 across all c; hide on s
 
 ## 5. Row selection
 
-- `enableRowSelection: true | (row) => boolean`, with `enableMultiRowSelection` (single = radio semantics, as in the Skimmer modal).
+- `enableRowSelection: true | (row) => boolean`, with `enableMultiRowSelection` (single = radio semantics, as in a picker dialog).
 - The auto-inserted **selection column** (`id: 'tk-select'`, pinned `left` when any left pin exists). The header has a tri-state checkbox (all/some/none) for the current page or all rows per `selectAllMode`. In single mode the header is empty (no checkbox).
-- `selectOnRowClick` (Skimmer modal: `true`). Clicking interactive descendants (buttons, links, inputs, `[data-tk-stop]`) does not toggle.
+- `selectOnRowClick` (typical in a picker dialog). Clicking interactive descendants (buttons, links, inputs, `[data-tk-stop]`) does not toggle.
 - Shift+click selects a range between the last clicked row and this one (`enableRangeSelection`).
 - Sub-row selection cascades when `enableSubRowSelection`. A parent is indeterminate when some of its children are selected.
 - **Selection bar** (`showSelectionBar`, default `true` when multi): "3 selected · Select all 235 matching · Clear", plus `renderBulkActions({ table, selectedRows, selectionQuery })`.
@@ -202,20 +202,20 @@ Lazy mounting; keepMounted; single mode; lazy children cached and invalidated on
 
 ## 8. Column pinning and static columns
 
-This replaces Skimmer's `stickyActions` (fixes B2).
+This is the declarative replacement for a hand-rolled "sticky actions" flag.
 
 - `column.pin: 'left' | 'right' | false`, or `state.columnPinning = { left: [...], right: [...] }`. Both work together: the column prop is the initial/locked value and the state is the runtime value.
 - Any number of columns can be pinned on each side. Offsets are stacked (`left` = the sum of the preceding left-pinned widths).
 - Pinned cells: `position: sticky`, a background from `--tk-row-bg` (which follows hover/selected/striped states), `z-index: var(--tk-z-pinned)`. Pinned header cells use `--tk-z-pinned-header`.
 - An **edge shadow** appears on the last left-pinned column and the first right-pinned column **only when content is scrolled underneath** (a scroll listener toggles `data-scrolled-left/right` on the container). The shadow is a token (`--tk-pinned-shadow`). In classic the token is `none`, so it matches today's look.
-- **Responsive pinning:** `pin: { base: 'right', md: false }` is Skimmer's "`stickyActions || isMobile`". The classic preset applies this to the actions column automatically (`rowActionsColumn.pin` default `{ base: 'right', md: 'right' }` when `stickyActions` is enabled). Consumers can pass `stickyActions` (a boolean) as a documented convenience alias that sets the actions column pin to `'right'`.
+- **Responsive pinning:** `pin: { base: 'right', md: false }` pins on desktop and releases on mobile. The classic preset applies this to the actions column automatically (`rowActionsColumn.pin` default `{ base: 'right', md: 'right' }` when `stickyActions` is enabled). Consumers can pass `stickyActions` (a boolean) as a documented convenience alias that sets the actions column pin to `'right'`.
 - UI (with `enableColumnActions`): "Pin left", "Pin right" and "Unpin" in the header menu, unless `lockPin`/`static`.
 - **Static column** (`static: true`): can't be unpinned, hidden, reordered, resized or menu-edited (04 §3). Typical uses are the selection, expand and actions columns, and a frozen identifier column.
 - Tests: multiple left/right pins with stacked offsets (visual); a selected row's background covers the pinned cells; RTL flips sides; the scroll shadow appears only when overflowed; a responsive pin switches at 960px.
 
 ## 9. Column sizing and resizing
 
-- **Width model:** by default (`tableLayout: 'auto'`) the CSS widths `width`/`minWidth`/`maxWidth` accept `%` or px (Skimmer), applied through `<colgroup>` and cells consistently (fixes B13).
+- **Width model:** by default (`tableLayout: 'auto'`) the CSS widths `width`/`minWidth`/`maxWidth` accept `%` or px, applied through `<colgroup>` and cells consistently (fixes B13).
 - When `enableColumnResizing` is on, the table switches to px sizing: `size` (initial), `minSize`, `maxSize`. `%` widths are converted to px on the first measurement.
 - The resize handle sits on the header's right edge (`role="separator"`, `aria-valuenow` = px, and it's keyboard-focusable: ←/→ change by 10px, Shift for 50px). Double-click auto-sizes it to fit the content of the rendered rows.
 - `columnResizeMode: 'onChange'` resizes live. `'onEnd'` shows a guide line and applies on release.
@@ -243,9 +243,9 @@ This replaces Skimmer's `stickyActions` (fixes B2).
 
 ```ts
 responsive?: {
-  breakpoints?: { xs: 0; sm: 600; md: 960; lg: 1280; xl: 1440 };  // classic defaults (Skimmer)
+  breakpoints?: { xs: 0; sm: 600; md: 960; lg: 1280; xl: 1440 };  // classic defaults
   mobileBreakpoint?: Breakpoint;                                   // default 'md' (below = mobile)
-  mobileLayout?: 'scroll' | 'cards';                               // default 'scroll' (Skimmer)
+  mobileLayout?: 'scroll' | 'cards';                               // default 'scroll'
   cardColumns?: string[];                                          // columns shown in card layout
   renderCard?: (ctx: { row, table }) => ReactNode;                 // full card override
   ssrBreakpoint?: Breakpoint;                                      // default 'lg'
@@ -300,13 +300,13 @@ Specified in 03 §8. Slots: `LoadingRow` (text), `SkeletonRows`, `LoadingOverlay
 - is positioned from the bottom of the header to the bottom of the container, covering the body only;
 - uses the background token `--tk-overlay-bg` (classic `rgba(255,255,255,.7)`), with a spinner of 40px in `--tk-color-accent`;
 - blocks interaction by default (fixes B7) and sets `aria-busy="true"` on the table;
-- has an optional delay (`loadingOverlayDelayMs`, default 150ms), so it doesn't flash on fast responses. The classic preset uses 0 for parity.
+- has an optional delay (`loadingOverlayDelayMs`, default 150ms), so it doesn't flash on fast responses. The classic preset uses 0.
 
 ## 18. Toolbar and selection bar
 
 - **Toolbar** layout: `[start: search, filters button, active chips] … [end: custom actions, density, columns, export]`. It wraps on narrow screens.
 - Each built-in control can be toggled (`enableGlobalFilter`, `filterDisplayMode`, `enableHiding`, `enableDensityToggle`, `enableExport`) and replaced via slots.
-- `toolbarActions` / `renderToolbarStart` / `renderToolbarEnd` for custom content, e.g. Skimmer's "Add customer" button.
+- `toolbarActions` / `renderToolbarStart` / `renderToolbarEnd` for custom content, e.g. an "Add" button.
 - Composable parts let you place the toolbar pieces anywhere: `<DataTable.Search/>`, `<DataTable.FiltersButton/>`, `<DataTable.FilterPanel/>`, `<DataTable.ColumnsButton/>`, `<DataTable.ExportButton/>`, `<DataTable.Pagination/>`, `<DataTable.SelectionBar/>`.
 
 ## 19. Density, sticky header and sticky footer

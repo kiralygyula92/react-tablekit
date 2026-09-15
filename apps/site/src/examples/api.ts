@@ -1,18 +1,19 @@
 import { createRestDataSource, type DataSource } from 'react-tablekit';
 import { mockFetch } from '../mock/ready';
-import type { Customer, PagedResponse, SearchCustomerRequest } from '../mock/types';
+import type { Account, PagedResponse, SearchAccountRequest } from '../mock/types';
 
 /**
- * The Skimmer customer search as a data source (10 §3.2): `{ queryCriteria, listingCriteria }` in,
- * `{ items, totalItemCount, requestCriteria }` out. The server echo is adopted by the table.
+ * The account search as a data source: `{ queryCriteria, listingCriteria }` in,
+ * `{ items, totalItemCount, requestCriteria }` out. The table adopts the server's echo of the
+ * request, so a page the server corrected wins over the one the table asked for.
  */
-export const customersDataSource: DataSource<Customer> = createRestDataSource<
-  Customer,
-  PagedResponse<Customer>
+export const accountsDataSource: DataSource<Account> = createRestDataSource<
+  Account,
+  PagedResponse<Account>
 >({
-  url: '/api/customers/search',
+  url: '/api/accounts/search',
   method: 'POST',
-  mapQuery: (q): SearchCustomerRequest => ({
+  mapQuery: (q): SearchAccountRequest => ({
     queryCriteria: q.globalFilter,
     listingCriteria: {
       pageNumber: q.pagination.pageIndex,
@@ -35,6 +36,6 @@ export const customersDataSource: DataSource<Customer> = createRestDataSource<
       signal: req.signal,
     });
     if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-    return (await res.json()) as PagedResponse<Customer>;
+    return (await res.json()) as PagedResponse<Account>;
   },
 });

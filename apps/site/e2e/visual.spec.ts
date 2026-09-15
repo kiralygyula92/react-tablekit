@@ -1,16 +1,16 @@
 import { expect, test } from './fixtures';
 
 /**
- * Visual baselines for the parity pages at 1440 and 390 (docs/09 §4). Font rendering differs per
+ * Visual baselines for the showcase pages at 1440 and 390 (docs/09 §4). Font rendering differs per
  * OS, so baselines are stored per platform and the suite runs as its own Playwright project:
  * `pnpm e2e:visual` (add `--update-snapshots` after an intended change).
  */
 
 const PAGES = [
-  { slug: 'parity-customer-list', table: 'customer list table' },
-  { slug: 'parity-pool-list', table: 'pool list table' },
-  { slug: 'parity-water-test-history', table: 'water test history table' },
-  { slug: 'parity-body-of-water-selection', table: 'body of water selection table' },
+  { slug: 'showcase-account-list', table: 'account list table' },
+  { slug: 'showcase-asset-list', table: 'asset list table' },
+  { slug: 'showcase-readings', table: 'reading history table' },
+  { slug: 'showcase-asset-picker', table: 'asset selection table' },
 ] as const;
 const WIDTHS = [
   { width: 1440, height: 1000 },

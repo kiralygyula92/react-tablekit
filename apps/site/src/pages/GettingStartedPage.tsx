@@ -14,7 +14,7 @@ export function GettingStartedPage() {
       <h2>Import the styles</h2>
       <pre className="site-code">
         <code>{`import '${PKG_NAME}/styles.css';
-// Optional preset (e.g. the Skimmer-parity look):
+// Optional preset (e.g. the dense classic look):
 import '${PKG_NAME}/presets/classic.css';`}</code>
       </pre>
       <p className="site-muted">

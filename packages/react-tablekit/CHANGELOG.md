@@ -53,11 +53,11 @@
   - Named regression tests for B14 (sticky header inside a `maxHeight` scroll container), B18 (typed,
     locale-aware sort comparators with nulls last in both directions) and B19 (pinned cells inherit
     the row background through `--tk-row-bg` instead of a hard-coded white).
-  - New examples: the Water-test history and Body-of-water selection parity pages, plus row
+  - New examples: the reading history and asset picker showcase pages, plus row
     selection, detail panels, tree data, lazily loaded server children, row overrides and handler
-    middleware. All four Skimmer parity pages now have locked visual baselines at 1440 and 390.
+    middleware. All four showcase pages now have locked visual baselines at 1440 and 390.
 
-- M1: core engine, basic rendering and Skimmer Customer List parity.
+- M1: core engine, basic rendering and the first showcase screen.
 
   - Headless core: store with controlled/uncontrolled state slices and updaters, column model
     (`accessorKey` / `accessorFn` / display / group), core row model with `getRowId`, memoized
@@ -73,7 +73,7 @@
   - Theming: the token system, the `light` and `classic` presets, and CSS `@layer tablekit`.
   - Cell building blocks: `ActionButton`, `Tooltip`, `TwoLineText`, `MultiLineList`, `Chip`,
     `ChipList`, `TruncatedText`.
-  - Fixes the Skimmer bugs B1, B2, B4, B5, B6, B7, B8, B9, B10, B11, B13 and B16, each with a named
+  - Fixes the known bugs B1, B2, B4, B5, B6, B7, B8, B9, B10, B11, B13 and B16, each with a named
     regression test.
 
 - M2: search, filtering, faceting, toolbar and localization.
@@ -94,7 +94,7 @@
     sorting and pagination, the pagination invariants, sort stability, and client-vs-server
     equivalence through the emitted `TableQuery`.
   - Unit-level a11y tests with `vitest-axe` across feature configurations and states.
-  - New examples: Pool List parity, global search, filter panel / row / popover+column menu /
+  - New examples: the asset list showcase, global search, filter panel / row / popover+column menu /
     server, server sorting, hybrid mode and localization.
 
 - M4: column power features and large data.
@@ -168,7 +168,7 @@
 
   - Eighteen more guides, one per feature in 05 — sorting, filtering, search, pagination, selection,
     expansion, grouping, pinning, sizing, ordering and visibility, virtualization, keyboard, export,
-    persistence, responsive — plus customization, localization and the Skimmer migration guide.
+    persistence, responsive — plus customization and localization.
   - The last fourteen examples: column types, client sorting, column pinning, sizing, ordering and
     visibility, cell building blocks, custom slots, a design-system re-skin, theming presets and
     custom theming, density, composable layout, headless, and the React Query recipe.

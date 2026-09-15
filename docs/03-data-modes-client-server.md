@@ -6,7 +6,7 @@
 - **server mode:** the server computes it, and the table only emits the query and renders the returned page;
 - **hybrid mode:** some features run on the server and others in the client (for example, server pagination and search, but client sorting of the current page).
 
-Skimmer uses server mode for Customer List, Pool List and Water-test History, and client mode for the Body-of-Water modal. Both must be reproducible with the same component.
+A typical app uses server mode for its large list screens and client mode for a small picker dialog. Both must be reproducible with the same component.
 
 ---
 
@@ -65,7 +65,7 @@ interface TableQuery {
 ## 3. Client mode (default)
 
 ```tsx
-<DataTable data={bodiesOfWater} columns={columns} getRowId={(r) => r.id}
+<DataTable data={assets} columns={columns} getRowId={(r) => r.id}
            initialState={{ pagination: { pageIndex: 0, pageSize: 10 } }} />
 ```
 
@@ -74,11 +74,11 @@ interface TableQuery {
 - Column filters use `column.filterFn` (resolved from `filterVariant` if not set; see 05 §3).
 - Sorting uses `column.sortingFn` (auto-detected from the first non-null value: `alphanumeric` / `datetime` / `basic` / `text`).
 - Faceting: `column.getFacetedUniqueValues()` (Map value→count) and `getFacetedMinMaxValues()` are computed from the rows that pass all *other* filters.
-- Selection: "select all" chooses between `page` and `all` via `selectAllMode` (default `'page'`, matching the Skimmer modal).
+- Selection: "select all" chooses between `page` and `all` via `selectAllMode` (default `'page'`, the common modal).
 
 ## 4. Server mode: controlled-state style (lowest level)
 
-The consumer owns the state and fetches manually. This is exactly Skimmer's current Zustand pattern:
+The consumer owns the state and fetches manually. This is the familiar "store plus effect" pattern:
 
 ```tsx
 const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -123,7 +123,7 @@ interface DataSourceResult<TData> {
   pageCount?: number;             // alternative to rowCount
   nextCursor?: string | null;     // cursor pagination (rowCount may be unknown → -1)
   prevCursor?: string | null;
-  /** Server may normalize/echo the query (Skimmer's `requestCriteria`); table adopts it. */
+  /** Server may normalize/echo the query (an echoed `requestCriteria`); table adopts it. */
   query?: Partial<TableQuery>;
   facets?: Record<string, FacetResult>;
 }
@@ -150,13 +150,13 @@ Usage:
 | Initial load | Fetches on mount (`fetchOnMount`, default `true`) with `reason: 'refresh'`. Sets `loading = true` (initial state visual) |
 | Refetch | Any query change sets `fetching = true`. Previous rows stay rendered under the overlay (`keepPreviousData: true`) |
 | Debounce | Global filter: `searchDebounceMs` (300). Text column filters: `filterDebounceMs` (300). Pagination/sorting: immediate |
-| Min search length | `searchMinLength` (default **0**; set to **3** for Skimmer parity). A query shorter than the minimum and longer than 0 does not fetch. An empty query always fetches (reset) |
+| Min search length | `searchMinLength` (default **0**; set to **3** for a busy server). A query shorter than the minimum and longer than 0 does not fetch. An empty query always fetches (reset) |
 | Page reset | Changing globalFilter, columnFilters, sorting, grouping or pageSize sets `pageIndex = 0` (and `cursor = null`) **before** fetching. Configurable per reason via `resetPageOn` |
 | Abort | Each new fetch aborts the previous one. Aborted results are ignored |
 | Race safety | Results are applied only if the request id is the latest |
 | Dedup | An identical query (deep-equal) that's in flight is not refetched. `dedupeMs` defaults to 0 (in-flight only) |
 | Errors | Sets the `error` state and renders the `ErrorState` slot (with Retry) *instead of* the rows if there is no previous data, or as a dismissible banner above the rows if there is. Calls `onError(error, query)` |
-| Server echo | If the result contains `query`, it is merged into state without re-triggering a fetch (Skimmer's `normalizeSearchCustomerRequest`) |
+| Server echo | If the result contains `query`, it is merged into state without re-triggering a fetch (an echoed `normalizeSearchCustomerRequest`) |
 | Page out of range | If `pageIndex >= pageCount` after a result (for example rows were deleted), the adapter moves to the last page and refetches once |
 | Refresh API | `table.refresh()` refetches the current query. `table.invalidate()` marks it stale and refetches on the next render |
 | Optimistic updates | `table.updateRow(id, updater)`, `table.removeRow(id)` and `table.insertRow(row, index?)` mutate the local page without refetching |
@@ -261,15 +261,15 @@ syncState?: {
 
 ## 8. Loading and state visuals per mode
 
-| Situation | Visual (default slots) | Skimmer parity |
+| Situation | Visual (default slots) | Classic preset |
 |---|---|---|
 | First load, no data | `loadingDisplay: 'text' \| 'skeleton' \| 'spinner'` (default `'skeleton'`; `'text'` in `classic`) | `'text'` → one centred "Loading..." row, `py 16px`, secondary colour |
 | Refetch with data | Body overlay with a spinner. Header, toolbar and pagination remain usable (pagination is disabled while fetching to prevent double-clicks: `disablePaginationWhileFetching: true`) | ✓ overlay `rgba(255,255,255,.7)` from the header bottom down |
-| Empty (no rows, no filters) | `EmptyState` slot with `localization.noRows` | "No customers found" |
+| Empty (no rows, no filters) | `EmptyState` slot with `localization.noRows` | "No records found" |
 | Empty due to filters/search | `EmptyState` with `localization.noResults` + a "Clear filters" action | improvement |
 | Error, no data | `ErrorState` with a message + Retry | improvement |
 | Error, stale data | Dismissible error banner above the body. Rows stay | improvement |
-| Precondition not met | `emptyStateContent` / `renderEmptyState({ reason })` custom | Modal "Please select a service location" |
+| Precondition not met | `emptyStateContent` / `renderEmptyState({ reason })` custom | Dialog "Please choose a site first" |
 
 `reason` passed to empty/loading renderers: `'loading' | 'noRows' | 'noResults' | 'error' | 'custom'`.
 

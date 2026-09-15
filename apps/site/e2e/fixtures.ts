@@ -23,8 +23,8 @@ export const test = base.extend<{ failOnConsoleErrors: undefined }>({
 export { expect };
 
 /**
- * Documented parity exception: Skimmer's header text `#717680` on `#FAFAFA` is 4.37:1, just
- * under WCAG AA. The classic preset reproduces it 1:1 on purpose; every other preset passes.
+ * Documented exception: the classic preset's header text `#717680` on `#FAFAFA` is 4.37:1, just
+ * under WCAG AA. Its token values are frozen by design; every other preset passes.
  */
 export const CLASSIC_HEADER_CONTRAST_EXCEPTION = '[data-theme="classic"] .tk-header-cell';
 

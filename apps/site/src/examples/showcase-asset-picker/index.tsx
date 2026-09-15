@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { ActionButton, createColumnHelper, DataTable, TruncatedText } from 'react-tablekit';
-import { generateCustomers, getCustomerBodiesOfWater } from '../../mock/data/customers';
-import type { BodyOfWater } from '../../mock/types';
+import { generateAccounts, getAccountAssets } from '../../mock/data/accounts';
+import type { Asset } from '../../mock/types';
 import { PenIcon } from '../icons';
-import { ParityPage, useParityTheme } from '../ParityFrame';
+import { ShowcasePage, useShowcaseTheme } from '../ShowcaseFrame';
 
-const col = createColumnHelper<BodyOfWater>();
-const gallons = new Intl.NumberFormat('en-US');
+const col = createColumnHelper<Asset>();
+const units = new Intl.NumberFormat('en-US');
 const dateFormat = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
@@ -14,45 +14,40 @@ const dateFormat = new Intl.DateTimeFormat('en-US', {
 });
 const dash = (v: string | undefined) => v ?? '-';
 
-/** The Body-of-Water selection columns of 01 §5.4: everything sortable except notes and actions. */
+/** Everything is sortable except the notes and the actions. */
 const columns = [
-  col.accessor('type', { header: 'Type', width: '10%', minWidth: '80px' }),
-  col.accessor('gallons', {
-    header: 'Volume',
+  col.accessor('kind', { header: 'Kind', width: '10%', minWidth: '80px' }),
+  col.accessor('capacity', {
+    header: 'Capacity',
     type: 'number',
     width: '10%',
     minWidth: '96px',
-    format: (v) => `${gallons.format(v)} gal`,
+    format: (v) => `${units.format(v)} u/h`,
   }),
-  col.accessor('surfaceType', {
-    header: 'Surface type',
+  col.accessor('enclosure', {
+    header: 'Enclosure',
     width: '15%',
     minWidth: '128px',
     format: dash,
   }),
-  col.accessor('sanitizer', { header: 'Sanitizer', width: '15%', minWidth: '128px', format: dash }),
-  col.accessor('classification', {
-    header: 'Classification',
+  col.accessor('powerSource', {
+    header: 'Power source',
     width: '15%',
     minWidth: '128px',
     format: dash,
   }),
-  col.accessor('location', { header: 'Location', width: '10%', minWidth: '96px', format: dash }),
-  col.accessor('groundLevel', {
-    header: 'Ground level',
-    width: '15%',
-    minWidth: '128px',
-    format: dash,
-  }),
-  col.accessor('filter', { header: 'Filter', width: '10%', minWidth: '96px', format: dash }),
-  col.accessor('buildDateUTC', {
-    header: 'Build date',
+  col.accessor('tier', { header: 'Tier', width: '15%', minWidth: '128px', format: dash }),
+  col.accessor('placement', { header: 'Placement', width: '10%', minWidth: '96px', format: dash }),
+  col.accessor('mounting', { header: 'Mounting', width: '15%', minWidth: '128px', format: dash }),
+  col.accessor('coolingType', { header: 'Cooling', width: '10%', minWidth: '96px', format: dash }),
+  col.accessor('installedAtUTC', {
+    header: 'Installed',
     type: 'date',
     width: '15%',
     minWidth: '128px',
     format: (v) => (v ? dateFormat.format(new Date(v)) : '-'),
   }),
-  col.accessor('builder', { header: 'Builder', width: '15%', minWidth: '128px', format: dash }),
+  col.accessor('vendor', { header: 'Vendor', width: '15%', minWidth: '128px', format: dash }),
   col.accessor('notes', {
     header: 'Notes',
     width: '15%',
@@ -74,25 +69,25 @@ const columns = [
 ];
 
 /**
- * Skimmer's Body-of-Water selection modal, 1:1 (01 §5.4): the one client-mode table — client
- * sorting, client pagination of 10, single selection by row click or radio, a scrollable
- * container with a sticky header (fixes B14) and `stickyActions`.
+ * A picker, as it would appear inside a dialog: client mode throughout — client sorting and
+ * paging — with single selection by row click or radio, and a sticky header inside a bounded
+ * 400px scroll area so the column labels stay visible while you scan.
  */
-export default function ParityBodyOfWaterSelection() {
-  const { theme, toggle } = useParityTheme();
+export default function ShowcaseAssetPicker() {
+  const { theme, toggle } = useShowcaseTheme();
   const [selected, setSelected] = useState<Record<string, boolean>>({});
-  const rows = useMemo(() => generateCustomers(40).flatMap((c) => getCustomerBodiesOfWater(c)), []);
+  const rows = useMemo(() => generateAccounts(40).flatMap((a) => getAccountAssets(a)), []);
   const selectedId = Object.keys(selected).find((id) => selected[id]);
 
   return (
-    <ParityPage>
+    <ShowcasePage>
       {toggle}
-      <h3 className="parity-title">Select a body of water</h3>
-      <DataTable<BodyOfWater>
-        aria-label="body of water selection table"
+      <h3 className="showcase-title">Select an asset</h3>
+      <DataTable<Asset>
+        aria-label="asset selection table"
         data={rows}
         columns={columns}
-        getRowId={(b) => b.id}
+        getRowId={(a) => a.id}
         theme={theme}
         toolbar={false}
         enableRowSelection
@@ -109,6 +104,6 @@ export default function ParityBodyOfWaterSelection() {
       <p className="site-muted" role="status">
         {selectedId ? `Selected: ${selectedId}` : 'Nothing selected yet.'}
       </p>
-    </ParityPage>
+    </ShowcasePage>
   );
 }

@@ -10,7 +10,7 @@
 | React component | Vitest (jsdom) + Testing Library + `user-event` | `test/react/**` | Rendering per slot, controlled/uncontrolled, handlers middleware, keyboard, focus management, live-region messages, SSR render (`renderToString` without errors or `window` access) |
 | A11y unit | `vitest-axe` | alongside component tests | No violations for each feature configuration |
 | E2E | Playwright (Chromium, Firefox, WebKit) | `apps/site/e2e/**` | Every example page smoke test; scripted journeys (search → filter → sort → paginate → select → bulk action; expand/collapse; resize; reorder; export) |
-| Visual regression | Playwright `toHaveScreenshot` | `apps/site/e2e/visual/**` | Parity pages at 375/768/1280/1440 widths, light/dark/classic, key states (loading, overlay, empty, error, selected row under a pinned column, hover, focus ring) |
+| Visual regression | Playwright `toHaveScreenshot` | `apps/site/e2e/visual/**` | Showcase pages at 375/768/1280/1440 widths, light/dark/classic, key states (loading, overlay, empty, error, selected row under a pinned column, hover, focus ring) |
 | A11y e2e | `@axe-core/playwright` | every page | Zero serious/critical violations |
 | Performance | Vitest bench + Playwright traces | `test/bench/**` | Budgets in §4 (informational in PRs, gating on main with a 20% tolerance) |
 
@@ -19,7 +19,7 @@ Coverage gate: **≥ 90% lines / 85% branches for `core`**, and ≥ 80% for `rea
 ## 2. Mandatory test cases (checklist)
 
 - [ ] `getPageItems` table from 05 §4.4 (and regression tests for legacy bug B1).
-- [ ] Every bug from 01 §10 has a named regression test (`B1`–`B19`).
+- [ ] Every known-bug regression has a named test (`B1`–`B19`).
 - [ ] Controlled vs uncontrolled for each state slice; `on*Change` receives updater functions; `reset*` behaviour.
 - [ ] Auto page reset rules (client) and data-source page reset rules (server).
 - [ ] Debounce + min length + abort + race (server).
@@ -37,12 +37,12 @@ Coverage gate: **≥ 90% lines / 85% branches for `core`**, and ≥ 80% for `rea
 - [ ] CSV: quoting, BOM, excluded columns, server chunking cancel.
 - [ ] SSR: rendering with `ssrBreakpoint`, no hydration mismatch in the site's SSR smoke test (a Vite SSR entry used only for tests).
 
-## 3. Visual parity process (Skimmer 1:1)
+## 3. Visual regression process
 
-1. **Reference screenshots.** Capture the four Skimmer screens (Customer List, Pool List, Pool History, the Body-of-Water modal) at 1440×900 and 390×844 in the real app, with deterministic data: the same seeded customers as the demo mock (export the generator output to JSON and load it into a local Skimmer build via its mock/emulator), or at least use them as side-by-side references. Store them in `apps/site/e2e/visual/reference/skimmer/` (they're reference images, not test baselines).
-2. **Build the parity pages** until they match the references on a side-by-side review page (`/examples/parity-*?compare=1` overlays the reference with an opacity slider). This is a dev-only feature of the site.
-3. **Lock the baselines.** Once they're approved, Playwright baselines for the parity pages become the regression gate (`maxDiffPixelRatio: 0.001`).
-4. Allowed deviations (documented on the pages): the fixed bugs from 01 §10 (e.g. pagination ellipses, the focus ring), the font rendering differences between MUI's Typography and plain CSS (≤1px), and the icons (in-house SVGs vs FontAwesome/MUI icons with the same size and colour).
+1. **Build the showcase pages** (08 §3.1) and review them at 1440×900 and 390×844 with the seeded mock data, so every run renders identical rows.
+2. **Lock the baselines.** Once approved, the Playwright screenshots become the regression gate (`maxDiffPixelRatio: 0.002`). Baselines are stored per platform, because font rendering differs between operating systems.
+3. **Review every diff.** A failing snapshot is either a regression or an intended change; an intended change is re-recorded with `--update-snapshots` in the same commit that causes it.
+4. The suite is its own Playwright project (`pnpm e2e:visual`), so a normal `pnpm e2e` run is not blocked by pixel differences.
 
 ## 4. Budgets
 
@@ -83,7 +83,7 @@ Feature modules must be tree-shakeable. For example, the `Grouping` code is not 
 ## 7. Versioning and release
 
 - **Changesets.** Every PR touching the library adds a changeset. The `release.yml` workflow on main opens a "Version Packages" PR; merging it publishes to npm with provenance (`npm publish --provenance --access public`) and creates a GitHub release.
-- **Semver policy (documented):** public API = everything in 04, class names, CSS variable names, data attributes, slot names, handler names and localization keys. Changing or removing any of these is a major change. Token default *values* may change in minors except in the `classic` preset, whose values are frozen (parity guarantee).
+- **Semver policy (documented):** public API = everything in 04, class names, CSS variable names, data attributes, slot names, handler names and localization keys. Changing or removing any of these is a major change. Token default *values* may change in minors except in the `classic` preset, whose values are frozen (stability guarantee).
 - Pre-releases: `next` dist-tag via `changeset pre enter next`.
 - Deprecations: `@deprecated` TSDoc and a dev-only console warning once per session, removed in the next major.
 - The docs site is versioned per major (a `/v1/` path when v2 ships).

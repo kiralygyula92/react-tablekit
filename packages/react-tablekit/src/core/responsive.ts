@@ -3,7 +3,7 @@ import type { Breakpoint, Breakpoints, ResponsiveValue } from '../themes/types';
 /** Breakpoints in ascending order. */
 export const BREAKPOINT_ORDER: readonly Breakpoint[] = ['xs', 'sm', 'md', 'lg', 'xl'];
 
-/** Classic (Skimmer) breakpoints: xs 0, sm 600, md 960, lg 1280, xl 1440. */
+/** Classic breakpoints: xs 0, sm 600, md 960, lg 1280, xl 1440. */
 export const DEFAULT_BREAKPOINTS: Breakpoints = { xs: 0, sm: 600, md: 960, lg: 1280, xl: 1440 };
 
 const RESPONSIVE_KEYS = new Set(['base', ...BREAKPOINT_ORDER]);

@@ -8,7 +8,7 @@ const data = generatePeople(60);
 /**
  * Row selection (05 §5): multi with a tri-state header checkbox, Shift+click range selection,
  * row-click selection, disabled rows that select-all skips, and a selection bar with bulk actions.
- * Switch to single mode to get radio semantics (the Skimmer modal).
+ * Switch to single mode to get radio semantics, as a picker dialog would.
  */
 export default function RowSelectionExample() {
   const [multi, setMulti] = useState(true);

@@ -402,9 +402,9 @@ export type ColumnPinPosition = 'left' | 'right';
 export interface FilterOption {
   value: unknown;
   label: string;
-  /** Chip background (Skimmer `background`). */
+  /** Chip background. */
   color?: string;
-  /** Chip text colour (Skimmer `lightText` → `'#fff'`). */
+  /** Chip text colour. */
   textColor?: string;
   icon?: Renderable;
   count?: number;
@@ -465,7 +465,7 @@ export interface FilterRenderContext<TData> {
 export interface ColumnDefBase<TData, TValue = unknown> {
   /** Header content. Defaults to the humanized id. */
   header?: ColumnTemplate<HeaderContext<TData, TValue>>;
-  /** Short header shown at small widths (replaces Skimmer `xsLabel`). */
+  /** Short header shown at small widths. */
   headerShort?: ResponsiveValue<Renderable>;
   /** Info tooltip content shown next to the header. */
   headerTooltip?: Renderable;
@@ -519,10 +519,10 @@ export interface ColumnDefBase<TData, TValue = unknown> {
    */
   static?: boolean;
 
-  /** Skimmer `sortable`. @default the table's `enableSorting` */
+  /** Whether this column can be sorted. @default the table's `enableSorting` */
   enableSorting?: boolean;
   sortingFn?: SortingFnName | SortingFn<TData>;
-  /** Overrides the value used for sorting (Skimmer `getSortValue`). */
+  /** Overrides the value used for sorting. */
   sortValue?: (row: TData) => unknown;
   sortDescFirst?: boolean | 'auto';
   /** Where null/undefined go regardless of direction. @default `'last'` */

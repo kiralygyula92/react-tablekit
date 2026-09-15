@@ -14,7 +14,7 @@ const signal = new AbortController().signal;
 afterEach(() => vi.unstubAllGlobals());
 
 describe('createRestDataSource (03 §5.3)', () => {
-  it('POSTs the mapped query as JSON and maps the result (Skimmer contract)', async () => {
+  it('POSTs the mapped query as JSON and maps the result (paged contract)', async () => {
     const fetchMock = vi.fn((_url: string, _init: RequestInit) =>
       Promise.resolve(
         new Response(JSON.stringify({ items: [{ id: 1 }], totalItemCount: 235 }), { status: 200 }),

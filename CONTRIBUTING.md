@@ -26,8 +26,8 @@ files a clean checkout does not have.
 
 ## Policies
 
-- **Tests alongside code.** Core ≥ 90% lines / 85% branches, React ≥ 80%. Every Skimmer bug
-  (B1–B19, docs/01 §10) gets a named regression test.
+- **Tests alongside code.** Core ≥ 90% lines / 85% branches, React ≥ 80%. Every known bug
+  (B1–B19) gets a named regression test.
 - **Tokens are the API.** Visual CSS in `theme.css` must only read `--tk-*` variables
   (`pnpm --filter react-tablekit lint:css-tokens`).
 - **Core never imports React.**

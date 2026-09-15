@@ -38,7 +38,7 @@ export interface ColumnHelper<TData> {
  * const col = createColumnHelper<Customer>();
  * const columns = [
  *   col.accessor('displayName.companyName', { header: 'Company name' }),
- *   col.accessor((r) => r.serviceLocations?.length ?? 0, { id: 'bodiesOfWater', type: 'number' }),
+ *   col.accessor((r) => r.sites?.length ?? 0, { id: 'siteCount', type: 'number' }),
  *   col.display({ id: 'actions', cell: ({ row }) => <Edit row={row} />, pin: 'right', static: true }),
  * ];
  * ```

@@ -8,7 +8,7 @@ type P<K extends keyof SlotPropsMap<unknown>> = SlotPropsMap<unknown>[K];
 
 /* eslint-disable @typescript-eslint/no-unused-vars -- context props are destructured to keep them off the DOM */
 
-/** Initial-load text row (Skimmer "Loading..."). */
+/** Initial-load text row. */
 export const LoadingRow = forwardRef<HTMLTableRowElement, P<'LoadingRow'>>(function LoadingRow(
   { table, colSpan, className, children, ...rest },
   ref,

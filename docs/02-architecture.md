@@ -60,7 +60,7 @@ react-tablekit/
 | Build | **tsup** (esbuild) → ESM + CJS + `.d.ts`; CSS copied/concatenated by a small script or `tsup` `loader` | Fast and standard |
 | Package manager | pnpm workspaces | Monorepo |
 | Tests | Vitest + @testing-library/react + jsdom; `expectTypeOf` for type tests | Fast; the same runner for core and React |
-| E2E / visual | Playwright (Chromium, WebKit, Firefox), `toHaveScreenshot` | Parity baselines |
+| E2E / visual | Playwright (Chromium, WebKit, Firefox), `toHaveScreenshot` | Showcase baselines |
 | A11y | `@axe-core/playwright` + `vitest-axe` | Automated a11y gates |
 | Lint | ESLint flat config, typescript-eslint strict-type-checked, eslint-plugin-react-hooks, jsx-a11y | |
 | Docs site | Vite + React Router 7 + MDX (`@mdx-js/rollup`) + Shiki for code highlighting | |
@@ -179,7 +179,7 @@ interface TableState {
 
 **Auto-reset rules** (each is configurable):
 
-- `autoResetPageIndex` (default `true` in client mode, `false` when `manualPagination`) resets to page 0 when data, filters, global filter, sorting or grouping change. In server mode the **data-source adapter** resets the page on query-affecting changes instead (see 03 §5), replicating Skimmer's "typing resets to page 0".
+- `autoResetPageIndex` (default `true` in client mode, `false` when `manualPagination`) resets to page 0 when data, filters, global filter, sorting or grouping change. In server mode the **data-source adapter** resets the page on query-affecting changes instead (see 03 §5), so typing a search goes back to page 0.
 - `autoResetExpanded` (default `true`).
 - `autoResetSelection` (default `false`).
 
@@ -262,7 +262,7 @@ Accessor values are **cached per row**.
 4. Rows are memoized. Cell renderers receive stable context objects (created once per row/column pair and reused while their inputs are unchanged).
 5. **Virtualization** (`enableRowVirtualization`, or automatically when visible rows exceed `virtualizationThreshold`, default 200) uses an in-house windowing hook (fixed or measured row heights, overscan) with no external dependency.
 6. Debounce global search and text filters (`searchDebounceMs` default 300, `filterDebounceMs` default 300).
-7. The server data source deduplicates identical queries, aborts stale requests (`AbortController`), and keeps previous rows during refetch (`keepPreviousData`, the Skimmer overlay behaviour).
+7. The server data source deduplicates identical queries, aborts stale requests (`AbortController`), and keeps previous rows during refetch (`keepPreviousData`, shown under the refetch overlay).
 8. Benchmarks (in CI, informational): 10k rows client sort < 50ms; 100k rows virtualized scroll at 60fps on a mid-range laptop; initial render of 50 rows × 10 cols < 16ms.
 
 ## 8. Public entry points (`package.json` exports)

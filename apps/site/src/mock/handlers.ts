@@ -1,12 +1,12 @@
 import { delay, http, HttpResponse } from 'msw';
 import { getMockConfig, resolveLatency } from './config';
-import { generateCustomers } from './data/customers';
-import { searchCustomers } from './server/customers';
-import { getWaterTestHistory } from './server/waterTests';
-import type { ListingCriteria, SearchCustomerRequest } from './types';
+import { generateAccounts } from './data/accounts';
+import { searchAccounts } from './server/accounts';
+import { getReadingHistory } from './server/readings';
+import type { ListingCriteria, SearchAccountRequest } from './types';
 
-let customers: ReturnType<typeof generateCustomers> | undefined;
-export const getCustomerDb = () => (customers ??= generateCustomers());
+let accounts: ReturnType<typeof generateAccounts> | undefined;
+export const getAccountDb = () => (accounts ??= generateAccounts());
 
 /** Applies the configured latency and returns an error response when failure is injected. */
 async function simulateNetwork(): Promise<Response | undefined> {
@@ -33,21 +33,21 @@ function listingFromSearchParams(params: URLSearchParams): Partial<ListingCriter
 }
 
 export const handlers = [
-  // Skimmer customer search contract (01 §3, 08 §7).
-  http.post('*/api/customers/search', async ({ request }) => {
+  // Account search: a POST body carrying the query and the listing criteria.
+  http.post('*/api/accounts/search', async ({ request }) => {
     const failure = await simulateNetwork();
     if (failure) return failure;
-    const body = ((await request.json().catch(() => ({}))) ?? {}) as SearchCustomerRequest;
-    return HttpResponse.json(searchCustomers(getCustomerDb(), body));
+    const body = ((await request.json().catch(() => ({}))) ?? {}) as SearchAccountRequest;
+    return HttpResponse.json(searchAccounts(getAccountDb(), body));
   }),
 
-  // Water-test history for one body of water.
-  http.get('*/api/pools/:bodyOfWaterId/history', async ({ request, params }) => {
+  // Reading history for one asset, with the listing criteria as search parameters.
+  http.get('*/api/assets/:assetId/readings', async ({ request, params }) => {
     const failure = await simulateNetwork();
     if (failure) return failure;
     const url = new URL(request.url);
     return HttpResponse.json(
-      getWaterTestHistory(String(params.bodyOfWaterId), listingFromSearchParams(url.searchParams)),
+      getReadingHistory(String(params.assetId), listingFromSearchParams(url.searchParams)),
     );
   }),
 ];

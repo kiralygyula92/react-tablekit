@@ -149,7 +149,7 @@ export function toCssVars(theme: TableThemeTokens): Record<string, string> {
   return vars;
 }
 
-/** The default preset. Same palette as Skimmer, plus hover, pinned shadows and richer defaults. */
+/** The default preset: a neutral palette with hover, pinned shadows and richer defaults. */
 export const lightTheme: TableTheme = {
   name: 'light',
   colorScheme: 'light',
@@ -170,7 +170,7 @@ export const lightTheme: TableTheme = {
     surfaceRaised: '#FFFFFF',
     surfaceSubtle: '#F5F5F5',
     text: '#252B37',
-    // #6B7079 is 4.77:1 on #FAFAFA (AA). Classic keeps Skimmer's #717680 (4.37:1) for parity.
+    // #6B7079 is 4.77:1 on #FAFAFA (AA). Classic keeps #717680 (4.37:1), whose values are frozen.
     textMuted: '#6B7079',
     textDisabled: '#A4A7AE',
     textOnAccent: '#FFFFFF',
@@ -278,7 +278,7 @@ export const lightTheme: TableTheme = {
 };
 
 /**
- * `classic`: 1:1 parity with the Skimmer Retail tables (07 §4). Values are frozen by the semver
+ * `classic`: a dense, compact look (07 §4). Values are frozen by the semver
  * policy.
  */
 export const classicTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, {

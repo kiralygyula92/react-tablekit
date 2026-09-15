@@ -1,21 +1,20 @@
 /**
- * The playground's control schema (08 §4). Each control maps to one prop; only values that differ
- * from the default are written into the generated code and the shareable URL hash.
+ * The playground's **setup** controls (08 §4): the things around the table that are not props of
+ * it — which data to show, whether it comes from memory or a simulated API, the preset, the
+ * language and the initial state. Every actual prop is generated from the package's types in
+ * `./props.ts`, so none is listed here.
  */
 export type ControlKind = 'boolean' | 'select' | 'number';
 
 export interface Control {
-  /** The prop this control sets. */
   id: string;
   label: string;
   kind: ControlKind;
-  /** The value the library uses when the prop is absent. */
   default: string | number | boolean;
-  /** Options for `select` controls. */
   options?: (string | number)[];
   min?: number;
   max?: number;
-  /** Short explanation shown under the control. */
+  step?: number;
   hint?: string;
 }
 
@@ -25,14 +24,13 @@ export interface ControlGroup {
   controls: Control[];
 }
 
-export const DATASETS = ['people', 'customers', 'tree', 'generated-10k'] as const;
+export const DATASETS = ['people', 'accounts', 'tree', 'generated-10k'] as const;
 export type DatasetName = (typeof DATASETS)[number];
 
-/** Groups mirror the feature sections of docs/05. */
 export const SCHEMA: ControlGroup[] = [
   {
-    id: 'data',
-    label: 'Data',
+    id: 'setup',
+    label: 'Setup',
     controls: [
       {
         id: 'dataset',
@@ -43,82 +41,36 @@ export const SCHEMA: ControlGroup[] = [
       },
       { id: 'rowCount', label: 'Rows', kind: 'number', default: 200, min: 0, max: 10000 },
       {
-        id: 'dataMode',
-        label: 'Mode',
+        id: 'source',
+        label: 'Data from',
         kind: 'select',
-        default: 'client',
-        options: ['client', 'server'],
-        hint: 'Server mode runs against a simulated API with latency.',
+        default: 'memory',
+        options: ['memory', 'api'],
+        hint: '"api" passes a dataSource that simulates a server with latency.',
       },
-      { id: 'latencyMs', label: 'Latency (ms)', kind: 'number', default: 300, min: 0, max: 3000 },
-      { id: 'failRate', label: 'Failure rate', kind: 'number', default: 0, min: 0, max: 1 },
-    ],
-  },
-  {
-    id: 'features',
-    label: 'Features',
-    controls: [
-      { id: 'enableSorting', label: 'Sorting', kind: 'boolean', default: true },
-      { id: 'enableMultiSort', label: 'Multi-sort', kind: 'boolean', default: true },
-      { id: 'enableGlobalFilter', label: 'Global search', kind: 'boolean', default: true },
-      { id: 'highlightSearchMatches', label: 'Highlight matches', kind: 'boolean', default: false },
-      { id: 'enableColumnFilters', label: 'Column filters', kind: 'boolean', default: true },
       {
-        id: 'filterDisplayMode',
-        label: 'Filter display',
-        kind: 'select',
-        default: 'panel',
-        options: ['panel', 'popover', 'row', 'none'],
+        id: 'latencyMs',
+        label: 'API latency (ms)',
+        kind: 'number',
+        default: 300,
+        min: 0,
+        max: 3000,
       },
-      { id: 'showActiveFilterChips', label: 'Filter chips', kind: 'boolean', default: false },
-      { id: 'enableRowSelection', label: 'Row selection', kind: 'boolean', default: false },
-      { id: 'enableMultiRowSelection', label: 'Multi-selection', kind: 'boolean', default: true },
-      { id: 'enableExpanding', label: 'Expansion', kind: 'boolean', default: false },
-      { id: 'enableGrouping', label: 'Grouping', kind: 'boolean', default: false },
-      { id: 'enableHiding', label: 'Columns menu', kind: 'boolean', default: false },
-      { id: 'enableColumnActions', label: 'Column menu', kind: 'boolean', default: false },
-      { id: 'enableColumnResizing', label: 'Resizing', kind: 'boolean', default: false },
-      { id: 'enableColumnOrdering', label: 'Reordering', kind: 'boolean', default: false },
-      { id: 'enableDensityToggle', label: 'Density toggle', kind: 'boolean', default: false },
-      { id: 'enableExport', label: 'Export', kind: 'boolean', default: false },
-      { id: 'enableKeyboardNavigation', label: 'Keyboard grid', kind: 'boolean', default: false },
-      { id: 'enableStickyHeader', label: 'Sticky header', kind: 'boolean', default: false },
-      { id: 'enableRowVirtualization', label: 'Virtualization', kind: 'boolean', default: false },
-    ],
-  },
-  {
-    id: 'pagination',
-    label: 'Pagination',
-    controls: [
-      { id: 'enablePagination', label: 'Enabled', kind: 'boolean', default: true },
       {
-        id: 'paginationVariant',
-        label: 'Variant',
-        kind: 'select',
-        default: 'numbered',
-        options: ['numbered', 'compact', 'simple', 'loadMore', 'infinite'],
+        id: 'failRate',
+        label: 'API failure rate',
+        kind: 'number',
+        default: 0,
+        min: 0,
+        max: 1,
+        step: 0.1,
       },
-      { id: 'pageSize', label: 'Page size', kind: 'number', default: 10, min: 1, max: 100 },
-      { id: 'showRowRange', label: 'Row range', kind: 'boolean', default: true },
-    ],
-  },
-  {
-    id: 'appearance',
-    label: 'Appearance',
-    controls: [
       {
         id: 'theme',
         label: 'Preset',
         kind: 'select',
         default: 'light',
         options: ['light', 'classic', 'dark', 'compact', 'minimal'],
-      },
-      {
-        id: 'density',
-        label: 'Density',
-        kind: 'select',
-        default: 'standard',
-        options: ['compact', 'standard', 'comfortable'],
       },
       {
         id: 'locale',
@@ -128,50 +80,60 @@ export const SCHEMA: ControlGroup[] = [
         options: ['en', 'hu', 'de', 'es'],
       },
       {
-        id: 'mobileLayout',
-        label: 'Mobile layout',
+        id: 'pageSize',
+        label: 'Initial page size',
+        kind: 'number',
+        default: 10,
+        min: 1,
+        max: 100,
+      },
+      {
+        id: 'density',
+        label: 'Initial density',
         kind: 'select',
-        default: 'scroll',
-        options: ['scroll', 'cards'],
+        default: 'standard',
+        options: ['compact', 'standard', 'comfortable'],
       },
     ],
   },
 ];
 
-/** Every control, flattened. */
+/** Every setup control, flattened. */
 export const ALL_CONTROLS: Control[] = SCHEMA.flatMap((group) => group.controls);
 
 export type PlaygroundValues = Record<string, string | number | boolean>;
 
-/** The default value of every control. */
+/** The default value of every setup control. */
 export function defaultValues(): PlaygroundValues {
   return Object.fromEntries(ALL_CONTROLS.map((c) => [c.id, c.default]));
 }
 
-/** Only the values that differ from the defaults — what the code and the URL need. */
+/** Only the setup values that differ from their defaults. */
 export function changedValues(values: PlaygroundValues): PlaygroundValues {
   return Object.fromEntries(
     ALL_CONTROLS.filter((c) => values[c.id] !== c.default).map((c) => [c.id, values[c.id]!]),
   );
 }
 
-/** Serializes the changed values into a URL hash. */
-export function encodeHash(values: PlaygroundValues): string {
-  const changed = changedValues(values);
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(changed)) params.set(key, String(value));
-  return params.toString();
+/** Writes the changed setup values into URL search params. */
+export function writeSetupParams(values: PlaygroundValues, params: URLSearchParams): void {
+  for (const [key, value] of Object.entries(changedValues(values))) params.set(key, String(value));
 }
 
-/** Reads values back from a URL hash, falling back to the defaults. */
-export function decodeHash(hash: string): PlaygroundValues {
-  const params = new URLSearchParams(hash.replace(/^#/, ''));
+/** Reads setup values back from URL search params, falling back to the defaults. */
+export function readSetupParams(params: URLSearchParams): PlaygroundValues {
   const values = defaultValues();
   for (const control of ALL_CONTROLS) {
     const raw = params.get(control.id);
     if (raw === null) continue;
-    values[control.id] =
-      control.kind === 'boolean' ? raw === 'true' : control.kind === 'number' ? Number(raw) : raw;
+    if (control.kind === 'number') {
+      const n = Number(raw);
+      if (Number.isFinite(n)) values[control.id] = n;
+    } else if (control.kind === 'boolean') {
+      values[control.id] = raw === 'true';
+    } else if (control.options?.map(String).includes(raw)) {
+      values[control.id] = raw;
+    }
   }
   return values;
 }

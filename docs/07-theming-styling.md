@@ -98,18 +98,18 @@ import { classicTheme, createTheme } from 'react-tablekit';
 | **Motion** | `motion.duration` / `easing` | `--tk-motion-duration` / `--tk-motion-easing` | `200ms` / `cubic-bezier(.2,0,0,1)` |
 | **Breakpoints** | `breakpoints` | (JS only) | `{ xs:0, sm:600, md:960, lg:1280, xl:1440 }` |
 
-## 4. `classic` preset: 1:1 Skimmer parity (exact)
+## 4. `classic` preset: the dense look (exact values)
 
-Differences from `light` are **bold**. Everything else equals the `light` defaults above, which were chosen from Skimmer's palette on purpose.
+Differences from `light` are **bold**. Everything else equals the `light` defaults above, which were chosen from the same palette on purpose.
 
 ```ts
 export const classicTheme = createTheme(lightTheme, {
   name: 'classic',
   font: { family: '"Open Sans Variable", "Open Sans", Arial, sans-serif', size: '14px', lineHeight: '1.5' },
-  row: { hoverBg: 'transparent' /* Skimmer has no hover */, selectedBg: '#EAF6FF', selectedHoverBg: '#EAF6FF' },
+  row: { hoverBg: 'transparent' /* no hover in this preset */, selectedBg: '#EAF6FF', selectedHoverBg: '#EAF6FF' },
   pinned: { shadowLeft: 'none', shadowRight: 'none' },
   container: { minTableWidth: '650px', border: '1px solid #E9EAEB', shadow: 'none' },
-  focus: { ring: '0 0 0 2px #FFFFFF, 0 0 0 4px #2196F3' }, // added; Skimmer relied on MUI defaults
+  focus: { ring: '0 0 0 2px #FFFFFF, 0 0 0 4px #2196F3' }, // added; the dense preset has no ring of its own
   overlay: { bg: 'rgba(255,255,255,0.7)', spinnerSize: '40px', spinnerColor: '#2196F3' },
   pagination: { /* exactly the light values listed in §3 */ },
   breakpoints: { xs: 0, sm: 600, md: 960, lg: 1280, xl: 1440 },
@@ -136,7 +136,7 @@ export const classicTheme = createTheme(lightTheme, {
 });
 ```
 
-Parity details to verify in visual tests (from 01 §4 and §8):
+Details to verify in visual tests:
 
 | Element | Required rendering |
 |---|---|
@@ -146,7 +146,7 @@ Parity details to verify in visual tests (from 01 §4 and §8):
 | Selected row | `#EAF6FF`, including pinned cells |
 | Pinned (actions) cell | White background (the row background), no shadow |
 | Action icon button | Colour `#2196F3`, padding `6px 4px`, transparent 1px border. Hover: `#369AE91A` background, `#2196F380` border, 4px radius. Tooltip placed on top |
-| Numbered pagination | As in 01 §4.6 (Prev/Next outlined with arrow icons, 40×40 page buttons, 2px gap) |
+| Numbered pagination | (Prev/Next outlined with arrow icons, 40×40 page buttons, 2px gap) |
 | Compact pagination | Centred, first/last/prev/next icon buttons, `siblingCount 0`, `boundaryCount 2`, small rounded items |
 | Loading (initial) | One text row, centred, `16px` vertical padding, muted colour, "Loading..." |
 | Overlay | `rgba(255,255,255,.7)` below the header, 40px accent spinner |

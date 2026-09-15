@@ -208,7 +208,7 @@ describe('column pinning (B2)', () => {
     expect(table.getColumn('joined')!.getIsPinned()).toBe('right');
   });
 
-  it("responsive pin: { base: 'right', md: false } (Skimmer stickyActions || isMobile)", () => {
+  it("responsive pin: { base: 'right', md: false } (pinned on desktop, released on mobile)", () => {
     const cols: AnyColumnDef<Person>[] = [
       { accessorKey: 'name' },
       { id: 'actions', pin: { base: 'right', md: false } },

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { Component, useEffect, useMemo, useState, type ErrorInfo, type ReactNode } from 'react';
 import {
   classicTheme,
   compactTheme,
+  createLocalDataSource,
   darkTheme,
   DataTable,
-  createLocalDataSource,
   lightTheme,
   minimalTheme,
   type TableQuery,
@@ -15,96 +15,147 @@ import es from 'react-tablekit/locales/es';
 import hu from 'react-tablekit/locales/hu';
 import { peopleColumns } from '../examples/columns';
 import { buildOrgTree, type OrgNode } from '../examples/orgTree';
-import { generateCustomers } from '../mock/data/customers';
-import { generatePeople, type DemoPerson } from '../mock/data/people';
 import { useDocumentTitle } from '../layout/useDocumentTitle';
+import { generateAccounts } from '../mock/data/accounts';
+import { generatePeople, type DemoPerson } from '../mock/data/people';
+import { PropControl } from './playground/PropControl';
+import {
+  groupControls,
+  jsLiteral,
+  matchesFilter,
+  PROP_SCHEMA,
+  propsToJsx,
+  readPropParams,
+  unflatten,
+  writePropParams,
+  type PropValue,
+  type PropValues,
+} from './playground/props';
 import {
   changedValues,
-  decodeHash,
   defaultValues,
-  encodeHash,
+  readSetupParams,
   SCHEMA,
+  writeSetupParams,
   type PlaygroundValues,
 } from './playground/schema';
 
-const THEMES: Record<string, TableTheme> = {
-  light: lightTheme,
-  classic: classicTheme,
-  dark: darkTheme,
-  compact: compactTheme,
-  minimal: minimalTheme,
+const THEMES: Record<string, { theme: TableTheme; name: string }> = {
+  light: { theme: lightTheme, name: 'lightTheme' },
+  classic: { theme: classicTheme, name: 'classicTheme' },
+  dark: { theme: darkTheme, name: 'darkTheme' },
+  compact: { theme: compactTheme, name: 'compactTheme' },
+  minimal: { theme: minimalTheme, name: 'minimalTheme' },
 };
 const LOCALES = { en: undefined, hu, de, es } as const;
 
-/** Builds the props the live table gets, from the control values. */
-function useTableProps(values: PlaygroundValues) {
-  const rowCount = Number(values.rowCount);
-  const dataset = String(values.dataset);
+/** Virtualization and a sticky header only do anything inside a bounded height. */
+const AUTO_MAX_HEIGHT = 460;
 
+function readHash(): { setup: PlaygroundValues; props: PropValues } {
+  if (typeof window === 'undefined') return { setup: defaultValues(), props: {} };
+  const params = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  return { setup: readSetupParams(params), props: readPropParams(params) };
+}
+
+/** Catches a render error so that any combination of props can be explored safely. */
+class PreviewBoundary extends Component<
+  { children: ReactNode; onReset: () => void },
+  { error: Error | null }
+> {
+  override state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  override componentDidCatch(error: Error, info: ErrorInfo) {
+    console.warn('[playground] this combination of props threw:', error, info.componentStack);
+  }
+
+  override render() {
+    if (!this.state.error) return this.props.children;
+    return (
+      <div className="playground__error" role="alert">
+        <p>
+          <strong>This combination of props threw an error:</strong> {this.state.error.message}
+        </p>
+        <button type="button" onClick={this.props.onReset}>
+          Reset props
+        </button>
+      </div>
+    );
+  }
+}
+
+/** `/playground`: every prop of the table as a control, a live table, and the code for it. */
+export function PlaygroundPage() {
+  useDocumentTitle('Playground');
+  const [initial] = useState(readHash);
+  const [setup, setSetup] = useState<PlaygroundValues>(initial.setup);
+  const [props, setProps] = useState<PropValues>(initial.props);
+  const [filter, setFilter] = useState('');
+  const [changedOnly, setChangedOnly] = useState(false);
+  /** Bumped by "Reset all", so free-text controls drop their drafts. */
+  const [generation, setGeneration] = useState(0);
+  const [tab, setTab] = useState<'code' | 'state' | 'query'>('code');
+  const [queryLog, setQueryLog] = useState<string[]>([]);
+
+  // The whole configuration lives in the URL hash, so it can be shared as a link.
+  useEffect(() => {
+    const params = new URLSearchParams();
+    writeSetupParams(setup, params);
+    writePropParams(props, params);
+    const hash = params.toString();
+    const next = `${window.location.pathname}${window.location.search}${hash ? `#${hash}` : ''}`;
+    window.history.replaceState(null, '', next);
+  }, [setup, props]);
+
+  const dataset = String(setup.dataset);
+  const rowCount = Number(setup.rowCount);
+  const fromApi = setup.source === 'api';
   const data = useMemo(() => {
-    if (dataset === 'customers') return generateCustomers(Math.min(rowCount, 235));
+    if (dataset === 'accounts') return generateAccounts(Math.min(rowCount, 235));
     if (dataset === 'tree') return buildOrgTree();
     return generatePeople(dataset === 'generated-10k' ? 10_000 : rowCount);
   }, [dataset, rowCount]);
-
-  const server = values.dataMode === 'server';
+  // Every dataset is rendered through the people columns, so the row type is uniform here.
+  const rows = data as DemoPerson[];
   const dataSource = useMemo(
     () =>
-      server
-        ? createLocalDataSource(data as DemoPerson[], {
+      fromApi
+        ? createLocalDataSource(rows, {
             columns: peopleColumns,
             getRowId: (p: DemoPerson) => p.id,
-            latencyMs: Number(values.latencyMs),
-            failRate: Number(values.failRate),
+            latencyMs: Number(setup.latencyMs),
+            failRate: Number(setup.failRate),
           })
         : undefined,
-    [server, data, values.latencyMs, values.failRate],
+    [fromApi, rows, setup.latencyMs, setup.failRate],
   );
 
-  return { data, dataSource, server, dataset };
-}
+  const passed = useMemo(() => unflatten(props), [props]);
+  const needsHeight =
+    (passed.enableRowVirtualization === true || passed.enableStickyHeader === true) &&
+    passed.maxHeight === undefined;
+  const autoProps = useMemo<Record<string, unknown>>(
+    () => (needsHeight ? { maxHeight: AUTO_MAX_HEIGHT } : {}),
+    [needsHeight],
+  );
 
-/** Renders the generated TSX for the non-default options (08 §4). */
-function generatedCode(values: PlaygroundValues): string {
-  const changed = changedValues(values);
-  const skip = new Set(['dataset', 'rowCount', 'latencyMs', 'failRate', 'locale', 'theme']);
-  const props = Object.entries(changed)
-    .filter(([key]) => !skip.has(key))
-    .map(([key, value]) => {
-      if (key === 'paginationVariant') return `  pagination={{ variant: '${String(value)}' }}`;
-      if (key === 'pageSize')
-        return `  initialState={{ pagination: { pageIndex: 0, pageSize: ${String(value)} } }}`;
-      if (key === 'mobileLayout') return `  responsive={{ mobileLayout: '${String(value)}' }}`;
-      if (key === 'density') return `  initialState={{ density: '${String(value)}' }}`;
-      if (typeof value === 'boolean') return value ? `  ${key}` : `  ${key}={false}`;
-      if (typeof value === 'number') return `  ${key}={${String(value)}}`;
-      return `  ${key}="${value}"`;
+  const setProp = (path: string, value: PropValue | undefined) =>
+    setProps((prev) => {
+      const next = { ...prev };
+      if (value === undefined) delete next[path];
+      else next[path] = value;
+      return next;
     });
-  if (changed.theme) props.unshift(`  theme={${String(changed.theme)}Theme}`);
-  if (values.dataMode === 'server') props.unshift('  dataSource={dataSource}');
-  else props.unshift('  data={data}');
-  return `<DataTable\n  aria-label="People"\n${props.join('\n')}\n  columns={columns}\n  getRowId={(row) => row.id}\n/>`;
-}
 
-/** `/playground`: every option as a control, a live table, and the code that produces it. */
-export function PlaygroundPage() {
-  useDocumentTitle('Playground');
-  const [values, setValues] = useState<PlaygroundValues>(() =>
-    typeof window === 'undefined' ? defaultValues() : decodeHash(window.location.hash),
-  );
-  const [tab, setTab] = useState<'code' | 'state' | 'query'>('code');
-  const [queryLog, setQueryLog] = useState<string[]>([]);
-  const { data, dataSource, server, dataset } = useTableProps(values);
-
-  // The control state lives in the URL hash, so a configuration is shareable.
-  useEffect(() => {
-    const hash = encodeHash(values);
-    const next = `${window.location.pathname}${window.location.search}${hash ? `#${hash}` : ''}`;
-    window.history.replaceState(null, '', next);
-  }, [values]);
-
-  const set = (id: string, value: string | number | boolean) =>
-    setValues((prev) => ({ ...prev, [id]: value }));
+  const resetAll = () => {
+    setSetup(defaultValues());
+    setProps({});
+    setGeneration((g) => g + 1);
+  };
 
   const onQueryChange = (query: TableQuery, change: { reason: string }) =>
     setQueryLog((prev) =>
@@ -116,89 +167,63 @@ export function PlaygroundPage() {
       ].slice(0, 8),
     );
 
-  // Every dataset is rendered through the people columns, so the row type is uniform here.
-  const rows = data as DemoPerson[];
-  // Hoisted so TypeScript can narrow them away when they are absent (English, unknown preset).
-  const localization = LOCALES[String(values.locale) as keyof typeof LOCALES];
-  const theme = THEMES[String(values.theme)];
-  const table = (
-    <DataTable<DemoPerson>
-      key={`${dataset}-${String(values.dataMode)}-${String(values.locale)}`}
-      aria-label="Playground"
-      {...(server && dataSource ? { dataSource } : { data: rows })}
-      columns={peopleColumns}
-      getRowId={(row) => row.id}
-      {...(theme ? { theme } : {})}
-      {...(localization ? { localization } : {})}
-      {...(dataset === 'tree'
-        ? {
-            getSubRows: (n: DemoPerson) =>
-              (n as unknown as OrgNode).children as unknown as DemoPerson[] | undefined,
-          }
-        : {})}
-      enableSorting={Boolean(values.enableSorting)}
-      enableMultiSort={Boolean(values.enableMultiSort)}
-      enableGlobalFilter={Boolean(values.enableGlobalFilter)}
-      highlightSearchMatches={Boolean(values.highlightSearchMatches)}
-      enableColumnFilters={Boolean(values.enableColumnFilters)}
-      filterDisplayMode={String(values.filterDisplayMode) as 'panel'}
-      showActiveFilterChips={Boolean(values.showActiveFilterChips)}
-      enableRowSelection={Boolean(values.enableRowSelection)}
-      enableMultiRowSelection={Boolean(values.enableMultiRowSelection)}
-      enableExpanding={Boolean(values.enableExpanding)}
-      enableGrouping={Boolean(values.enableGrouping)}
-      enableHiding={Boolean(values.enableHiding)}
-      enableColumnActions={Boolean(values.enableColumnActions)}
-      enableColumnResizing={Boolean(values.enableColumnResizing)}
-      enableColumnOrdering={Boolean(values.enableColumnOrdering)}
-      enableDensityToggle={Boolean(values.enableDensityToggle)}
-      enableExport={Boolean(values.enableExport)}
-      enableKeyboardNavigation={Boolean(values.enableKeyboardNavigation)}
-      enableStickyHeader={Boolean(values.enableStickyHeader)}
-      enableRowVirtualization={Boolean(values.enableRowVirtualization)}
-      enablePagination={Boolean(values.enablePagination)}
-      pagination={{
-        variant: String(values.paginationVariant) as 'numbered',
-        showRowRange: Boolean(values.showRowRange),
-      }}
-      responsive={{ mobileLayout: String(values.mobileLayout) as 'scroll' }}
-      {...(Boolean(values.enableRowVirtualization) || Boolean(values.enableStickyHeader)
-        ? { maxHeight: 460 }
-        : {})}
-      onQueryChange={onQueryChange}
-      initialState={{
-        pagination: { pageIndex: 0, pageSize: Number(values.pageSize) },
-        density: String(values.density) as 'standard',
-      }}
-    />
+  const theme = THEMES[String(setup.theme)];
+  const localization = LOCALES[String(setup.locale) as keyof typeof LOCALES];
+  const pageSize = Number(setup.pageSize);
+  const density = String(setup.density) as 'compact' | 'standard' | 'comfortable';
+
+  const code = useMemo(() => {
+    const lines = [
+      '<DataTable',
+      '  aria-label="People"',
+      fromApi ? '  dataSource={dataSource}' : '  data={data}',
+      '  columns={columns}',
+      '  getRowId={(row) => row.id}',
+    ];
+    if (setup.theme !== 'light' && theme) lines.push(`  theme={${theme.name}}`);
+    if (setup.locale !== 'en') lines.push(`  localization={${String(setup.locale)}}`);
+    const initialState: Record<string, unknown> = {};
+    if (pageSize !== 10) initialState.pagination = { pageIndex: 0, pageSize };
+    if (density !== 'standard') initialState.density = density;
+    if (Object.keys(initialState).length > 0) {
+      lines.push(`  initialState={${jsLiteral(initialState)}}`);
+    }
+    lines.push(...propsToJsx({ ...autoProps, ...passed }));
+    return `${lines.join('\n')}\n/>`;
+  }, [fromApi, setup.theme, setup.locale, theme, pageSize, density, autoProps, passed]);
+
+  const visibleControls = PROP_SCHEMA.controls.filter(
+    (control) => matchesFilter(control, filter) && (!changedOnly || control.path in props),
   );
+  const groups = groupControls(visibleControls);
+  const changedCount = Object.keys(props).length;
+  const filtering = filter.trim() !== '' || changedOnly;
+  // Remount the table when the props change shape, so a boundary error clears on the next edit.
+  const previewKey = `${dataset}-${String(setup.source)}-${String(setup.locale)}-${JSON.stringify(props)}`;
 
   return (
     <div className="playground">
       <aside className="playground__controls" aria-label="Options">
         <div className="playground__head">
           <h1>Playground</h1>
-          <button type="button" onClick={() => setValues(defaultValues())}>
-            Reset
+          <button type="button" onClick={resetAll}>
+            Reset all
           </button>
         </div>
+
         {SCHEMA.map((group) => (
-          <details key={group.id} open={group.id !== 'appearance'}>
+          <details key={group.id} open>
             <summary>{group.label}</summary>
             <div className="playground__group">
               {group.controls.map((control) => (
                 <label key={control.id} className="playground__control">
                   <span>{control.label}</span>
-                  {control.kind === 'boolean' ? (
-                    <input
-                      type="checkbox"
-                      checked={Boolean(values[control.id])}
-                      onChange={(e) => set(control.id, e.target.checked)}
-                    />
-                  ) : control.kind === 'select' ? (
+                  {control.kind === 'select' ? (
                     <select
-                      value={String(values[control.id])}
-                      onChange={(e) => set(control.id, e.target.value)}
+                      value={String(setup[control.id])}
+                      onChange={(e) =>
+                        setSetup((prev) => ({ ...prev, [control.id]: e.target.value }))
+                      }
                     >
                       {(control.options ?? []).map((option) => (
                         <option key={String(option)} value={String(option)}>
@@ -209,11 +234,13 @@ export function PlaygroundPage() {
                   ) : (
                     <input
                       type="number"
-                      value={Number(values[control.id])}
+                      value={Number(setup[control.id])}
                       min={control.min}
                       max={control.max}
-                      step={control.id === 'failRate' ? 0.1 : 1}
-                      onChange={(e) => set(control.id, Number(e.target.value))}
+                      step={control.step ?? 1}
+                      onChange={(e) =>
+                        setSetup((prev) => ({ ...prev, [control.id]: Number(e.target.value) }))
+                      }
                     />
                   )}
                 </label>
@@ -221,10 +248,99 @@ export function PlaygroundPage() {
             </div>
           </details>
         ))}
+
+        <div className="playground__props-bar">
+          <h2 className="playground__props-title">
+            Props{' '}
+            <span className="site-muted">
+              {PROP_SCHEMA.controls.length} · {changedCount} changed
+            </span>
+          </h2>
+          <label className="playground__filter">
+            <span className="site-visually-hidden">Filter props</span>
+            <input
+              type="search"
+              placeholder="Filter props, e.g. pageSize"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+          </label>
+          <label className="playground__changed-only">
+            <input
+              type="checkbox"
+              checked={changedOnly}
+              onChange={(e) => setChangedOnly(e.target.checked)}
+            />
+            Changed only
+          </label>
+        </div>
+
+        {groups.length === 0 && <p className="site-muted">No props match.</p>}
+        {groups.map(([group, controls]) => {
+          const changedInGroup = controls.filter((c) => c.path in props).length;
+          return (
+            <details key={group} open={filtering}>
+              <summary>
+                {group}{' '}
+                <span className="site-muted">
+                  ({controls.length}
+                  {changedInGroup > 0 ? `, ${String(changedInGroup)} changed` : ''})
+                </span>
+              </summary>
+              <div className="playground__group">
+                {controls.map((control) => (
+                  <PropControl
+                    key={`${control.path}-${String(generation)}`}
+                    control={control}
+                    value={props[control.path]}
+                    onChange={(value) => setProp(control.path, value)}
+                  />
+                ))}
+              </div>
+            </details>
+          );
+        })}
+
+        <details>
+          <summary>
+            Code only <span className="site-muted">({PROP_SCHEMA.codeOnly.length})</span>
+          </summary>
+          <p className="site-muted">
+            Callbacks, render functions, registries and data cannot be toggled; set them in code.
+          </p>
+          <ul className="playground__code-only">
+            {PROP_SCHEMA.codeOnly.map((prop) => (
+              <li key={prop.name}>
+                <code>{prop.name}</code> <span className="site-muted">{prop.type}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
       </aside>
 
-      <main className="playground__preview">
-        {table}
+      <section className="playground__preview" aria-label="Preview">
+        <PreviewBoundary key={previewKey} onReset={() => setProps({})}>
+          <DataTable<DemoPerson>
+            key={`${dataset}-${String(setup.source)}-${String(setup.locale)}`}
+            aria-label="Playground"
+            {...(dataSource ? { dataSource } : { data: rows })}
+            columns={peopleColumns}
+            getRowId={(row) => row.id}
+            {...(theme ? { theme: theme.theme } : {})}
+            {...(localization ? { localization } : {})}
+            {...(dataset === 'tree'
+              ? {
+                  getSubRows: (n: DemoPerson) =>
+                    (n as unknown as OrgNode).children as unknown as DemoPerson[] | undefined,
+                }
+              : {})}
+            initialState={{ pagination: { pageIndex: 0, pageSize }, density }}
+            onQueryChange={onQueryChange}
+            {...autoProps}
+            {...passed}
+          />
+        </PreviewBoundary>
+
         <div className="playground__output">
           <div role="tablist" aria-label="Output" className="example-tabs">
             {(['code', 'state', 'query'] as const).map((t) => (
@@ -241,14 +357,14 @@ export function PlaygroundPage() {
           </div>
           {tab === 'code' && (
             // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must be focusable (axe)
-            <pre className="site-code" tabIndex={0}>
-              <code>{generatedCode(values)}</code>
+            <pre className="site-code" tabIndex={0} data-testid="playground-code">
+              <code>{code}</code>
             </pre>
           )}
           {tab === 'state' && (
             // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must be focusable (axe)
             <pre className="site-code" tabIndex={0}>
-              <code>{JSON.stringify(changedValues(values), null, 2)}</code>
+              <code>{JSON.stringify({ setup: changedValues(setup), props: passed }, null, 2)}</code>
             </pre>
           )}
           {tab === 'query' && (
@@ -265,7 +381,7 @@ export function PlaygroundPage() {
             </ol>
           )}
         </div>
-      </main>
+      </section>
     </div>
   );
 }
