@@ -25,7 +25,6 @@ const ROUTES = [
   { path: '/docs/guides/responsive', heading: 'Responsive' },
   { path: '/docs/guides/customization', heading: 'Customization' },
   { path: '/docs/guides/localization', heading: 'Localization' },
-  { path: '/docs/guides/migration-skimmer', heading: 'Migrating from the Skimmer table' },
   { path: '/docs/versioning', heading: 'Versioning policy' },
   { path: '/changelog', heading: 'Changelog' },
   { path: '/examples', heading: 'Examples' },
@@ -82,6 +81,40 @@ for (const { path, symbol, member } of API_PAGES) {
     await expect(page.locator(`#${member}`).first()).toBeVisible();
   });
 }
+
+test('a long virtualized member table scrolls all the way to its last row', async ({ page }) => {
+  // Regression: the table body virtualizes inside its scroll container, but React attaches the
+  // container's ref only after the body's layout effect has run. The virtualizer gave up on that
+  // first attempt and never followed the scroll, so this 217-row table showed its first 9 rows
+  // (ending at `autoResetPageIndex`) however far it was scrolled. It is a browser-only ordering
+  // effect, which is why this lives in e2e rather than jsdom.
+  await page.goto('/api/data-table');
+  const table = page
+    .getByRole('grid', { name: 'DataTableProps members' })
+    .or(page.getByRole('table', { name: 'DataTableProps members' }));
+  await expect(table.locator('tbody tr.tk-row').first()).toBeVisible();
+  const scroller = table.locator('xpath=ancestor::div[contains(@class,"tk-container")][1]');
+  const renderedIds = () =>
+    table
+      .locator('tbody tr.tk-row')
+      .evaluateAll((rows) => rows.map((r) => r.querySelector('[id]')?.id ?? ''));
+  const firstWindow = await renderedIds();
+
+  await expect(async () => {
+    await scroller.evaluate((el) => {
+      el.scrollTop = el.scrollHeight;
+    });
+    const atBottom = await scroller.evaluate(
+      (el) => el.scrollTop + el.clientHeight >= el.scrollHeight - 2,
+    );
+    expect(atBottom).toBe(true);
+    const ids = await renderedIds();
+    expect(ids).not.toContain(firstWindow[0]);
+    // At the bottom the last row is rendered: nothing stands in for further rows after it.
+    // (Not `toBeInViewport`: the table sits below the fold, so that checks the page instead.)
+    await expect(table.locator('tbody tr').last()).toHaveClass(/\btk-row\b/);
+  }).toPass({ timeout: 10_000 });
+});
 
 test('primary navigation routes between sections', async ({ page }) => {
   await page.goto('/');

@@ -81,7 +81,11 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
     return { offsets: result, totalSize: result[count] ?? 0 };
   }, [count, measured, estimate]);
 
-  useIsomorphicLayoutEffect(() => {
+  const detachRef = useRef<(() => void) | null>(null);
+
+  /** Starts following the scroll element; a no-op while it is missing or already followed. */
+  const attach = useCallback(() => {
+    if (detachRef.current) return;
     const element = getScrollElement();
     if (!element) return;
     const update = () => {
@@ -96,11 +100,29 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
     const observer =
       typeof ResizeObserver === 'undefined' ? undefined : new ResizeObserver(() => update());
     observer?.observe(element);
-    return () => {
+    detachRef.current = () => {
       element.removeEventListener('scroll', update);
       observer?.disconnect();
+      detachRef.current = null;
     };
   }, [getScrollElement]);
+
+  const detach = useCallback(() => {
+    detachRef.current?.();
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    attach();
+    return detach;
+  }, [attach, detach]);
+
+  // React attaches refs child-first. When this hook runs inside a descendant of the scroll
+  // container — as the table body does — the container's ref is still null during the layout
+  // effect above, so nothing would ever follow the scroll and the window would stay on the first
+  // rows. Every ref is attached by the time passive effects run, so try again then.
+  useEffect(() => {
+    attach();
+  });
 
   /** Index of the last offset that is still at or before `position`. */
   const findIndex = useCallback(
