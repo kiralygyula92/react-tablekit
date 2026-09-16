@@ -9,24 +9,24 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "pnpm -r --filter react-tablekit build && pnpm docs:json && pnpm --filter site build",
-    "dev": "pnpm docs:json && pnpm --filter site dev",
+    "build": "pnpm --filter react-tablekit run build && pnpm --filter site run build",
+    "dev": "pnpm --filter site run dev",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "e2e": "pnpm --filter site e2e",
-    "size": "pnpm --filter react-tablekit size",
-    "check:package": "pnpm --filter react-tablekit check:package",
-    "docs:check": "pnpm --filter react-tablekit docs:check",
-    "docs:json": "pnpm --filter react-tablekit docs:json",
-    "verify": "pnpm --filter site build:data && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm conformance && pnpm e2e",
+    "e2e": "pnpm --filter site run e2e",
+    "size": "pnpm --filter react-tablekit run size",
+    "check:package": "pnpm --filter react-tablekit run check:package",
+    "docs:check": "pnpm --filter react-tablekit run docs:check",
+    "docs:json": "pnpm --filter react-tablekit run docs:json",
+    "verify": "pnpm --filter site run build:data && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit run lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm conformance && pnpm e2e",
     "changeset": "changeset",
     "version-packages": "changeset version && node scripts/sync-version.mjs && pnpm install --lockfile-only",
     "release": "pnpm build && changeset publish",
-    "conformance": "pnpm --filter site conformance"
+    "conformance": "pnpm --filter site run conformance"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.2",

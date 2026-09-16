@@ -53,7 +53,10 @@ if (errors.length > 0) {
 
 const vercel = {
   $schema: 'https://openapi.vercel.sh/vercel.json',
-  buildCommand: 'pnpm --filter react-tablekit build && pnpm docs:json && pnpm --filter site build',
+  // One step. The site aliases the library to its source and generates its own reference
+  // data, so nothing has to run before this and no order can be got wrong. `run` is explicit
+  // because a bare `pnpm --filter x <script>` was read as `exec` on the deploy host.
+  buildCommand: 'pnpm --filter site run build',
   outputDirectory: 'apps/site/dist',
   installCommand: 'pnpm install --frozen-lockfile',
   framework: null,

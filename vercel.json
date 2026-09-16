@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter react-tablekit build && pnpm docs:json && pnpm --filter site build",
+  "buildCommand": "pnpm --filter site run build",
   "outputDirectory": "apps/site/dist",
   "installCommand": "pnpm install --frozen-lockfile",
   "framework": null,

@@ -1,16 +1,30 @@
 /**
  * Transforms TypeDoc's `api.json` into the compact per-page JSON the API pages render (08 §6.2).
  *
- * Usage: `node scripts/build-api.mjs` (after `pnpm docs:json` in the library).
- * Output: `src/generated/api/<page>.json`.
+ * It runs TypeDoc itself when that file is missing, so there is no build order to get right: the
+ * script that needs the data produces it, in development, in CI and on the host. Getting that
+ * order wrong used to fail the deployment — or, worse, ship twelve empty reference pages.
+ *
+ * Usage: `node scripts/build-api.mjs`. Output: `src/generated/api/<page>.json`.
  */
+import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const API_JSON = resolve(here, '../../../packages/react-tablekit/dist/api.json');
+const LIB_DIR = resolve(here, '../../../packages/react-tablekit');
+const API_JSON = resolve(LIB_DIR, 'dist/api.json');
 const OUT_DIR = resolve(here, '../src/generated/api');
+
+/** Runs TypeDoc over the library's source, the same way its own `docs:json` script does. */
+function generateApiJson() {
+  const require = createRequire(resolve(LIB_DIR, 'package.json'));
+  const bin = resolve(dirname(require.resolve('typedoc/package.json')), 'bin/typedoc');
+  console.log('[build-api] dist/api.json not found — running TypeDoc');
+  execFileSync(process.execPath, [bin, '--json', API_JSON], { cwd: LIB_DIR, stdio: 'inherit' });
+}
 
 /** TypeDoc reflection kinds we care about. */
 const KIND = {
@@ -302,21 +316,7 @@ function declarationOf(node, declarations) {
   };
 }
 
-// Without `pnpm docs:json` there is nothing to transform. Keep whatever was generated before (or
-// write empty pages on a fresh clone) so a standalone site build still succeeds.
-if (!existsSync(API_JSON)) {
-  mkdirSync(OUT_DIR, { recursive: true });
-  for (const { page } of PAGES) {
-    const file = resolve(OUT_DIR, `${page}.json`);
-    if (!existsSync(file)) writeFileSync(file, '[]\n');
-  }
-  const playground = resolve(OUT_DIR, 'playground.json');
-  if (!existsSync(playground)) writeFileSync(playground, '{ "controls": [], "codeOnly": [] }\n');
-  console.warn(
-    '[build-api] dist/api.json not found — run `pnpm docs:json` first. Pages left as is.',
-  );
-  process.exit(0);
-}
+if (!existsSync(API_JSON)) generateApiJson();
 
 const root = JSON.parse(readFileSync(API_JSON, 'utf8'));
 
