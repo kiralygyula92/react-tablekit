@@ -6,30 +6,34 @@ you already know the address is not a flow.
 Each one is an automated test in `apps/site/e2e/flows.spec.ts`, so these paths are re-walked on
 every run rather than checked once. `pnpm --filter site e2e` runs them.
 
+The sidebar is collapsed to its nine sections with the current one open (D-12), so opening a
+section is a step in the path rather than something the tests work around.
+
 **7 of 8 flows complete. F6 is not applicable — see [EXCEPTIONS.md](../EXCEPTIONS.md) E-01.**
 
 ---
 
-## F1 Evaluate — marketing home → install decision
+## F1 Evaluate — the root → install decision
 
-| Step | Click                             | Lands on                              |
-| ---- | --------------------------------- | ------------------------------------- |
-| 1    | Open `/`                          | Marketing landing, hero and live demo |
-| 2    | Header → **Features**             | `/react-tablekit/all-features/`       |
-| 3    | **Sorting** in the features index | `/react-tablekit/sorting/`            |
-| 4    | Sidebar → **Overview**            | `/react-tablekit/`                    |
+| Step | Click                             | Lands on                        |
+| ---- | --------------------------------- | ------------------------------- |
+| 1    | Open `/`                          | 301 to `/react-tablekit/`       |
+| 2    | Sidebar → **Features**            | The section opens               |
+| 3    | Sidebar → **All features**        | `/react-tablekit/all-features/` |
+| 4    | **Sorting** in the features index | `/react-tablekit/sorting/`      |
 
-**Exit:** the Overview's "Start now" links lead to installation. There is no pricing page and
-nothing to buy (E-01), so the flow ends at install rather than at purchase.
+**Exit:** the Overview's "Start now" links lead to installation. There is no landing page in
+front of the documentation (E-16) and nothing to buy (E-01), so the flow starts at the Overview
+and ends at install rather than at purchase.
 
 ## F2 Adopt — overview → working installation
 
-| Step | Click                      | Lands on                                        |
-| ---- | -------------------------- | ----------------------------------------------- |
-| 1    | Open `/react-tablekit/`    | Overview                                        |
-| 2    | Sidebar → **Installation** | `/react-tablekit/getting-started/installation/` |
-| 3    | Sidebar → **Quickstart**   | `/react-tablekit/getting-started/quickstart/`   |
-| 4    | Sidebar → **Columns**      | `/react-tablekit/columns/`                      |
+| Step | Click                                    | Lands on                                        |
+| ---- | ---------------------------------------- | ----------------------------------------------- |
+| 1    | Open `/react-tablekit/`                  | Overview                                        |
+| 2    | Sidebar → **Installation**               | `/react-tablekit/getting-started/installation/` |
+| 3    | Sidebar → **Quickstart**                 | `/react-tablekit/getting-started/quickstart/`   |
+| 4    | Sidebar → **Features**, then **Columns** | `/react-tablekit/columns/`                      |
 
 **Exit:** a working installation. The quickstart's example is asserted to be complete — it
 contains `createColumnHelper` and no ellipsis, so it can be pasted rather than filled in.
@@ -61,12 +65,12 @@ back the CSS or theme object to paste.
 
 ## F5 Upgrade — version selector → migrated project
 
-| Step | Click                   | Lands on                                    |
-| ---- | ----------------------- | ------------------------------------------- |
-| 1    | Any docs page           | The version selector is in the header       |
-| 2    | Sidebar → **Versions**  | `/react-tablekit/getting-started/versions/` |
-| 3    | Sidebar → **Migration** | `/react-tablekit/migration/`                |
-| 4    | Sidebar → **Changelog** | `/react-tablekit/discover-more/changelog/`  |
+| Step | Click                                            | Lands on                                    |
+| ---- | ------------------------------------------------ | ------------------------------------------- |
+| 1    | Any docs page                                    | The version selector is in the header       |
+| 2    | Sidebar → **Getting started**, then **Versions** | `/react-tablekit/getting-started/versions/` |
+| 3    | Sidebar → **Migration** twice                    | `/react-tablekit/migration/`                |
+| 4    | Sidebar → **Discover more**, then **Changelog**  | `/react-tablekit/discover-more/changelog/`  |
 
 **Exit:** a migrated project. The selector has one entry and there is no version to migrate from
 yet (E-08, E-09); the path exists so that v2 needs no structural change.
@@ -80,11 +84,11 @@ rather than a restructure.
 
 ## F7 Support — any docs page → a ticket or an answer
 
-| Step | Click                       | Lands on                                   |
-| ---- | --------------------------- | ------------------------------------------ |
-| 1    | Open any docs page          | Sidebar carries **Support**                |
-| 2    | Sidebar → **Support**       | `/react-tablekit/getting-started/support/` |
-| 3    | **Open an issue on GitHub** | The issue tracker                          |
+| Step | Click                                           | Lands on                                   |
+| ---- | ----------------------------------------------- | ------------------------------------------ |
+| 1    | Open any docs page                              | Sidebar carries **Getting started**        |
+| 2    | Sidebar → **Getting started**, then **Support** | `/react-tablekit/getting-started/support/` |
+| 3    | **Open an issue on GitHub**                     | The issue tracker                          |
 
 **Exit:** a ticket. There is no paid channel, and the page says so rather than implying one.
 Security reports have their own private route to GitHub's advisories.

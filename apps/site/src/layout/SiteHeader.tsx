@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
-import { Link, NavLink } from 'react-router';
+import { Link } from 'react-router';
 import { useHotkey } from '../search/useHotkey';
 import { pluginConfig } from '../nav/nav';
 import { ThemeToggle } from './ThemeToggle';
@@ -11,10 +11,11 @@ const load = () => import('../search/CommandPalette');
 const CommandPalette = lazy(() => load().then((m) => ({ default: m.CommandPalette })));
 
 /**
- * One header, two surfaces (PPDS §2.1 / §2.2). The docs header carries the version selector and
- * never the marketing menus; both link home through the logo.
+ * The site header: the product, the version it documents, and the three tools — search, source,
+ * appearance. There are no section links here because the sidebar already lists every section;
+ * a second copy in the header would be one more thing to keep in step with the nav data.
  */
-export function SiteHeader({ surface }: { surface: 'marketing' | 'docs' }) {
+export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   // Once requested, the palette stays mounted so re-opening is instant.
   const [paletteRequested, setPaletteRequested] = useState(false);
@@ -26,43 +27,26 @@ export function SiteHeader({ surface }: { surface: 'marketing' | 'docs' }) {
 
   return (
     <header className="site-topbar">
-      <Link to="/" className="site-logo" aria-label={`${pluginConfig.name} home`}>
-        <span className="site-logo__mark" aria-hidden="true" />
+      <Link to="/react-tablekit/" className="site-logo">
         {pluginConfig.name}
       </Link>
 
-      {surface === 'marketing' ? (
-        <nav aria-label="Primary" className="site-nav">
-          <NavLink to="/react-tablekit/" className="site-nav__link">
-            Docs
-          </NavLink>
-          <NavLink to="/react-tablekit/all-features/" className="site-nav__link">
-            Features
-          </NavLink>
-          <NavLink to="/react-tablekit/demos/" className="site-nav__link">
-            Demos
-          </NavLink>
-        </nav>
-      ) : (
-        <nav aria-label="Documentation sections" className="site-nav">
-          <label className="site-version-select">
-            <span className="site-visually-hidden">Version</span>
-            <select
-              value={pluginConfig.versions?.[0]?.href ?? '/react-tablekit/'}
-              onChange={(e) => {
-                window.location.href = e.target.value;
-              }}
-            >
-              {(pluginConfig.versions ?? []).map((v) => (
-                <option key={v.label} value={v.href}>
-                  {v.label}
-                  {v.supported === false ? ' (unsupported)' : ''}
-                </option>
-              ))}
-            </select>
-          </label>
-        </nav>
-      )}
+      <label className="site-version-select">
+        <span className="site-visually-hidden">Version</span>
+        <select
+          value={pluginConfig.versions?.[0]?.href ?? '/react-tablekit/'}
+          onChange={(e) => {
+            window.location.href = e.target.value;
+          }}
+        >
+          {(pluginConfig.versions ?? []).map((v) => (
+            <option key={v.label} value={v.href}>
+              {v.label}
+              {v.supported === false ? ' (unsupported)' : ''}
+            </option>
+          ))}
+        </select>
+      </label>
 
       <div className="site-topbar__end">
         <button

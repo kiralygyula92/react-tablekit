@@ -1,7 +1,6 @@
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { pages } from './content/pages';
 import { DocsLayout, DocsPage } from './layout/DocsLayout';
-import { MarketingPage } from './layout/MarketingLayout';
 import { EmbedPage } from './pages/EmbedPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
@@ -15,29 +14,21 @@ import { NotFoundPage } from './pages/NotFoundPage';
 export function SiteRoutes() {
   return (
     <Routes>
-      {pages
-        .filter((page) => !page.pathname.startsWith('/react-tablekit/'))
-        .map((page) => (
-          <Route
-            key={page.pathname}
-            path={page.pathname}
-            element={<MarketingPage pathname={page.pathname} />}
-          />
-        ))}
+      {/* There is one surface. The root is the documentation's front door, and the host 301s to
+          it; this covers the dev server and any client-side arrival at `/`. */}
+      <Route path="/" element={<Navigate to="/react-tablekit/" replace />} />
 
       {/* A chrome-less single demo, used by the width-preset iframes and by the test suite. */}
       <Route path="/embed/*" element={<EmbedPage />} />
 
       <Route element={<DocsLayout />}>
-        {pages
-          .filter((page) => page.pathname.startsWith('/react-tablekit/'))
-          .map((page) => (
-            <Route
-              key={page.pathname}
-              path={page.pathname}
-              element={<DocsPage pathname={page.pathname} />}
-            />
-          ))}
+        {pages.map((page) => (
+          <Route
+            key={page.pathname}
+            path={page.pathname}
+            element={<DocsPage pathname={page.pathname} />}
+          />
+        ))}
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

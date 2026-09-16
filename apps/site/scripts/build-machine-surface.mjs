@@ -35,8 +35,7 @@ const pages = JSON.parse(readFileSync(indexFile, 'utf8'));
 const config = JSON.parse(readFileSync(configFile, 'utf8'));
 const nav = JSON.parse(readFileSync(navFile, 'utf8'));
 
-const docs = pages.filter((p) => p.pathname.startsWith('/react-tablekit/'));
-const marketing = pages.filter((p) => !p.pathname.startsWith('/react-tablekit/'));
+const docs = pages;
 
 /* ── Markdown twins ────────────────────────────────────────────────────────
    `/react-tablekit/sorting/` also answers at `/react-tablekit/sorting/index.md` with the page's
@@ -107,11 +106,6 @@ const flatten = (nodes, out = []) => {
 };
 
 const llms = [`# ${config.name}`, '', `> ${config.description}`, ''];
-if (marketing.length > 0) {
-  llms.push('## Home', '');
-  for (const page of marketing) llms.push(entry(page.pathname));
-  llms.push('');
-}
 for (const section of nav) {
   const listed = flatten(section.children ?? []).filter((p) => titleOf(p));
   if (listed.length === 0) continue;
@@ -122,7 +116,7 @@ for (const section of nav) {
 writeFileSync(path.join(publicRoot, 'llms.txt'), `${llms.join('\n').trim()}\n`);
 
 /* ── sitemap.xml ───────────────────────────────────────────────────────────
-   Both surfaces. `/embed/*` is excluded: it is a demo frame, not a page. */
+   Every published page. `/embed/*` is excluded: it is a demo frame, not a page. */
 
 const today = new Date().toISOString().slice(0, 10);
 const priority = (pathname) =>
@@ -184,6 +178,6 @@ const rss = [
 writeFileSync(path.join(publicRoot, 'changelog.xml'), `${rss.join('\n')}\n`);
 
 console.log(
-  `[machine-surface] ${twins} markdown twins, llms.txt (${docs.length} docs pages), ` +
+  `[machine-surface] ${twins} markdown twins, llms.txt (${docs.length} pages), ` +
     `sitemap.xml (${pages.length} urls), robots.txt, changelog.xml (${releases.length} releases)`,
 );

@@ -9,8 +9,8 @@ const load = (factory: () => Promise<{ default: ComponentType }>) => {
   const Loaded = lazy(factory);
   return function Interactive() {
     return (
-      <ClientOnly placeholder={<p className="site-muted">Loading…</p>}>
-        <Suspense fallback={<p className="site-muted">Loading…</p>}>
+      <ClientOnly placeholder={<div className="interactive-placeholder">Loading…</div>}>
+        <Suspense fallback={<div className="interactive-placeholder">Loading…</div>}>
           <Loaded />
         </Suspense>
       </ClientOnly>

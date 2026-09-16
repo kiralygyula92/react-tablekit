@@ -201,7 +201,7 @@ export function PlaygroundPage() {
 
   return (
     <div className="playground">
-      <aside className="playground__controls" aria-label="Options">
+      <section className="playground__controls" aria-label="Options">
         <div className="playground__head">
           {' '}
           <button type="button" onClick={resetAll}>
@@ -273,48 +273,50 @@ export function PlaygroundPage() {
           </label>
         </div>
 
-        {groups.length === 0 && <p className="site-muted">No props match.</p>}
-        {groups.map(([group, controls]) => {
-          const changedInGroup = controls.filter((c) => c.path in props).length;
-          return (
-            <details key={group} open={filtering}>
-              <summary>
-                {group}{' '}
-                <span className="site-muted">
-                  ({controls.length}
-                  {changedInGroup > 0 ? `, ${String(changedInGroup)} changed` : ''})
-                </span>
-              </summary>
-              <div className="playground__group">
-                {controls.map((control) => (
-                  <PropControl
-                    key={`${control.path}-${String(generation)}`}
-                    control={control}
-                    value={props[control.path]}
-                    onChange={(value) => setProp(control.path, value)}
-                  />
-                ))}
-              </div>
-            </details>
-          );
-        })}
+        <div className="playground__props">
+          {groups.length === 0 && <p className="site-muted">No props match.</p>}
+          {groups.map(([group, controls]) => {
+            const changedInGroup = controls.filter((c) => c.path in props).length;
+            return (
+              <details key={group} open={filtering}>
+                <summary>
+                  {group}{' '}
+                  <span className="site-muted">
+                    ({controls.length}
+                    {changedInGroup > 0 ? `, ${String(changedInGroup)} changed` : ''})
+                  </span>
+                </summary>
+                <div className="playground__group">
+                  {controls.map((control) => (
+                    <PropControl
+                      key={`${control.path}-${String(generation)}`}
+                      control={control}
+                      value={props[control.path]}
+                      onChange={(value) => setProp(control.path, value)}
+                    />
+                  ))}
+                </div>
+              </details>
+            );
+          })}
 
-        <details>
-          <summary>
-            Code only <span className="site-muted">({PROP_SCHEMA.codeOnly.length})</span>
-          </summary>
-          <p className="site-muted">
-            Callbacks, render functions, registries and data cannot be toggled; set them in code.
-          </p>
-          <ul className="playground__code-only">
-            {PROP_SCHEMA.codeOnly.map((prop) => (
-              <li key={prop.name}>
-                <code>{prop.name}</code> <span className="site-muted">{prop.type}</span>
-              </li>
-            ))}
-          </ul>
-        </details>
-      </aside>
+          <details>
+            <summary>
+              Code only <span className="site-muted">({PROP_SCHEMA.codeOnly.length})</span>
+            </summary>
+            <p className="site-muted">
+              Callbacks, render functions, registries and data cannot be toggled; set them in code.
+            </p>
+            <ul className="playground__code-only">
+              {PROP_SCHEMA.codeOnly.map((prop) => (
+                <li key={prop.name}>
+                  <code>{prop.name}</code> <span className="site-muted">{prop.type}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </div>
+      </section>
 
       <section className="playground__preview" aria-label="Preview">
         <PreviewBoundary key={previewKey} onReset={() => setProps({})}>

@@ -7,6 +7,11 @@
   "trailingSlash": true,
   "redirects": [
     {
+      "source": "/",
+      "destination": "/react-tablekit/",
+      "permanent": true
+    },
+    {
       "source": "/docs/getting-started",
       "destination": "/react-tablekit/getting-started/installation/",
       "permanent": true

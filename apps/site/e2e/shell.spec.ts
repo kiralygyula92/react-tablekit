@@ -31,12 +31,9 @@ const pages = JSON.parse(readFileSync(indexPath, 'utf8')) as IndexedPage[];
 for (const page_ of pages) {
   test(`${page_.pathname} renders without console errors and passes axe`, async ({ page }) => {
     await page.goto(page_.pathname);
-    // A documentation page's heading is its title, written in one place (PPDS P10). The marketing
-    // surface writes its own headline, so there only the presence of an h1 is asserted.
+    // A page's heading is its title, written in one place (PPDS P10).
     await expect(
-      page_.pathname.startsWith('/react-tablekit/')
-        ? page.getByRole('heading', { level: 1, name: page_.frontmatter.title })
-        : page.getByRole('heading', { level: 1 }),
+      page.getByRole('heading', { level: 1, name: page_.frontmatter.title }),
     ).toBeVisible();
     // The showcase pages default to the `classic` preset, whose header contrast is a documented
     // exception (see CLASSIC_HEADER_CONTRAST_EXCEPTION). Every other rule still runs.
@@ -120,18 +117,10 @@ test('a long virtualized member table scrolls all the way to its last row', asyn
   }).toPass({ timeout: 10_000 });
 });
 
-test('the marketing header routes into the documentation', async ({ page }) => {
+test('the root redirects into the documentation', async ({ page }) => {
+  // There is one surface, so `/` is the documentation's front door rather than a landing page
+  // that would need its own copy of the navigation.
   await page.goto('/');
-  // Crossing into the documentation swaps the header for the docs surface (PPDS P1), so the
-  // marketing nav is gone on the other side — each link is followed from the home page.
-  const nav = page.getByRole('navigation', { name: 'Primary' });
-  await nav.getByRole('link', { name: 'Features' }).click();
-  await expect(page).toHaveURL(/\/react-tablekit\/all-features\/$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'All features' })).toBeVisible();
-  await expect(nav).toHaveCount(0);
-
-  await page.goto('/');
-  await nav.getByRole('link', { name: 'Docs' }).click();
   await expect(page).toHaveURL(/\/react-tablekit\/$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Overview' })).toBeVisible();
 });
@@ -139,22 +128,53 @@ test('the marketing header routes into the documentation', async ({ page }) => {
 test('the documentation sidebar links to every page in the navigation', async ({ page }) => {
   await page.goto('/react-tablekit/');
   const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  await sidebar.getByRole('button', { name: 'Features' }).click();
   await sidebar.getByRole('link', { name: 'Sorting', exact: true }).click();
   await expect(page).toHaveURL(/\/react-tablekit\/sorting\/$/);
   await expect(page.getByRole('heading', { level: 1, name: 'Sorting' })).toBeVisible();
 });
 
-test('theme toggle switches light / dark / classic and persists', async ({ page }) => {
-  await page.goto('/');
+test('the theme toggle switches light and dark, and the choice persists', async ({ page }) => {
+  await page.goto('/react-tablekit/');
   const html = page.locator('html');
-  await page.getByRole('radio', { name: 'Dark' }).check({ force: true });
+
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await expect(html).toHaveAttribute('data-site-theme', 'dark');
   await expectNoA11yViolations(page);
-  await page.getByRole('radio', { name: 'Classic' }).check({ force: true });
-  await expect(html).toHaveAttribute('data-site-theme', 'classic');
+
+  // The tables follow the site, so a dark page never shows the light preset.
+  await page.goto('/react-tablekit/sorting/');
+  await expect(html).toHaveAttribute('data-site-theme', 'dark');
+  const cell = page.locator('.tk-root tbody tr td').first();
+  await expect(cell).toBeVisible();
+  const background = await cell.evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(background).not.toBe('rgb(255, 255, 255)');
+
   await page.reload();
-  await expect(html).toHaveAttribute('data-site-theme', 'classic');
-  await expect(page.getByRole('radio', { name: 'Classic' })).toBeChecked();
+  await expect(html).toHaveAttribute('data-site-theme', 'dark');
+  await expect(page.getByRole('button', { name: 'Switch to light theme' })).toBeVisible();
+});
+
+test('the sidebar collapses to its sections, and opens the one being read', async ({ page }) => {
+  await page.goto('/react-tablekit/sorting/');
+  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+
+  // The section holding this page is open; the others are collapsed, so all nine fit on screen.
+  const features = sidebar.getByRole('button', { name: 'Features' });
+  await expect(features).toHaveAttribute('aria-expanded', 'true');
+  await expect(sidebar.getByRole('button', { name: 'Integrations' })).toHaveAttribute(
+    'aria-expanded',
+    'false',
+  );
+  await expect(sidebar.getByRole('link', { name: 'Sorting', exact: true })).toBeVisible();
+
+  // Collapsing hides its pages; opening a second section does not close the first.
+  await features.click();
+  await expect(sidebar.getByRole('link', { name: 'Sorting', exact: true })).toBeHidden();
+  await features.click();
+  await sidebar.getByRole('button', { name: 'Guides' }).click();
+  await expect(features).toHaveAttribute('aria-expanded', 'true');
+  await expect(sidebar.getByRole('link', { name: 'Testing' })).toBeVisible();
 });
 
 test('is usable at 375px width', async ({ page }) => {

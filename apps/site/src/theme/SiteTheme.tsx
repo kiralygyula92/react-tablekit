@@ -7,16 +7,23 @@ import {
   type ReactNode,
 } from 'react';
 
-/** Site-wide appearance. `classic` also switches demo tables to the classic preset. */
-export type SiteTheme = 'light' | 'dark' | 'classic';
+/**
+ * Site-wide appearance.
+ *
+ * Light and dark only. `classic` is a *table* preset, not a site appearance — it lives on the
+ * theming page, in the theme editor and on the showcase demos, which is where a reader is
+ * comparing presets rather than choosing how to read the documentation.
+ */
+export type SiteTheme = 'light' | 'dark';
 
-export const SITE_THEMES: readonly SiteTheme[] = ['light', 'dark', 'classic'];
+export const SITE_THEMES: readonly SiteTheme[] = ['light', 'dark'];
 
 const STORAGE_KEY = 'tk-site:theme';
 
 interface SiteThemeValue {
   theme: SiteTheme;
   setTheme: (theme: SiteTheme) => void;
+  toggle: () => void;
 }
 
 const SiteThemeContext = createContext<SiteThemeValue | null>(null);
@@ -43,7 +50,7 @@ function subscribe(listener: () => void): () => void {
 
 function getSnapshot(): SiteTheme {
   const fromDom = document.documentElement.dataset.siteTheme;
-  return SITE_THEMES.includes(fromDom as SiteTheme) ? (fromDom as SiteTheme) : 'light';
+  return fromDom === 'dark' ? 'dark' : 'light';
 }
 
 const getServerSnapshot = (): SiteTheme => 'light';
@@ -61,7 +68,10 @@ export function SiteThemeProvider({ children }: { children: ReactNode }) {
     for (const listener of listeners) listener();
   }, []);
 
-  const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
+  const value = useMemo(
+    () => ({ theme, setTheme, toggle: () => setTheme(theme === 'dark' ? 'light' : 'dark') }),
+    [theme, setTheme],
+  );
   return <SiteThemeContext.Provider value={value}>{children}</SiteThemeContext.Provider>;
 }
 

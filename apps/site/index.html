@@ -16,8 +16,7 @@
       // Apply the stored site theme before first paint to avoid a flash.
       try {
         var t = localStorage.getItem('tk-site:theme');
-        if (t === 'light' || t === 'dark' || t === 'classic')
-          document.documentElement.dataset.siteTheme = t;
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.siteTheme = t;
       } catch (e) {}
     </script>
   </head>

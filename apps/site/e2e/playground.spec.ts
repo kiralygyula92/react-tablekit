@@ -9,7 +9,7 @@ const schema = JSON.parse(
 
 test('every controllable prop has a control', async ({ page }) => {
   await page.goto('/react-tablekit/demos/playground/');
-  const panel = page.getByRole('complementary', { name: 'Options' });
+  const panel = page.getByRole('region', { name: 'Options' });
   await expect(panel.locator('.prop-control')).toHaveCount(schema.controls.length);
   // The generated count is the real contract; guard against it collapsing.
   expect(schema.controls.length).toBeGreaterThanOrEqual(100);
@@ -21,7 +21,7 @@ test('the rows-per-page dropdown can be switched off, and the link keeps it off'
   await page.goto('/react-tablekit/demos/playground/');
   await expect(page.getByLabel('Rows per page:')).toBeVisible();
 
-  const panel = page.getByRole('complementary', { name: 'Options' });
+  const panel = page.getByRole('region', { name: 'Options' });
   await panel.getByPlaceholder(/Filter props/).fill('pageSizeOptions');
   await panel.getByRole('checkbox', { name: 'false for pagination.pageSizeOptions' }).check();
 
@@ -47,7 +47,7 @@ test('the rows-per-page dropdown can be switched off, and the link keeps it off'
 
 test('resetting a prop removes it from the code', async ({ page }) => {
   await page.goto('/react-tablekit/demos/playground/');
-  const panel = page.getByRole('complementary', { name: 'Options' });
+  const panel = page.getByRole('region', { name: 'Options' });
   await panel.getByPlaceholder(/Filter props/).fill('enableRowSelection');
   await panel.getByLabel('enableRowSelection', { exact: true }).selectOption('true');
   await expect(page.getByTestId('playground-code')).toContainText('enableRowSelection');

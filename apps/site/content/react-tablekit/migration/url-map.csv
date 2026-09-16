@@ -1,5 +1,5 @@
 legacy_url,content_type_found,target_archetype,target_url,action,redirect
-/,marketing,G Marketing landing,/,rewrite,(none — same URL)
+/,marketing,(retired),/react-tablekit/,retire,301
 /docs/getting-started,install,F Getting started,/react-tablekit/getting-started/installation/,split,301
 /docs/versioning,how-to,F Getting started,/react-tablekit/getting-started/versions/,port,301
 /changelog,changelog,I Editorial,/react-tablekit/discover-more/changelog/,port,301

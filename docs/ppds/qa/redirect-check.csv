@@ -1,4 +1,5 @@
 legacy_url,destination,status_expected,destination_status,result
+/,/react-tablekit/,301,200,ok
 /docs/getting-started,/react-tablekit/getting-started/installation/,301,200,ok
 /docs/versioning,/react-tablekit/getting-started/versions/,301,200,ok
 /changelog,/react-tablekit/discover-more/changelog/,301,200,ok

@@ -9,6 +9,12 @@ export interface Frontmatter {
   /** Library symbols this page documents. Drives `## API` links and the reverse `usedBy` list. */
   symbols?: string[];
   group?: string;
+  /**
+   * Drop the right-hand table of contents and give the page the full content width. For pages
+   * whose subject is a wide thing — the playground's table, the theme editor's preview — where
+   * 220px of rail costs more than the three headings it would list.
+   */
+  wide?: boolean;
   plan?: 'free';
   lifecycle?: 'new' | 'preview' | 'beta' | 'planned' | 'deprecated' | 'legacy';
   /** Resource chips, rendered from data rather than written per page. */

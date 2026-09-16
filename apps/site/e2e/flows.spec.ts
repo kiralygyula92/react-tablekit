@@ -8,20 +8,19 @@ import { expect, test } from './fixtures';
  * is recorded as exception E-01.
  */
 
-test('F1 evaluate: landing → capability → docs overview → features index', async ({ page }) => {
+test('F1 evaluate: root → overview → features index → a capability', async ({ page }) => {
+  // The root is the documentation: there is no landing page in front of it (E-16).
   await page.goto('/');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  await expect(page).toHaveURL(/\/react-tablekit\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Overview' })).toBeVisible();
 
-  const primary = page.getByRole('navigation', { name: 'Primary' });
-  await primary.getByRole('link', { name: 'Features' }).click();
+  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  await sidebar.getByRole('button', { name: 'Features' }).click();
+  await sidebar.getByRole('link', { name: 'All features' }).click();
   await expect(page).toHaveURL(/\/react-tablekit\/all-features\/$/);
 
   await page.getByRole('link', { name: 'Sorting', exact: true }).first().click();
   await expect(page.getByRole('heading', { level: 1, name: 'Sorting' })).toBeVisible();
-
-  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
-  await sidebar.getByRole('link', { name: 'Overview', exact: true }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'Overview' })).toBeVisible();
 });
 
 test('F2 adopt: overview → installation → quickstart → a capability', async ({ page }) => {
@@ -38,6 +37,7 @@ test('F2 adopt: overview → installation → quickstart → a capability', asyn
   await expect(code).toContainText('createColumnHelper');
   await expect(code).not.toContainText('...');
 
+  await sidebar.getByRole('button', { name: 'Features' }).click();
   await sidebar.getByRole('link', { name: 'Columns', exact: true }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Columns' })).toBeVisible();
 });
@@ -80,12 +80,15 @@ test('F5 upgrade: version selector → Versions → Migration → Changelog', as
   await expect(page.getByLabel('Version')).toBeVisible();
 
   const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  await sidebar.getByRole('button', { name: 'Getting started' }).click();
   await sidebar.getByRole('link', { name: 'Versions' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Versions' })).toBeVisible();
 
+  await sidebar.getByRole('button', { name: 'Migration' }).click();
   await sidebar.getByRole('link', { name: 'Migration', exact: true }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Migration' })).toBeVisible();
 
+  await sidebar.getByRole('button', { name: 'Discover more' }).click();
   await sidebar.getByRole('link', { name: 'Changelog' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Changelog' })).toBeVisible();
 });
@@ -93,6 +96,7 @@ test('F5 upgrade: version selector → Versions → Migration → Changelog', as
 test('F7 support: any docs page → Support → a channel that resolves', async ({ page }) => {
   await page.goto('/react-tablekit/pagination/');
   const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  await sidebar.getByRole('button', { name: 'Getting started' }).click();
   await sidebar.getByRole('link', { name: 'Support' }).click();
   await expect(page.getByRole('heading', { level: 1, name: 'Support' })).toBeVisible();
 
@@ -104,7 +108,7 @@ test('F8 agent: llms.txt → a .md twin, both machine-readable', async ({ page, 
   const llms = await request.get('/llms.txt');
   expect(llms.status()).toBe(200);
   const text = await llms.text();
-  expect(text).toContain('# react-tablekit');
+  expect(text).toContain('# React Tablekit');
 
   const first = /\]\((https?:\/\/[^)]+\.md)\)/.exec(text)?.[1];
   expect(first, 'llms.txt lists at least one entry').toBeTruthy();

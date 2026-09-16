@@ -1,41 +1,56 @@
 /* Site chrome only. Library styles are imported separately (react-tablekit/styles.css). */
 :root {
+  /* A slate-navy scale, so the chrome recedes and the tables and code are what carry colour. */
   --site-bg: #ffffff;
-  --site-bg-muted: #f5f5f5;
+  --site-bg-muted: #f8fafc;
   --site-surface: #ffffff;
-  --site-text: #252b37;
-  --site-text-muted: #5d6270;
-  --site-border: #e9eaeb;
-  --site-accent: #1769c2;
+  --site-surface-raised: #f1f5f9;
+  --site-text: #0f172a;
+  --site-text-muted: #475569;
+  --site-border: #e2e8f0;
+  --site-border-strong: #cbd5e1;
+  --site-accent: #2563eb;
+  --site-accent-soft: #eff6ff;
   --site-accent-contrast: #ffffff;
-  --site-code-bg: #f3f4f6;
+  --site-code-bg: #f1f5f9;
+  --site-warning: #b45309;
+  --site-warning-soft: #fffbeb;
+  --site-shadow: 0 1px 2px rgb(15 23 42 / 6%);
+  --site-header-h: 56px;
   --site-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --site-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
 }
 
 :root[data-site-theme='dark'] {
-  --site-bg: #0f1115;
-  --site-bg-muted: #161a20;
-  --site-surface: #161a20;
-  --site-text: #e6e8eb;
-  --site-text-muted: #a3aab5;
-  --site-border: #262b33;
-  --site-accent: #6cb4ff;
-  --site-accent-contrast: #0f1115;
-  --site-code-bg: #1b2028;
+  --site-bg: #0b1220;
+  --site-bg-muted: #0f172a;
+  --site-surface: #101a2d;
+  --site-surface-raised: #16233a;
+  --site-text: #e2e8f0;
+  --site-text-muted: #94a3b8;
+  --site-border: #1e293b;
+  --site-border-strong: #334155;
+  --site-accent: #60a5fa;
+  --site-accent-soft: #14294a;
+  --site-accent-contrast: #0b1220;
+  --site-code-bg: #101a2d;
+  --site-warning: #fbbf24;
+  --site-warning-soft: #251c08;
+  --site-shadow: 0 1px 2px rgb(0 0 0 / 40%);
   color-scheme: dark;
-}
-
-:root[data-site-theme='classic'] {
-  --site-bg: #f5f5f5;
-  --site-font: 'Open Sans Variable', 'Open Sans', Arial, sans-serif;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html {
+  /* The header is sticky, so an anchor jump has to clear it. The table of contents reads this
+     same value to decide which heading the reader is under. */
+  scroll-padding-top: 76px;
 }
 
 body {
@@ -89,25 +104,51 @@ code {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 24px;
-  padding: 10px 20px;
-  background: var(--site-surface);
+  gap: 8px 20px;
+  min-height: var(--site-header-h);
+  padding: 8px 24px;
+  background: var(--site-bg);
   border-bottom: 1px solid var(--site-border);
 }
 
 .site-logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   font-weight: 700;
   color: var(--site-text);
   text-decoration: none;
 }
-.site-logo__mark {
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  background: var(--site-accent);
+.site-logo {
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+}
+
+/* The version reads as a chip beside the product name: a small, quiet pill rather than a form
+   control, because it is a label that happens to be switchable. */
+.site-version-select select {
+  appearance: none;
+  padding: 4px 28px 4px 12px;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--site-text-muted);
+  background: var(--site-bg-muted);
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentcolor 50%),
+    linear-gradient(135deg, currentcolor 50%, transparent 50%);
+  background-position:
+    right 14px center,
+    right 9px center;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+  border: 1px solid var(--site-border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.site-version-select select:hover {
+  color: var(--site-text);
+  border-color: var(--site-border-strong);
 }
 
 .site-nav,
@@ -137,36 +178,25 @@ code {
   font-family: var(--site-mono);
 }
 
-.site-theme-toggle {
+.theme-toggle {
   display: inline-flex;
-  margin: 0;
-  padding: 2px;
-  border: 1px solid var(--site-border);
-  border-radius: 6px;
-}
-.site-theme-toggle__option {
-  position: relative;
-  padding: 2px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-.site-theme-toggle__option input {
-  position: absolute;
-  opacity: 0;
-  inset: 0;
-  margin: 0;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  color: var(--site-text-muted);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
   cursor: pointer;
 }
-.site-theme-toggle__option:has(input:focus-visible) {
-  outline: 2px solid var(--site-accent);
-}
-.site-theme-toggle__option[data-active] {
-  background: var(--site-accent);
-  color: var(--site-accent-contrast);
+.theme-toggle:hover {
+  color: var(--site-text);
+  background: var(--site-bg-muted);
+  border-color: var(--site-border);
 }
 
-/* Body */
 .site-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -206,10 +236,21 @@ code {
 }
 
 .site-prose {
-  max-width: 820px;
-}
-.site-prose--wide {
   max-width: none;
+}
+/*
+ * A line of prose stays readable at about 78 characters however wide the window is. Demos,
+ * tables and code blocks are deliberately not capped: width is what they are for.
+ */
+.site-prose > p,
+.site-prose > ul,
+.site-prose > ol,
+.site-prose > blockquote,
+.site-prose > h2,
+.site-prose > h3,
+.site-prose > h4,
+.page-header .site-lead {
+  max-width: 78ch;
 }
 .site-lead {
   font-size: 1.1rem;
@@ -570,21 +611,34 @@ code {
 
 /* ── Ctrl+K search palette (08 §1) ──────────────────────────────────────── */
 
+/* A search field in shape, a button in behaviour: it opens the palette rather than typing
+   into anything, and it is wide enough to read as the place to search from. */
 .palette-trigger {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  min-width: 260px;
   font: inherit;
-  font-size: 0.85rem;
-  padding: 4px 10px;
+  font-size: 0.875rem;
+  padding: 6px 10px;
   color: var(--site-text-muted);
-  background: var(--site-surface);
+  background: var(--site-bg-muted);
   border: 1px solid var(--site-border);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  text-align: start;
+}
+.palette-trigger .palette__kbd {
+  margin-inline-start: auto;
 }
 .palette-trigger:hover {
   color: var(--site-text);
+  border-color: var(--site-border-strong);
+}
+@media (max-width: 860px) {
+  .palette-trigger {
+    min-width: 0;
+  }
 }
 
 .palette__kbd {
@@ -687,45 +741,70 @@ code {
   border-top: 1px solid var(--site-border);
 }
 
-/* ── Playground ────────────────────────────────────────────────────── */
+/* ── Playground ────────────────────────────────────────────────────────────
+   Options above, table below. The table is the thing being demonstrated, so it gets the full
+   width of the page rather than what is left over beside a column of controls — a table squeezed
+   into 60% of the viewport cannot show pinning, horizontal scroll or a wide column set. */
 .playground {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
+
+.playground__controls {
+  border: 1px solid var(--site-border);
+  border-radius: 12px;
+  background: var(--site-surface);
+  overflow: hidden;
+}
+
 .playground__head {
   display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--site-border);
+  background: var(--site-bg-muted);
 }
 .playground__head h1 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 .playground__head button {
   font: inherit;
-  padding: 4px 10px;
+  font-size: 0.8125rem;
+  padding: 4px 12px;
   color: var(--site-text);
   background: var(--site-surface);
   border: 1px solid var(--site-border);
   border-radius: 6px;
   cursor: pointer;
 }
-.playground__controls details {
-  border-bottom: 1px solid var(--site-border);
-  padding: 8px 0;
+.playground__head button:hover {
+  border-color: var(--site-accent);
+  color: var(--site-accent);
 }
-.playground__controls summary {
+
+/* The setup groups sit side by side across the top: they are six short lists, not a column. */
+.playground__controls > details {
+  border-bottom: 1px solid var(--site-border);
+}
+.playground__controls > details > summary {
+  padding: 8px 16px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.875rem;
+}
+.playground__controls > details > summary:hover {
+  background: var(--site-bg-muted);
 }
 .playground__group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 8px 20px;
+  padding: 4px 16px 14px;
 }
 .playground__control {
   display: flex;
@@ -738,13 +817,77 @@ code {
 .playground__control input[type='number'] {
   font: inherit;
   font-size: 0.85rem;
-  padding: 2px 6px;
+  padding: 3px 6px;
   max-width: 130px;
   color: var(--site-text);
   background: var(--site-surface);
   border: 1px solid var(--site-border);
-  border-radius: 4px;
+  border-radius: 6px;
 }
+
+/* 151 prop controls would push the table off the screen, so the list scrolls inside the panel
+   and the filter stays pinned to the top of it. */
+.playground__props-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 10px 16px;
+  background: var(--site-bg-muted);
+  border-bottom: 1px solid var(--site-border);
+}
+.playground__props-title {
+  margin: 0;
+  font-size: 0.875rem;
+  flex: 0 0 auto;
+}
+.playground__filter {
+  flex: 1 1 220px;
+}
+.playground__filter input {
+  width: 100%;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  color: var(--site-text);
+  background: var(--site-surface);
+  border: 1px solid var(--site-border);
+  border-radius: 6px;
+}
+.playground__changed-only {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.playground__props {
+  max-height: 44vh;
+  overflow-y: auto;
+}
+.playground__props > details {
+  border-bottom: 1px solid var(--site-border);
+}
+.playground__props > details:last-child {
+  border-bottom: 0;
+}
+.playground__props > details > summary {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.playground__props > details > summary:hover {
+  background: var(--site-bg-muted);
+}
+.playground__props .playground__group {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 4px 16px;
+}
+
 .playground__preview {
   min-width: 0;
   display: flex;
@@ -756,60 +899,13 @@ code {
   overflow: auto;
 }
 
-/* The options panel scrolls on its own, so the preview stays in view while props change. */
-.playground {
-  grid-template-columns: 340px minmax(0, 1fr);
-}
-.playground__controls {
-  position: sticky;
-  top: 64px;
-  max-height: calc(100vh - 80px);
-  overflow-y: auto;
-  padding-right: 8px;
-}
-.playground__props-bar {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 12px;
-  padding: 10px 0;
-  background: var(--site-bg);
-  border-bottom: 1px solid var(--site-border);
-}
-.playground__props-title {
-  margin: 0;
-  font-size: 1rem;
-  flex: 1 1 100%;
-}
-.playground__filter {
-  flex: 1 1 auto;
-}
-.playground__filter input {
-  width: 100%;
-  font: inherit;
-  font-size: 0.85rem;
-  padding: 4px 8px;
-  color: var(--site-text);
-  background: var(--site-surface);
-  border: 1px solid var(--site-border);
-  border-radius: 4px;
-}
-.playground__changed-only {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.85rem;
-}
 .prop-control {
   padding: 6px 8px;
   border-radius: 6px;
   font-size: 0.85rem;
 }
 .prop-control[data-changed] {
-  background: color-mix(in srgb, var(--site-accent) 10%, transparent);
+  background: var(--site-accent-soft);
 }
 .prop-control__head {
   display: flex;
@@ -870,7 +966,7 @@ code {
 }
 .playground__code-only {
   margin: 0;
-  padding-left: 18px;
+  padding: 0 16px 14px 34px;
   font-size: 0.8rem;
 }
 .playground__error {
@@ -884,12 +980,9 @@ code {
   padding: 4px 10px;
   cursor: pointer;
 }
-@media (max-width: 960px) {
-  .playground {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .playground__controls {
-    position: static;
+
+@media (max-width: 860px) {
+  .playground__props {
     max-height: none;
   }
 }

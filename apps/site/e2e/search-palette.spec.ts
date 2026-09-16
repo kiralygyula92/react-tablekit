@@ -16,7 +16,7 @@ async function openWithHotkey(page: Page) {
 }
 
 test('Ctrl+K opens the palette and Escape closes it', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/react-tablekit/');
   const dialog = await openWithHotkey(page);
   // The input is focused on open, so typing goes straight into the search.
   await expect(dialog.getByRole('combobox', { name: 'Search' })).toBeFocused();
@@ -25,13 +25,13 @@ test('Ctrl+K opens the palette and Escape closes it', async ({ page }) => {
 });
 
 test('the topbar trigger opens the palette', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/react-tablekit/');
   await page.getByRole('button', { name: /Search/ }).click();
   await expect(page.getByRole('dialog', { name: 'Search the documentation' })).toBeVisible();
 });
 
 test('results are grouped, and Enter opens the highlighted one', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/react-tablekit/');
   const dialog = await openWithHotkey(page);
   await dialog.getByRole('combobox', { name: 'Search' }).fill('virtualization');
 
@@ -57,7 +57,7 @@ test('results are grouped, and Enter opens the highlighted one', async ({ page }
 });
 
 test('searches API symbols and theme tokens, not just pages', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/react-tablekit/');
   const dialog = await openWithHotkey(page);
   const input = dialog.getByRole('combobox', { name: 'Search' });
 
@@ -70,14 +70,14 @@ test('searches API symbols and theme tokens, not just pages', async ({ page }) =
 });
 
 test('an unmatched query says so rather than showing nothing', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/react-tablekit/');
   const dialog = await openWithHotkey(page);
   await dialog.getByRole('combobox', { name: 'Search' }).fill('zzzznotathing');
   await expect(dialog.getByText(/No matches/)).toBeVisible();
 });
 
 test('the open palette passes axe', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/react-tablekit/');
   const dialog = await openWithHotkey(page);
   await dialog.getByRole('combobox', { name: 'Search' }).fill('column');
   await expect(dialog.getByRole('option').first()).toBeVisible();

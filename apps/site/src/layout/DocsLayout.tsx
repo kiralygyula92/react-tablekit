@@ -5,41 +5,13 @@ import { Badge } from '../components/Badge';
 import { mdxComponents } from '../components/mdx';
 import { componentFor, pageByPath } from '../content/pages';
 import { PageMeta } from '../head/PageMeta';
-import { isGroup, nav, orderedPages, pluginConfig, titleFor, type NavNode } from '../nav/nav';
+import { orderedPages, pluginConfig, titleFor } from '../nav/nav';
+import { Breadcrumbs, Sidebar } from './Sidebar';
+import { TableOfContents } from './TableOfContents';
 import { SiteFooter } from './SiteFooter';
 import { SiteHeader } from './SiteHeader';
 
 const REPO_EDIT_BASE = `${pluginConfig.repo}/edit/main/apps/site/content`;
-
-function SidebarNode({ node }: { node: NavNode }) {
-  if (isGroup(node)) {
-    return (
-      <li className="site-sidebar__group">
-        <p className="site-sidebar__subheader">{node.subheader}</p>
-        <ul>
-          {(node.children ?? []).map((child) => (
-            <SidebarNode key={child.pathname} node={child} />
-          ))}
-        </ul>
-      </li>
-    );
-  }
-  return (
-    <li>
-      <NavLink to={node.pathname} end className="site-sidebar__link">
-        {titleFor(node.pathname)}
-        <Badge node={node} />
-      </NavLink>
-      {node.children && node.children.length > 0 && (
-        <ul>
-          {node.children.map((child) => (
-            <SidebarNode key={child.pathname} node={child} />
-          ))}
-        </ul>
-      )}
-    </li>
-  );
-}
 
 /** Prev/next follow sidebar order, which is the order a reader is expected to meet the pages. */
 function PageNav({ pathname }: { pathname: string }) {
@@ -87,18 +59,13 @@ export function DocsPage({ pathname }: { pathname: string }) {
   return (
     <>
       <PageMeta title={fm.title} description={fm.description} pathname={pathname} />
-      <div className="docs-body">
-        <nav aria-label="Documentation" className="site-sidebar">
-          <ul>
-            {nav.map((section) => (
-              <SidebarNode key={section.pathname} node={section} />
-            ))}
-          </ul>
-        </nav>
+      <div className={fm.wide ? 'docs-body docs-body--wide' : 'docs-body'}>
+        <Sidebar pathname={pathname} />
 
         <main id="main" className="docs-main" tabIndex={-1} key={location.pathname}>
           <article className="site-prose">
             <header className="page-header">
+              <Breadcrumbs pathname={pathname} title={fm.title} />
               <h1>
                 {fm.title}
                 {navNode && <Badge node={navNode} />}
@@ -141,20 +108,7 @@ export function DocsPage({ pathname }: { pathname: string }) {
           </article>
         </main>
 
-        <aside className="site-toc" aria-label="On this page">
-          {toc.length > 0 && (
-            <>
-              <p className="site-toc__title">On this page</p>
-              <ul>
-                {toc.map((entry) => (
-                  <li key={entry.id} data-level={entry.level}>
-                    <a href={`#${entry.id}`}>{entry.text}</a>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </aside>
+        {!fm.wide && <TableOfContents headings={toc} />}
       </div>
     </>
   );
@@ -167,7 +121,7 @@ export function DocsLayout() {
       <a className="site-skip-link" href="#main">
         Skip to content
       </a>
-      <SiteHeader surface="docs" />
+      <SiteHeader />
       <Outlet />
       <SiteFooter />
     </div>

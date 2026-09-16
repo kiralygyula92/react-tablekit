@@ -1,7 +1,7 @@
 {
   "$schema": "../../../../docs/ppds/plugin-site.schema.json",
   "id": "react-tablekit",
-  "name": "react-tablekit",
+  "name": "React Tablekit",
   "tagline": "A headless-core React data table where every feature works on the client and on the server.",
   "description": "A React data table with a framework-agnostic core. Pagination, search, filters, sorting, grouping, expansion, selection and faceting each run in the browser or on your server. Every part is a replaceable slot, every interaction is overridable, and every visual value is a CSS variable.",
   "categoryId": "data-display",
