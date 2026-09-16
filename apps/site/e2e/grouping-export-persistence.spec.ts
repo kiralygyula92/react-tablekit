@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 const anyTable = (page: Page, name: string) =>
   page
@@ -9,7 +10,7 @@ const anyTable = (page: Page, name: string) =>
 
 test.describe('grouping and aggregation', () => {
   test('group rows carry a count and expand to their members', async ({ page }) => {
-    await page.goto('/examples/grouping-aggregation');
+    await page.goto(demoUrl('features/grouping/demo-basics'));
     const table = anyTable(page, 'People');
     const groupRows = table.locator('tbody tr[data-grouped]');
     await expect(groupRows.first()).toBeVisible();
@@ -28,7 +29,7 @@ test.describe('grouping and aggregation', () => {
 
 test.describe('export', () => {
   test('offers the four scopes and downloads a CSV of the page', async ({ page }) => {
-    await page.goto('/examples/export');
+    await page.goto(demoUrl('features/export/demo-basics'));
     await page.getByRole('button', { name: 'Export' }).first().click();
     const menu = page.getByRole('menu').first();
     for (const label of [
@@ -48,7 +49,7 @@ test.describe('export', () => {
 
 test.describe('URL and storage sync', () => {
   test('writes the page to the URL and restores it on reload', async ({ page }) => {
-    await page.goto('/examples/url-sync');
+    await page.goto(demoUrl('features/persistence/demo-basics'));
     const table = anyTable(page, 'People');
     await expect(table.locator('tbody tr[data-row-id]').first()).toBeVisible();
 
@@ -63,7 +64,7 @@ test.describe('URL and storage sync', () => {
   });
 
   test('a shared URL reproduces the view', async ({ page }) => {
-    await page.goto('/examples/url-sync?tk.q=ava&tk.sort=age.desc');
+    await page.goto(demoUrl('features/persistence/demo-basics', '?tk.q=ava&tk.sort=age.desc'));
     const table = anyTable(page, 'People');
     await expect(table.locator('tbody tr[data-row-id]').first()).toBeVisible();
     await expect(page.getByRole('searchbox', { name: 'Search' })).toHaveValue('ava');
@@ -75,7 +76,7 @@ test.describe('URL and storage sync', () => {
 });
 
 test('keyboard navigation moves between cells and selects a row', async ({ page }) => {
-  await page.goto('/examples/keyboard-navigation');
+  await page.goto(demoUrl('features/keyboard-navigation/demo-basics'));
   const table = anyTable(page, 'People');
   await expect(table.locator('tbody tr[data-row-id]').first()).toBeVisible();
 
@@ -94,7 +95,7 @@ test('keyboard navigation moves between cells and selects a row', async ({ page 
 
 test('the cards layout replaces the table on a phone', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/examples/responsive-cards');
+  await page.goto(demoUrl('features/responsive/demo-basics'));
   await expect(page.getByRole('article').first()).toBeVisible();
   await expect(page.locator('.tk-root table')).toHaveCount(0);
 
@@ -105,7 +106,7 @@ test('the cards layout replaces the table on a phone', async ({ page }) => {
 
 test.describe('states', () => {
   test('shows each loading, empty and error state', async ({ page }) => {
-    await page.goto('/examples/states');
+    await page.goto(demoUrl('features/loading-and-empty-states/demo-basics'));
     const select = page.getByLabel('State');
 
     await expect(page.locator('.tk-skeleton').first()).toBeVisible();

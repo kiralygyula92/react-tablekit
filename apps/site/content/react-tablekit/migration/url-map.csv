@@ -1,0 +1,134 @@
+legacy_url,content_type_found,target_archetype,target_url,action,redirect
+/,marketing,G Marketing landing,/,rewrite,(none — same URL)
+/docs/getting-started,install,F Getting started,/react-tablekit/getting-started/installation/,split,301
+/docs/versioning,how-to,F Getting started,/react-tablekit/getting-started/versions/,port,301
+/changelog,changelog,I Editorial,/react-tablekit/discover-more/changelog/,port,301
+/examples,capability,C Features index,/react-tablekit/all-features/,rewrite,301
+/playground,capability,I Editorial (interactive tool),/react-tablekit/demos/playground/,port,301
+/theme-editor,capability,I Editorial (interactive tool),/react-tablekit/demos/theme-editor/,port,301
+/api,reference,E Reference index,/react-tablekit/api/,port,301
+/api/data-table,reference,E Reference,/react-tablekit/api/data-table-props/,generate,301
+/api/column-def,reference,E Reference,/react-tablekit/api/column-def/,generate,301
+/api/instance,reference,E Reference,/react-tablekit/api/table-instance/,generate,301
+/api/state,reference,E Reference,/react-tablekit/api/table-state/,generate,301
+/api/hooks,reference,E Reference,/react-tablekit/api/hooks/,generate,301
+/api/utilities,reference,E Reference,/react-tablekit/api/utilities/,generate,301
+/api/slots,reference,E Reference,/react-tablekit/api/slots/,generate,301
+/api/handlers,reference,E Reference,/react-tablekit/api/handlers/,generate,301
+/api/theme-tokens,reference,E Reference,/react-tablekit/api/theme-tokens/,generate,301
+/api/localization,reference,E Reference,/react-tablekit/api/localization-keys/,generate,301
+/api/icons,reference,E Reference,/react-tablekit/api/icons/,generate,301
+/docs/guides/client-vs-server,how-to,B Capability,/react-tablekit/client-and-server/,merge,301
+/docs/guides/server-data,how-to,B Capability,/react-tablekit/guides/server-data/,port,301
+/docs/guides/columns,how-to,B Capability,/react-tablekit/columns/,merge,301
+/docs/guides/theming,how-to,B Capability,/react-tablekit/customization/theming/,merge,301
+/docs/guides/accessibility,how-to,B Capability,/react-tablekit/guides/accessibility/,port,301
+/docs/guides/sorting,how-to,B Capability,/react-tablekit/sorting/,merge,301
+/docs/guides/filtering,how-to,B Capability,/react-tablekit/column-filters/,merge,301
+/docs/guides/search,how-to,B Capability,/react-tablekit/global-search/,merge,301
+/docs/guides/pagination,how-to,B Capability,/react-tablekit/pagination/,merge,301
+/docs/guides/selection,how-to,B Capability,/react-tablekit/row-selection/,merge,301
+/docs/guides/expansion,how-to,B Capability,/react-tablekit/expansion/,merge,301
+/docs/guides/grouping,how-to,B Capability,/react-tablekit/grouping/,merge,301
+/docs/guides/pinning,how-to,B Capability,/react-tablekit/column-pinning/,merge,301
+/docs/guides/sizing,how-to,B Capability,/react-tablekit/column-sizing/,merge,301
+/docs/guides/ordering-and-visibility,how-to,B Capability,/react-tablekit/column-ordering/,split,301
+/docs/guides/virtualization,how-to,B Capability,/react-tablekit/virtualization/,merge,301
+/docs/guides/keyboard,how-to,B Capability,/react-tablekit/keyboard-navigation/,merge,301
+/docs/guides/export,how-to,B Capability,/react-tablekit/export/,merge,301
+/docs/guides/persistence,how-to,B Capability,/react-tablekit/persistence/,merge,301
+/docs/guides/responsive,how-to,B Capability,/react-tablekit/responsive/,merge,301
+/docs/guides/customization,how-to,B Capability,/react-tablekit/customization/,split,301
+/docs/guides/localization,how-to,B Capability,/react-tablekit/localization/,merge,301
+/examples/showcase-account-list,capability,I Editorial (demo scenario),/react-tablekit/demos/account-list/,merge,301
+/examples/showcase-asset-list,capability,I Editorial (demo scenario),/react-tablekit/demos/asset-list/,merge,301
+/examples/showcase-readings,capability,I Editorial (demo scenario),/react-tablekit/demos/reading-history/,merge,301
+/examples/showcase-asset-picker,capability,I Editorial (demo scenario),/react-tablekit/demos/asset-picker/,merge,301
+/examples/row-selection,capability,B Capability,/react-tablekit/row-selection/,merge,301
+/examples/detail-panels,capability,B Capability,/react-tablekit/expansion/,merge,301
+/examples/tree-data,capability,B Capability,/react-tablekit/tree-data/,merge,301
+/examples/tree-lazy-server,capability,B Capability,/react-tablekit/tree-data/,merge,301
+/examples/row-overrides,capability,B Capability,/react-tablekit/customization/rows-and-cells/,merge,301
+/examples/handlers-middleware,capability,B Capability,/react-tablekit/customization/handlers/,merge,301
+/examples/column-features,capability,B Capability,/react-tablekit/column-visibility/,merge,301
+/examples/sticky-header-footer,capability,B Capability,/react-tablekit/sticky-header-and-footer/,merge,301
+/examples/virtualization-100k,capability,B Capability,/react-tablekit/virtualization/,merge,301
+/examples/infinite-scroll,capability,B Capability,/react-tablekit/pagination/,merge,301
+/examples/cursor-pagination,capability,B Capability,/react-tablekit/pagination/,merge,301
+/examples/grouping-aggregation,capability,B Capability,/react-tablekit/grouping/,merge,301
+/examples/export,capability,B Capability,/react-tablekit/export/,merge,301
+/examples/url-sync,capability,B Capability,/react-tablekit/persistence/,merge,301
+/examples/keyboard-navigation,capability,B Capability,/react-tablekit/keyboard-navigation/,merge,301
+/examples/responsive-cards,capability,B Capability,/react-tablekit/responsive/,merge,301
+/examples/states,capability,B Capability,/react-tablekit/loading-and-empty-states/,merge,301
+/examples/basic,capability,B Capability,/react-tablekit/getting-started/quickstart/,merge,301
+/examples/pagination-variants,capability,B Capability,/react-tablekit/pagination/,merge,301
+/examples/global-search,capability,B Capability,/react-tablekit/global-search/,merge,301
+/examples/filters-panel,capability,B Capability,/react-tablekit/column-filters/,merge,301
+/examples/filters-row,capability,B Capability,/react-tablekit/column-filters/,merge,301
+/examples/filters-popover-and-column-menu,capability,B Capability,/react-tablekit/column-filters/,merge,301
+/examples/filters-server,capability,B Capability,/react-tablekit/faceting/,merge,301
+/examples/server-sorting,capability,B Capability,/react-tablekit/sorting/,merge,301
+/examples/hybrid-mode,capability,B Capability,/react-tablekit/client-and-server/,merge,301
+/examples/localization,capability,B Capability,/react-tablekit/localization/,merge,301
+/examples/client-vs-server,capability,B Capability,/react-tablekit/client-and-server/,merge,301
+/examples/column-types,capability,B Capability,/react-tablekit/columns/,merge,301
+/examples/client-sorting,capability,B Capability,/react-tablekit/sorting/,merge,301
+/examples/column-pinning,capability,B Capability,/react-tablekit/column-pinning/,merge,301
+/examples/column-sizing,capability,B Capability,/react-tablekit/column-sizing/,merge,301
+/examples/column-ordering-visibility,capability,B Capability,/react-tablekit/column-ordering/,merge,301
+/examples/cell-building-blocks,capability,B Capability,/react-tablekit/customization/cell-building-blocks/,merge,301
+/examples/slots-custom-components,capability,B Capability,/react-tablekit/customization/slots/,merge,301
+/examples/slots-design-system,capability,B Capability,/react-tablekit/customization/structure/,merge,301
+/examples/theming-presets,capability,B Capability,/react-tablekit/customization/theming/,merge,301
+/examples/theming-custom,capability,B Capability,/react-tablekit/customization/theming/,merge,301
+/examples/density,capability,B Capability,/react-tablekit/density/,merge,301
+/examples/composable-layout,capability,B Capability,/react-tablekit/toolbar/,merge,301
+/examples/headless,capability,B Capability,/react-tablekit/headless/,merge,301
+/examples/react-query-recipe,capability,B Capability,/react-tablekit/integrations/react-query/,merge,301
+/embed/showcase-account-list,capability,(not a docs page — iframe target),/embed/showcase-account-list,port,"(none — same URL, noindex + canonical)"
+/embed/showcase-asset-list,capability,(not a docs page — iframe target),/embed/showcase-asset-list,port,"(none — same URL, noindex + canonical)"
+/embed/showcase-readings,capability,(not a docs page — iframe target),/embed/showcase-readings,port,"(none — same URL, noindex + canonical)"
+/embed/showcase-asset-picker,capability,(not a docs page — iframe target),/embed/showcase-asset-picker,port,"(none — same URL, noindex + canonical)"
+/embed/row-selection,capability,(not a docs page — iframe target),/embed/row-selection,port,"(none — same URL, noindex + canonical)"
+/embed/detail-panels,capability,(not a docs page — iframe target),/embed/detail-panels,port,"(none — same URL, noindex + canonical)"
+/embed/tree-data,capability,(not a docs page — iframe target),/embed/tree-data,port,"(none — same URL, noindex + canonical)"
+/embed/tree-lazy-server,capability,(not a docs page — iframe target),/embed/tree-lazy-server,port,"(none — same URL, noindex + canonical)"
+/embed/row-overrides,capability,(not a docs page — iframe target),/embed/row-overrides,port,"(none — same URL, noindex + canonical)"
+/embed/handlers-middleware,capability,(not a docs page — iframe target),/embed/handlers-middleware,port,"(none — same URL, noindex + canonical)"
+/embed/column-features,capability,(not a docs page — iframe target),/embed/column-features,port,"(none — same URL, noindex + canonical)"
+/embed/sticky-header-footer,capability,(not a docs page — iframe target),/embed/sticky-header-footer,port,"(none — same URL, noindex + canonical)"
+/embed/virtualization-100k,capability,(not a docs page — iframe target),/embed/virtualization-100k,port,"(none — same URL, noindex + canonical)"
+/embed/infinite-scroll,capability,(not a docs page — iframe target),/embed/infinite-scroll,port,"(none — same URL, noindex + canonical)"
+/embed/cursor-pagination,capability,(not a docs page — iframe target),/embed/cursor-pagination,port,"(none — same URL, noindex + canonical)"
+/embed/grouping-aggregation,capability,(not a docs page — iframe target),/embed/grouping-aggregation,port,"(none — same URL, noindex + canonical)"
+/embed/export,capability,(not a docs page — iframe target),/embed/export,port,"(none — same URL, noindex + canonical)"
+/embed/url-sync,capability,(not a docs page — iframe target),/embed/url-sync,port,"(none — same URL, noindex + canonical)"
+/embed/keyboard-navigation,capability,(not a docs page — iframe target),/embed/keyboard-navigation,port,"(none — same URL, noindex + canonical)"
+/embed/responsive-cards,capability,(not a docs page — iframe target),/embed/responsive-cards,port,"(none — same URL, noindex + canonical)"
+/embed/states,capability,(not a docs page — iframe target),/embed/states,port,"(none — same URL, noindex + canonical)"
+/embed/basic,capability,(not a docs page — iframe target),/embed/basic,port,"(none — same URL, noindex + canonical)"
+/embed/pagination-variants,capability,(not a docs page — iframe target),/embed/pagination-variants,port,"(none — same URL, noindex + canonical)"
+/embed/global-search,capability,(not a docs page — iframe target),/embed/global-search,port,"(none — same URL, noindex + canonical)"
+/embed/filters-panel,capability,(not a docs page — iframe target),/embed/filters-panel,port,"(none — same URL, noindex + canonical)"
+/embed/filters-row,capability,(not a docs page — iframe target),/embed/filters-row,port,"(none — same URL, noindex + canonical)"
+/embed/filters-popover-and-column-menu,capability,(not a docs page — iframe target),/embed/filters-popover-and-column-menu,port,"(none — same URL, noindex + canonical)"
+/embed/filters-server,capability,(not a docs page — iframe target),/embed/filters-server,port,"(none — same URL, noindex + canonical)"
+/embed/server-sorting,capability,(not a docs page — iframe target),/embed/server-sorting,port,"(none — same URL, noindex + canonical)"
+/embed/hybrid-mode,capability,(not a docs page — iframe target),/embed/hybrid-mode,port,"(none — same URL, noindex + canonical)"
+/embed/localization,capability,(not a docs page — iframe target),/embed/localization,port,"(none — same URL, noindex + canonical)"
+/embed/client-vs-server,capability,(not a docs page — iframe target),/embed/client-vs-server,port,"(none — same URL, noindex + canonical)"
+/embed/column-types,capability,(not a docs page — iframe target),/embed/column-types,port,"(none — same URL, noindex + canonical)"
+/embed/client-sorting,capability,(not a docs page — iframe target),/embed/client-sorting,port,"(none — same URL, noindex + canonical)"
+/embed/column-pinning,capability,(not a docs page — iframe target),/embed/column-pinning,port,"(none — same URL, noindex + canonical)"
+/embed/column-sizing,capability,(not a docs page — iframe target),/embed/column-sizing,port,"(none — same URL, noindex + canonical)"
+/embed/column-ordering-visibility,capability,(not a docs page — iframe target),/embed/column-ordering-visibility,port,"(none — same URL, noindex + canonical)"
+/embed/cell-building-blocks,capability,(not a docs page — iframe target),/embed/cell-building-blocks,port,"(none — same URL, noindex + canonical)"
+/embed/slots-custom-components,capability,(not a docs page — iframe target),/embed/slots-custom-components,port,"(none — same URL, noindex + canonical)"
+/embed/slots-design-system,capability,(not a docs page — iframe target),/embed/slots-design-system,port,"(none — same URL, noindex + canonical)"
+/embed/theming-presets,capability,(not a docs page — iframe target),/embed/theming-presets,port,"(none — same URL, noindex + canonical)"
+/embed/theming-custom,capability,(not a docs page — iframe target),/embed/theming-custom,port,"(none — same URL, noindex + canonical)"
+/embed/density,capability,(not a docs page — iframe target),/embed/density,port,"(none — same URL, noindex + canonical)"
+/embed/composable-layout,capability,(not a docs page — iframe target),/embed/composable-layout,port,"(none — same URL, noindex + canonical)"
+/embed/headless,capability,(not a docs page — iframe target),/embed/headless,port,"(none — same URL, noindex + canonical)"
+/embed/react-query-recipe,capability,(not a docs page — iframe target),/embed/react-query-recipe,port,"(none — same URL, noindex + canonical)"

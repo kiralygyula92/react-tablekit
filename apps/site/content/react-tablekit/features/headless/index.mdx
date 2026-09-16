@@ -1,0 +1,79 @@
+---
+title: Headless
+description: The engine without the markup — every feature, none of the table. Use it for cards, lists, charts, or a table you draw yourself.
+archetype: capability
+capabilityId: headless
+group: Developer tools
+symbols: [useDataTable, createTable, TableInstance, DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/index.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/headless/demo-basics" label="Headless" />
+
+The features live in a core that knows nothing about the DOM. `useDataTable` gives you that core
+as a React hook, and what you render is entirely yours:
+
+```tsx
+const table = useDataTable({ data, columns, getRowId: (p) => p.id });
+
+return (
+  <ul>
+    {table.getRowModel().rows.map((row) => (
+      <li key={row.id}>{row.getValue('name')}</li>
+    ))}
+  </ul>
+);
+```
+
+Sorting, filtering, search, pagination, grouping, selection and faceting all work — they are
+computations over rows, not decorations on a `table` element. Only the rendering is missing,
+because you are supplying it.
+
+### When this is the right shape
+
+A list of cards with a sort control. A chart that has to honour the same filters as the table
+beside it. A virtualized feed. A table whose markup is dictated by a design system that will not
+accept a component. In all of them the hard part is the data pipeline, and that is exactly what
+this gives you.
+
+### Outside React
+
+`createTable` is the same engine as a plain object, with `subscribe` for change notification. It
+has no React dependency, which makes it usable in a test, a worker, or another framework's
+adapter.
+
+### Meeting in the middle
+
+You do not have to choose all or nothing. `DataTable.Root` plus the composable parts renders the
+library's markup where you want it and yours everywhere else — see
+[Toolbar](/react-tablekit/toolbar/). `useVirtualRows`, `useBreakpoint` and `useSyncState` are all
+exported for the same reason.
+
+## Customization
+
+There is nothing to customize here — that is the point. What the styled table exposes as
+[slots](/react-tablekit/customization/slots/) and
+[handlers](/react-tablekit/customization/handlers/), the headless form exposes as ordinary
+function calls on the instance.
+
+## Limitations
+
+- **Accessibility becomes yours.** The roles, `aria-sort`, the live-region announcements and the
+  keyboard model are in the rendering layer you are replacing.
+- **The stylesheet is not involved**, so [tokens](/react-tablekit/customization/tokens/) and
+  presets do nothing until you use them.
+- **`flexRender` needs table context.** In a headless tree, read `cell.getValue()` and apply the
+  column's `format` yourself rather than rendering cell contexts outside the table.
+
+## API
+
+- [Hooks](/react-tablekit/api/hooks/) — `useDataTable`, `useDataSource`, `useTableState`,
+  `useVirtualRows`, `useBreakpoint`, `useSyncState`.
+- [Utilities](/react-tablekit/api/utilities/) — `createTable`, `createColumnHelper`,
+  `createLocalDataSource`, `createRestDataSource`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — everything the engine exposes.

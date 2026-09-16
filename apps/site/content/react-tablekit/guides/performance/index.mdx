@@ -1,0 +1,89 @@
+---
+title: Performance
+description: Where a table's time actually goes, what the library does about it, and the four things you control that matter most.
+archetype: editorial
+group: Guides
+symbols: [DataTableProps, useVirtualRows]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## Where the time goes
+
+Three places, in this order:
+
+1. **Rendering rows.** A thousand rows times ten columns is ten thousand cells, and no amount of
+   clever memoization makes that free.
+2. **Recomputing the row model.** Sorting and filtering are the work; doing them when nothing
+   changed is waste.
+3. **Fetching.** A request per keystroke costs more than everything else combined.
+
+The library handles the second and third. The first is mostly your decision.
+
+## Render fewer rows
+
+[Virtualization](/react-tablekit/virtualization/) turns "how many rows are there" into "how tall
+is the container". It switches on automatically past `virtualizationThreshold` and needs a bounded
+height:
+
+```tsx
+<DataTable data={rows} columns={columns} maxHeight={600} />
+```
+
+Paginating instead is the other answer, and often the better one: a reader who needs to see ten
+thousand rows usually needs a filter, not a scrollbar.
+
+## Keep identities stable
+
+Two props decide whether the engine can skip work:
+
+```tsx
+const columns = useMemo(() => [...], []);          // not rebuilt every render
+<DataTable data={data} columns={columns} getRowId={(r) => r.id} />
+```
+
+A new `columns` array is a new column model. A new `data` array is a new row model. `getRowId`
+keeps selection and expansion attached across refetches instead of resetting them.
+
+## Keep cell renderers cheap
+
+A `cell` runs for every visible row on every render. Creating an `Intl` formatter inside one
+creates it a hundred times:
+
+```tsx
+const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }); // once
+col.accessor('total', { format: (v) => money.format(v) });
+```
+
+Derived values belong in the data or in an `accessorFn`, not in the render.
+
+## Fetch less
+
+`searchDebounceMs`, `searchMinLength`, `filterApplyMode: 'manual'` and `dedupeMs` each remove
+requests. `keepPreviousData` removes the blank frame between them. See [Server
+data](/react-tablekit/guides/server-data/).
+
+## What the library guarantees
+
+The row model is memoized per stage, so changing the page does not re-sort and changing the sort
+does not re-filter. Feature modules are tree-shakeable: a table that never groups does not ship
+the grouping code.
+
+The published bundle is measured on every build with hard limits — around 58 kB min+gzip for
+`import { DataTable }`, about 61.5 kB for the full import, 21 kB for the headless core and under
+10 kB for the stylesheet. Those are regression guards: they fail the build when a change makes the
+library bigger, rather than being aspirations in a document.
+
+## Measuring
+
+`debugTable`, `debugRows` and `debugColumns` log the row-model timings, which tells you whether
+you are in case 1 or case 2 above. For case 1, a browser profile of a scroll is the answer;
+virtualization exists to make that flat.
+
+## Related
+
+- [Virtualization](/react-tablekit/virtualization/)
+- [Server data](/react-tablekit/guides/server-data/)
+- [Best practices](/react-tablekit/guides/best-practices/)
+- [Requirements and compatibility](/react-tablekit/getting-started/requirements/)

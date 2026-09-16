@@ -1,21 +1,20 @@
-import { Suspense } from 'react';
 import { useParams } from 'react-router';
-import { findExample } from '../examples/registry';
-import { useDocumentTitle } from '../layout/useDocumentTitle';
+import { Demo } from '../components/Demo';
 
-/** A chrome-less example, loaded in an iframe so width presets exercise real breakpoints. */
+/**
+ * A chrome-less demo for the width-preset iframes. Not a documentation page: it is excluded from
+ * the sitemap and llms.txt, and carries noindex plus a canonical to the page that embeds it.
+ */
 export function EmbedPage() {
-  const { slug } = useParams();
-  const example = findExample(slug);
-  useDocumentTitle(example?.title);
-  if (!example) return <p>Unknown example</p>;
-  const { Component: Demo } = example;
+  const params = useParams();
+  const id = params['*'] ?? '';
   return (
-    <main className="embed-main" aria-label={example.title}>
-      <h1 className="site-visually-hidden">{example.title}</h1>
-      <Suspense fallback={<p>Loading demo…</p>}>
-        <Demo />
-      </Suspense>
-    </main>
+    <>
+      <meta name="robots" content="noindex" />
+      <main id="main" className="embed-main">
+        <h1 className="site-visually-hidden">Embedded example</h1>
+        <Demo id={id} label="Embedded example" />
+      </main>
+    </>
   );
 }

@@ -1,0 +1,86 @@
+---
+title: Faceting
+description: Filter options and counts computed from the data — from the loaded rows in client mode, from your API in server mode.
+archetype: capability
+capabilityId: faceting
+group: Core features
+symbols: [DataTableProps, ColumnDef, Column, TableDataSource]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/faceting.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/faceting/demo-basics" label="Server-side facets" />
+
+A facet is the answer to "what can I filter this column by, and how many rows would each choice
+leave?" When a column has no `filterOptions`, the table works them out: the distinct values for a
+select or multi-select, and the minimum and maximum for a range or slider.
+
+Counts are shown next to each option — `Berlin (142)` — and they respect the _other_ active
+filters, so the numbers describe what you would actually get.
+
+### Client and server
+
+In client mode the facets come from `column.getFacetedUniqueValues()` and
+`column.getFacetedMinMaxValues()` over the currently loaded rows, which is exact because the
+browser has all of them.
+
+In server mode the browser has one page, so counting locally would be wrong. The table asks the
+data source instead:
+
+```tsx
+const dataSource = createRestDataSource({
+  url: '/api/people',
+  fetchFacets: async (query, columnIds) => api.facets(query, columnIds),
+});
+```
+
+Facets are requested lazily — the first time a filter control opens — and cached per query, so
+opening the same dropdown twice costs one round trip. `manualFaceting` and `facetingMode` force
+the choice when the default inference is not what you want, and `facets` supplies them outright.
+
+### Turning it off
+
+`enableFacetedValues: false` stops the computation for tables where the option lists are static
+and known. Then `filterOptions` on the column is the only source, and no counts are shown.
+`showFacetCounts: false` keeps the options but drops the numbers.
+
+## Customization
+
+`filterOptions` accepts a static array, a function, or an async function — the control shows a
+loading state while it resolves. Options carry their own presentation, which is what makes a
+status filter look like the status column:
+
+```tsx
+col.accessor('status', {
+  filterVariant: 'select',
+  filterOptions: [
+    { value: 'active', label: 'Active', color: '#e6f4ea' },
+    { value: 'archived', label: 'Archived', color: '#f1f3f4' },
+  ],
+});
+```
+
+Those colours are reused by the [filter chips](/react-tablekit/column-filters/).
+
+## Limitations
+
+- **Client facets only see loaded rows.** With server pagination the browser holds one page, so
+  faceting must come from the server or the counts will describe the page rather than the data
+  set.
+- **Counts reflect the other filters, not this one.** A multi-select shows what each option would
+  add, which is the standard behaviour but is not the same as the count after applying it.
+- **There is no facet for a display column.** A facet needs a value; compute it with an
+  `accessorFn` if you need to filter on something derived.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableFacetedValues`,
+  `facetingMode`, `manualFaceting`, `facets`, `showFacetCounts`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `filterOptions`, `filterVariant`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `getColumn(id).getFacetedUniqueValues`,
+  `getFacetedMinMaxValues`, `getServerFacets`, `loadFacets`.
+- [Utilities](/react-tablekit/api/utilities/) — `createRestDataSource`.

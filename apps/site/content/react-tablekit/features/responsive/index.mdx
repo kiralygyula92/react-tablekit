@@ -1,0 +1,82 @@
+---
+title: Responsive
+description: Breakpoint-aware props, a card layout for small screens, and a server-rendered first paint that does not jump.
+archetype: capability
+capabilityId: responsive
+group: Display & layout
+symbols: [DataTableProps, useBreakpoint, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/hooks/useBreakpoint.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/responsive/demo-basics" label="Responsive cards" />
+
+Below the mobile breakpoint a table can stop being a table. `mobileLayout: 'cards'` renders each
+row as a card of label and value pairs, with the row actions in the card footer and the selection
+checkbox in its header. Sorting moves to a "Sort by" select, because there are no headers left to
+click.
+
+```tsx
+<DataTable
+  responsive={{ mobileLayout: 'cards', cardColumns: ['name', 'status', 'total'] }}
+  data={rows}
+  columns={columns}
+/>
+```
+
+`cardColumns` chooses what a card shows — a card with nine fields is a table with extra steps.
+
+### Scrolling instead
+
+The default `mobileLayout: 'scroll'` keeps the table and scrolls it horizontally, with
+[pinned](/react-tablekit/column-pinning/) columns holding the identifying column in place and
+tighter padding below the small breakpoint. For a table of numbers that is usually better than
+cards.
+
+### Responsive props
+
+Several props take a value per breakpoint, mobile-first, so behaviour follows the layout without
+a media query in your code:
+
+```tsx
+col.display({ id: 'actions', pin: { base: false, md: 'right' } })
+<DataTable responsive={{ breakpoints: { xs: 0, sm: 600, md: 960, lg: 1280, xl: 1440 } }} />
+```
+
+`pin`, `headerShort`, the pagination variant, `density` and `maxWidth` all accept one.
+`headerShort` is the small one worth remembering: a column can be _Monthly recurring revenue_ on
+a wide screen and _MRR_ on a narrow one.
+
+### Server rendering
+
+On the server there is no viewport, so the first render uses `ssrBreakpoint` — `lg` by default.
+Pick the one your typical reader is on and the hydrated layout will match the rendered one
+instead of snapping into place.
+
+## Customization
+
+`renderCard` replaces the card entirely when label-and-value is not the right shape.
+`useBreakpoint` exposes the same breakpoint state to your own components, so a toolbar button can
+disappear on mobile using the table's breakpoints rather than a second set of its own.
+
+## Limitations
+
+- **Cards have no columns**, so column resizing, reordering, pinning and the header menu do not
+  apply there.
+- **`hideBelow` and the card layout are different tools.** One removes a column, the other
+  changes the presentation of all of them.
+- **Breakpoints are the table's, not your framework's.** If your design system already has
+  breakpoints, pass them in so the two agree.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `responsive` (`breakpoints`,
+  `mobileBreakpoint`, `mobileLayout`, `cardColumns`, `renderCard`, `ssrBreakpoint`),
+  `compactPagination`, `maxWidth`, `minWidth`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `headerShort`, `hideBelow`, `hideAbove`, `pin`.
+- [Hooks](/react-tablekit/api/hooks/) — `useBreakpoint`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `getBreakpoint`.

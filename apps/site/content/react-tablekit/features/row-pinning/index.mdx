@@ -1,0 +1,62 @@
+---
+title: Row pinning
+description: Keep chosen rows at the top or the bottom while the rest of the table sorts, filters and pages away beneath them.
+archetype: capability
+capabilityId: row-pinning
+group: Display & layout
+symbols: [DataTableProps, Row, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/rowPinning.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/row-pinning/demo-basics" label="Row pinning" />
+
+`enableRowPinning` lets a row be held at the top or the bottom of the table. Sort, filter and page
+all around it — it stays, which is what makes it useful for comparing one record against the
+rest.
+
+```tsx
+<button onClick={() => row.pin('top')}>Pin</button>
+<button onClick={() => row.pin(false)}>Unpin</button>
+```
+
+Pinning is a row action, not a column, so it goes wherever it belongs in your design: a button in
+a display column, an entry in a row menu, a keyboard shortcut.
+
+### Staying pinned
+
+`keepPinnedRows` is on by default, which means a pinned row survives a filter that would have
+removed it. Turn it off and pinning is only a reordering: the row keeps its place at the top
+while it still matches, and disappears when it does not.
+
+### Pinned and sticky
+
+With `enableStickyHeader`, top-pinned rows stick under the header and bottom-pinned rows sit
+above the footer, so they stay on screen in a scrolling table rather than only at the top of the
+list.
+
+## Customization
+
+`getTopRows` and `getBottomRows` return the pinned rows, so a summary line, a count or a "clear
+pins" button can be driven from the same state. Pinned rows carry `data-pinned`, which is enough
+for CSS to give them their own treatment without a slot.
+
+## Limitations
+
+- **Pinning is keyed by row id**, so it resets on refetch unless `getRowId` is stable.
+- **A pinned row is rendered twice in spirit, once in fact** — it is lifted out of the body, so it
+  does not also appear in its sorted position.
+- **Pinned rows count against the page.** A page of ten with two pinned rows shows eight
+  unpinned rows, not ten.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowPinning`,
+  `keepPinnedRows`, `enableStickyHeader`, `enableStickyFooter`, `onRowPinningChange`.
+- [`Row`](/react-tablekit/api/table-instance/) — `pin`, `getIsPinned`, `getCanPin`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setRowPinning`, `resetRowPinning`,
+  `getTopRows`, `getBottomRows`, `getCenterRows`.

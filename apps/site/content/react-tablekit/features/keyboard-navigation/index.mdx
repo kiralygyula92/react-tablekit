@@ -1,0 +1,73 @@
+---
+title: Keyboard navigation
+description: The WAI-ARIA data grid pattern — arrow keys between cells, one tab stop for the whole table, and Enter to reach interactive content.
+archetype: capability
+capabilityId: keyboard-navigation
+group: Interaction
+symbols: [DataTableProps, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/hooks/useKeyboardNavigation.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/keyboard-navigation/demo-basics" label="Keyboard navigation" />
+
+`enableKeyboardNavigation` turns the table into a grid in the WAI-ARIA sense: the whole table is
+one tab stop, and the arrow keys move between cells inside it. Tab in, navigate, Tab out — rather
+than tabbing through four hundred cells to reach the pagination.
+
+| Key                 | Action                                                                         |
+| ------------------- | ------------------------------------------------------------------------------ |
+| Tab                 | Enters the grid at the last focused cell, or leaves it                         |
+| Arrows              | Move between cells, header included                                            |
+| Home / End          | First or last cell in the row; with Ctrl, in the grid                          |
+| Page Up / Page Down | Move by a screen of rows                                                       |
+| Enter               | Sorts on a header, runs `onRowClick` on a row, or steps into a cell's controls |
+| Escape              | Steps back out of a cell, and closes menus                                     |
+| Space               | Toggles selection of the focused row                                           |
+| Left / Right        | Collapse or expand a row that has children or a panel                          |
+
+### Reaching what is inside a cell
+
+A cell with a link and two buttons is a problem for a grid: the arrow keys own those directions.
+Enter steps _into_ the cell, where Tab moves between its controls, and Escape steps back out.
+That is the standard resolution and it is what this implements.
+
+### Without it
+
+Turned off, everything is still reachable: buttons, checkboxes, sort buttons and links are all in
+the tab order. Rows are not focusable unless `onRowClick` makes them interactive — a row you
+cannot activate should not be a tab stop.
+
+### With virtualization
+
+Navigation is [virtualization](/react-tablekit/virtualization/)-aware. Page Down moves by a
+visible page and scrolls the target row into view, so arrowing past the bottom of the window does
+not fall off the end of the rendered rows.
+
+## Customization
+
+`focusCell` and `scrollToRow` drive focus from your own code — after a save, after an insert, or
+from a keyboard shortcut of your own. The focus ring is the `--tk-focus-ring`
+[token](/react-tablekit/customization/tokens/), so it matches the rest of your application rather
+than the browser default.
+
+## Limitations
+
+- **Cell focus is not cell _selection_.** Copying a rectangular range is on the
+  [roadmap](/react-tablekit/discover-more/roadmap/), not in 1.0.
+- **A cell whose content traps focus will trap it here too.** A custom control that swallows
+  Escape breaks the step-out, and the table cannot intercept that.
+- **Two grids on one page each have their own tab stop**, which is correct but means the reader
+  tabs twice to cross them.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableKeyboardNavigation`,
+  `onRowClick`, `onCellClick`, `enableRangeSelection`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `focusCell`, `scrollToRow`.
+- [Accessibility](/react-tablekit/guides/accessibility/) — how this fits the rest of the
+  accessibility model.

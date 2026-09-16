@@ -1,0 +1,84 @@
+---
+title: Design tokens
+description: What the token families control, how they cascade, and where to override them so a change reaches the whole table.
+archetype: capability
+capabilityId: tokens
+group: Customization
+symbols: [TableTheme, toCssVars]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/styles/base
+---
+
+## Basics
+
+Every visual value in the table is a CSS custom property named `--tk-*`. There are no hard-coded
+colours, no magic pixel values in the component tree, and nothing that can only be changed by
+overriding a class.
+
+```css
+.my-app .tk-root {
+  --tk-color-accent: #7c3aed;
+  --tk-row-height: 44px;
+  --tk-radius-container: 12px;
+}
+```
+
+That is the whole mechanism. Set a variable anywhere in the cascade above the table and the table
+follows.
+
+### The families
+
+- **Colour** — `--tk-color-*` for the palette, plus the semantic pairs the rows use:
+  `--tk-row-bg`, `--tk-row-hover-bg`, `--tk-row-selected-bg`, `--tk-row-stripe-bg`,
+  `--tk-header-bg`.
+- **Spacing** — `--tk-cell-py` and `--tk-cell-px` and their header counterparts. These are what
+  [density](/react-tablekit/density/) switches between.
+- **Typography** — `--tk-font-family`, `--tk-font-size`, `--tk-font-weight-header`.
+- **Border and radius** — `--tk-border-color`, `--tk-border-width`, `--tk-radius-container`.
+- **Elevation** — `--tk-pinned-shadow`, `--tk-overlay-bg`, `--tk-focus-ring`.
+- **Layering** — `--tk-z-pinned`, `--tk-z-pinned-header`, `--tk-z-overlay`, for when the table
+  sits inside your own stacking context.
+
+The generated list with every value per preset is on [Theme
+tokens](/react-tablekit/api/theme-tokens/).
+
+### Where to set them
+
+Scope decides reach. On `:root` a token is global; on a wrapper it covers a section; on the table
+it covers one instance. A `[data-density='compact']` selector redefines what compact means
+everywhere at once.
+
+```css
+[data-density='compact'] {
+  --tk-cell-py: 4px;
+  --tk-cell-px: 8px;
+}
+```
+
+### The cascade layer
+
+The stylesheet lives in `@layer tablekit`, which is deliberately low priority: an unlayered rule
+of yours beats it without `!important` and without counting specificity.
+
+## Customization
+
+`toCssVars(theme)` produces the declarations from a theme object, so the same values can be used
+in a stylesheet, in a style attribute, or written to a file at build time. The [theme
+editor](/react-tablekit/demos/theme-editor/) is the fastest way to find the token you want.
+
+## Limitations
+
+- **A token is a value, not a rule.** There is no token for "hide the border on the last row" —
+  that is CSS you write.
+- **Custom properties do not animate like colours** unless registered with `@property`; a
+  transition between two token values may step rather than blend.
+- **Renaming tokens is a breaking change**, so they follow the same
+  [versioning](/react-tablekit/getting-started/versions/) rules as the TypeScript API.
+
+## API
+
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — the complete generated catalogue.
+- [Utilities](/react-tablekit/api/utilities/) — `createTheme`, `toCssVars`.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `theme`, `darkTheme`, `unstyled`.

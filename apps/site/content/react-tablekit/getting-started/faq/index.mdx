@@ -1,0 +1,34 @@
+---
+title: 'FAQ'
+description: 'Short answers about licensing, scope, styling and how this library compares.'
+archetype: getting-started
+plan: free
+---
+
+## Is it free?
+
+Yes. MIT licensed, with no paid tier, no feature gating and no licence key. You can use it commercially.
+
+## Does it depend on a component framework?
+
+No. There is no Material UI, no styled-components, no CSS-in-JS runtime. Styling is plain CSS with custom properties inside `@layer tablekit`.
+
+## Can I use my own design system?
+
+Yes, at three levels: override CSS variables, pass your own class names, or replace whole parts with your own components. See [How to customize](/react-tablekit/customization/).
+
+## Does it do server-side data?
+
+Every data feature does, and each one independently. See [Client and server](/react-tablekit/client-and-server/).
+
+## Can I use it without the built-in markup?
+
+Yes. `useDataTable` gives you the engine and renders nothing; `createTable` runs without React at all. See [Headless](/react-tablekit/headless/).
+
+## Is inline editing supported?
+
+Not in 1.0. It is specified and planned — see the [roadmap](/react-tablekit/discover-more/roadmap/).
+
+## How large is it?
+
+56.5 kB min+gzip for a basic import; 20.8 kB for the headless core. Full numbers in [Requirements](/react-tablekit/getting-started/requirements/).

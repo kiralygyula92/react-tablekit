@@ -1,0 +1,87 @@
+---
+title: Toolbar
+description: The strip above the table — search, filters, columns, density, export — either as one component or as parts you place yourself.
+archetype: capability
+capabilityId: toolbar
+group: Interaction
+symbols: [DataTableProps, DataTableViewProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/parts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/toolbar/demo-basics" label="Composable layout" />
+
+The toolbar assembles itself from the features that are on: search at the start, then the filters
+button and the active filter chips; density, columns and export at the end. Turn a feature off
+and its control disappears — there is no separate toolbar configuration to keep in sync.
+
+`renderToolbarStart` and `renderToolbarEnd` add your own content beside the built-ins, which is
+where an **Add** button or a saved-view picker belongs:
+
+```tsx
+<DataTable
+  renderToolbarEnd={() => <button onClick={create}>New person</button>}
+  data={rows}
+  columns={columns}
+/>
+```
+
+### Taking it apart
+
+When the toolbar should not be a strip above the table — because search belongs in the page
+header, or the filters live in a sidebar — use the composable parts. They talk to the same table
+instance, so nothing is duplicated:
+
+```tsx
+const table = useDataTable({ data, columns });
+
+<DataTable.Root table={table}>
+  <PageHeader>
+    <DataTable.Search table={table} />
+    <DataTable.FiltersButton table={table} />
+  </PageHeader>
+  <Sidebar>
+    <DataTable.FilterPanel table={table} />
+  </Sidebar>
+  <DataTable.Table />
+  <DataTable.Pagination />
+</DataTable.Root>;
+```
+
+`Search`, `FiltersButton`, `FilterPanel`, `ColumnsButton`, `ExportButton`, `Pagination` and
+`SelectionBar` are all available this way.
+
+### The selection bar
+
+When [row selection](/react-tablekit/row-selection/) is on, a second bar appears under the
+toolbar as soon as something is selected. `renderBulkActions` fills it, and
+`showSelectionBar: false` removes it if your design puts bulk actions somewhere else.
+
+## Customization
+
+Every control is a [slot](/react-tablekit/customization/slots/), so replacing the Filters button
+with your design system's button is one entry rather than a rebuild. `toolbarActions` is the
+short form of `renderToolbarEnd` for a list of buttons, and `toolbar: false` removes the strip
+entirely while leaving the features working.
+
+## Limitations
+
+- **The toolbar wraps, it does not collapse.** On a narrow screen the controls flow onto a second
+  line rather than folding into an overflow menu; use the parts if you need one.
+- **A composable part still needs the table instance.** The parts are not context-free
+  components — they read and write the same state, which is what keeps them consistent.
+- **Order within the toolbar is fixed.** Start and end slots are yours; the built-ins keep their
+  relative order so tables look alike.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `toolbar`, `toolbarActions`,
+  `renderToolbarStart`, `renderToolbarEnd`, `enableGlobalFilter`, `filterDisplayMode`,
+  `enableHiding`, `enableDensityToggle`, `enableExport`, `showSelectionBar`, `renderBulkActions`.
+- [Slots](/react-tablekit/api/slots/) — `Toolbar`, `SearchInput`, `FiltersButton`, `FilterPanel`,
+  `ColumnsButton`, `ExportButton`, `SelectionBar`.
+- [Hooks](/react-tablekit/api/hooks/) — `useDataTable` for the composable form.

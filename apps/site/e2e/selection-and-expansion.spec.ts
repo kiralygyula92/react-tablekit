@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 /**
  * A selectable table exposes `role="grid"` and a tree `role="treegrid"` (ADR-004 D8), so a lookup
@@ -15,7 +16,7 @@ const rows = (page: Page, name: string) => tableByName(page, name).locator('tbod
 
 test.describe('row selection', () => {
   test('selects, range-selects with Shift and offers a bulk action', async ({ page }) => {
-    await page.goto('/examples/row-selection');
+    await page.goto(demoUrl('features/row-selection/demo-basics'));
     const table = 'People';
     const boxes = rows(page, table).getByRole('checkbox');
     await boxes.nth(0).check();
@@ -36,7 +37,7 @@ test.describe('row selection', () => {
   });
 
   test('disabled rows cannot be selected and select-all skips them', async ({ page }) => {
-    await page.goto('/examples/row-selection');
+    await page.goto(demoUrl('features/row-selection/demo-basics'));
     const disabled = rows(page, 'People').filter({ has: page.locator('[data-disabled]') });
     const selectAll = page.getByRole('checkbox', { name: /Select all rows on this page/ });
     await selectAll.check();
@@ -48,7 +49,7 @@ test.describe('row selection', () => {
   });
 
   test('single mode uses radio semantics', async ({ page }) => {
-    await page.goto('/examples/row-selection');
+    await page.goto(demoUrl('features/row-selection/demo-basics'));
     await page.getByLabel('Mode').selectOption('single');
     const radios = rows(page, 'People').getByRole('radio');
     await radios.nth(1).check();
@@ -59,7 +60,7 @@ test.describe('row selection', () => {
 
 test.describe('expansion', () => {
   test('detail panels open under the row and close again', async ({ page }) => {
-    await page.goto('/examples/detail-panels');
+    await page.goto(demoUrl('features/expansion/demo-basics'));
     const first = rows(page, 'People').first();
     await first.getByRole('button', { name: 'Expand row' }).click();
     const panel = page.locator('.tk-detail-row').first();
@@ -70,7 +71,7 @@ test.describe('expansion', () => {
   });
 
   test('tree rows indent by depth and expand all works', async ({ page }) => {
-    await page.goto('/examples/tree-data');
+    await page.goto(demoUrl('features/tree-data/demo-basics'));
     const table = 'Organisation';
     const before = await rows(page, table).count();
     await page.getByRole('button', { name: 'Expand all' }).click();
@@ -83,7 +84,7 @@ test.describe('expansion', () => {
   test('lazy children are fetched once per row on expand', async ({ page }) => {
     const requests: string[] = [];
     page.on('request', (r) => requests.push(r.url()));
-    await page.goto('/examples/tree-lazy-server');
+    await page.goto(demoUrl('features/tree-data/demo-lazy-children'));
     const table = 'Organisation (lazy)';
     const first = rows(page, table).first();
     await expect(first).toBeVisible();
@@ -101,7 +102,7 @@ test.describe('expansion', () => {
 });
 
 test('handler middleware can cancel and rewrite an interaction', async ({ page }) => {
-  await page.goto('/examples/handlers-middleware');
+  await page.goto(demoUrl('customization/handlers/demo-basics'));
   // Paging past page 3 is cancelled by the middleware.
   await page.getByRole('button', { name: 'Page 4', exact: true }).click();
   await expect(page.locator('.example-log')).toContainText('page 4 blocked by middleware');

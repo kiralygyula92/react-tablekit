@@ -1,0 +1,87 @@
+---
+title: Theming
+description: Pick a preset, override the tokens you disagree with, and get dark mode without a second stylesheet.
+archetype: capability
+capabilityId: theming
+group: Customization
+symbols: [createTheme, toCssVars, TableTheme, DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/styles
+---
+
+## Basics
+
+<Demo id="react-tablekit/customization/theming/demo-presets" label="Theme presets" />
+
+A theme is a set of CSS custom properties. The presets are starting points, not a fork in the
+road — you can take one and change any part of it.
+
+```tsx
+import 'react-tablekit/styles.css';
+import 'react-tablekit/presets/classic.css';
+```
+
+`classic` is dense and quiet, made for information-heavy back-office screens. `light` is the
+modern default with more air. Both are the same component and the same markup.
+
+### Changing values
+
+<Demo id="react-tablekit/customization/theming/demo-custom" label="Custom theme" />
+
+`createTheme` merges your overrides onto a preset and returns a theme object; `toCssVars` turns
+one into the custom properties, so a theme can live in a stylesheet instead of a prop:
+
+```tsx
+const brand = createTheme('light', {
+  color: { accent: '#7c3aed', headerBg: '#faf5ff' },
+  radius: { container: 12 },
+});
+
+<DataTable theme={brand} data={rows} columns={columns} />;
+```
+
+Nothing here is class-name surgery. Because every value is a variable, an override reaches
+everything that reads it — the focus ring, the selected row, the spinner — without you finding
+each one.
+
+### Dark mode
+
+`colorScheme` follows the system by default and can be forced. `darkTheme` supplies the dark
+values, so light and dark are one configuration rather than two stylesheets:
+
+```tsx
+<DataTable theme={brand} darkTheme={brandDark} colorScheme="auto" />
+```
+
+### Scoping
+
+Tokens cascade, so a theme can also be applied by an ancestor — a section, a dialog, a preview
+pane — and every table inside it follows. The stylesheet is inside `@layer tablekit`, which means
+your own rules win without `!important`.
+
+## Customization
+
+`unstyled` drops the presentational CSS and keeps the structural rules, which is the starting
+point for a design system that supplies all of its own visuals. See [Overriding
+structure](/react-tablekit/customization/structure/).
+
+The [theme editor](/react-tablekit/demos/theme-editor/) edits every token live and hands back CSS
+or a theme object.
+
+## Limitations
+
+- **Tokens describe values, not layout.** Moving a control is a [slot](/react-tablekit/customization/slots/)
+  or a composable part, not a token.
+- **A preset is a whole set.** Importing two preset stylesheets means the later one wins for every
+  token it defines; use `createTheme` to combine deliberately.
+- **`colorScheme="auto"` depends on the OS**, so a screenshot test should pin it rather than
+  inherit whatever the machine prefers.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `theme`, `darkTheme`,
+  `colorScheme`, `unstyled`, `className`, `classNames`, `styles`.
+- [Utilities](/react-tablekit/api/utilities/) — `createTheme`, `toCssVars`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — every token and its value per preset.

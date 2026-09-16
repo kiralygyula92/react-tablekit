@@ -1,4 +1,5 @@
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 interface PagedResponse {
   items: { identifiers: { id: string } }[];
@@ -8,7 +9,9 @@ interface PagedResponse {
 
 test.describe('MSW mock server', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/?mockLatency=0');
+    // The worker starts on the first `mockFetch`, so this opens a demo that makes one rather
+    // than a page that might not.
+    await page.goto(demoUrl('demos/account-list/demo-basics'));
     // Set by mock/ready.ts once the service worker is active.
     await expect(page.locator('html')).toHaveAttribute('data-mock-ready', 'true');
   });

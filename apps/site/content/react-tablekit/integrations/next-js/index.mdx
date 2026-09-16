@@ -1,0 +1,106 @@
+---
+title: Next.js
+description: Server components, the client boundary, and rendering a first paint that does not jump when it hydrates.
+archetype: editorial
+group: Integrations
+symbols: [DataTableProps, useRouterSync]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## The client boundary
+
+The table is interactive, so it is a client component. The page around it does not have to be:
+fetch on the server, render the shell there, and pass the rows across.
+
+```tsx
+// app/people/page.tsx — a server component
+import { PeopleTable } from './PeopleTable';
+
+export default async function PeoplePage({ searchParams }) {
+  const data = await getPeople(searchParams);
+  return <PeopleTable initialData={data} />;
+}
+```
+
+```tsx
+// app/people/PeopleTable.tsx
+'use client';
+import { DataTable } from 'react-tablekit';
+
+export function PeopleTable({ initialData }) {
+  return <DataTable data={initialData.items} rowCount={initialData.total} columns={columns} />;
+}
+```
+
+Columns contain functions, so they cannot cross the server-client boundary as props. Define them
+in the client module.
+
+## The stylesheet
+
+Import it once, in the root layout:
+
+```tsx
+import 'react-tablekit/styles.css';
+import 'react-tablekit/presets/light.css';
+```
+
+Both are plain CSS, so they work with the App Router's own CSS handling without a transform.
+
+## Rendering without a jump
+
+On the server there is no viewport, so the table renders at `ssrBreakpoint` — `lg` by default. If
+most of your readers are on phones, set it to `sm` and the server-rendered layout will match what
+they hydrate into:
+
+```tsx
+<DataTable responsive={{ ssrBreakpoint: 'sm' }} data={rows} columns={columns} />
+```
+
+This is the difference between a first paint that settles and one that visibly re-lays-out.
+
+## State in the URL
+
+`useSearchParams` and `useRouter` give `useRouterSync` what it needs, so filters and paging become
+real navigations that a server component can read:
+
+```tsx
+const searchParams = useSearchParams();
+const router = useRouter();
+const routerSync = useRouterSync({
+  searchParams,
+  setSearchParams: (next) => router.replace('?' + next.toString(), { scroll: false }),
+});
+```
+
+With `scroll: false` the page does not jump to the top when a filter changes. Use `replace` rather
+than `push` for anything that changes while typing.
+
+## Server actions
+
+A bulk action is an ordinary server action. Pass the selection query — not a list of ids — so it
+still works when the reader selected everything matching:
+
+```tsx
+renderBulkActions={({ selectionQuery }) => (
+  <button onClick={() => archivePeople(selectionQuery)}>Archive</button>
+)}
+```
+
+## Limitations
+
+- **The table cannot be a server component.** It has state and event handlers; there is no
+  read-only build of it.
+- **Columns are not serializable.** `cell`, `format` and `accessorFn` are functions, so the column
+  list has to be defined on the client side of the boundary.
+- **Streaming and the first paint.** With `loading.tsx` and a suspended fetch, decide whether the
+  table's own skeleton or the route's fallback is the one the reader should see — showing both is
+  worse than either.
+
+## Related
+
+- [Responsive](/react-tablekit/responsive/) — `ssrBreakpoint`.
+- [Persistence](/react-tablekit/persistence/)
+- [Server data](/react-tablekit/guides/server-data/)
+- [Installation](/react-tablekit/getting-started/installation/)

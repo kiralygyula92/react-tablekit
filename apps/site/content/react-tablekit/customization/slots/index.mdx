@@ -1,0 +1,107 @@
+---
+title: Slots
+description: Replace any part of the table with your own component, and wrap the default rather than reimplementing it.
+archetype: capability
+capabilityId: slots
+group: Customization
+symbols: [TableSlots, DataTableProps, useTableSlots]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/slots
+---
+
+## Basics
+
+<Demo id="react-tablekit/customization/slots/demo-basics" label="Custom slot components" />
+
+A slot is a named piece of the table you can swap for a component of your own. There are 65 of
+them, from `Root` down to `SortIcon`, and each receives fully computed props — classes, ARIA
+attributes, event handlers, state:
+
+```tsx
+<DataTable
+  slots={{
+    Button: MyButton,
+    Checkbox: MyCheckbox,
+    Menu: MyMenu,
+  }}
+/>
+```
+
+Those three are worth noticing: about six primitive slots — button, icon button, checkbox, select,
+text input, menu — are enough to make the whole table look like your design system, because
+everything else is built from them.
+
+### Spread the props
+
+A replacement that spreads what it receives keeps every behaviour it was given:
+
+```tsx
+const MyHeaderCell: TableSlots<Person>['HeaderCell'] = (props) => (
+  <th {...props} className={cx(props.className, 'my-header')} />
+);
+```
+
+Drop the spread and you drop the sort handler, the `aria-sort`, the pinning offset and the data
+attributes with it.
+
+### Wrapping the default
+
+`useTableSlots().defaults` gives you the original implementation, so an override can add rather
+than replace:
+
+```tsx
+function HeaderCellWithHint(props) {
+  const { HeaderCell: Default } = useTableSlots().defaults;
+  return (
+    <Default {...props}>
+      {props.children}
+      <InfoIcon title={props.column.columnDef.headerTooltip} />
+    </Default>
+  );
+}
+```
+
+This matters more than it looks: the default header cell already contains the sort button, so
+rendering `children` _beside_ your addition rather than wrapping it is what keeps a button out of
+a button.
+
+### Lighter than a slot
+
+Most of the time you do not need a component. `classNames`, `styles` and `slotProps` take the
+same slot names in camelCase and merge rather than replace:
+
+```tsx
+<DataTable
+  classNames={{ cell: ({ column }) => (column.id === 'amount' ? 'tabular-nums' : undefined) }}
+  slotProps={{ row: ({ row }) => ({ 'data-status': row.original.status }) }}
+/>
+```
+
+Class names concatenate, styles shallow-merge and event handlers chain — yours first, and it can
+stop the table's with `event.preventTablekitDefault()`.
+
+## Customization
+
+Slots compose with everything else: a slot can read the theme
+[tokens](/react-tablekit/customization/tokens/), and behaviour belongs in
+[handlers](/react-tablekit/customization/handlers/) rather than in a slot that reimplements a
+click. For a full design-system adapter, see [Overriding
+structure](/react-tablekit/customization/structure/).
+
+## Limitations
+
+- **Slots must forward refs** to their DOM root. The table measures and focuses through them; a
+  slot that swallows the ref breaks sizing and keyboard navigation.
+- **A slot cannot change the table's structure.** Moving a control somewhere else is a composable
+  part, not a slot.
+- **Replacing a semantic element with a `div`** removes the semantics with it. A `HeaderCell` that
+  is not a `th` is not a header cell to a screen reader.
+
+## API
+
+- [Slots](/react-tablekit/api/slots/) — every slot, its element and its props.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `slots`, `slotProps`, `classNames`,
+  `styles`, `unstyled`.
+- [Hooks](/react-tablekit/api/hooks/) — `useTableSlots` for the defaults.

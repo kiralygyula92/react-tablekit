@@ -1,7 +1,8 @@
 import { defineConfig } from 'vitest/config';
-import { libraryAliases } from './vite.config.ts';
+import { contentPlugins, libraryAliases } from './vite.config.ts';
 
 export default defineConfig({
+  plugins: contentPlugins(),
   resolve: { alias: libraryAliases },
   test: {
     environment: 'node',

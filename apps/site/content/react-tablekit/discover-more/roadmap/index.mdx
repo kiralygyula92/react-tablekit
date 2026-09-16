@@ -1,0 +1,65 @@
+---
+title: Roadmap
+description: What is planned after 1.0, what is deliberately not planned, and how to influence either.
+archetype: editorial
+group: Discover more
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+1.0 is feature-complete against its specification: every feature works on the client and on the
+server, everything is themeable, replaceable and overridable, and the API is stable under
+[semver](/react-tablekit/getting-started/versions/).
+
+What follows is the shape of 1.x. Dates are not promised — this is an order of intent, and it
+changes with what people actually need.
+
+## Planned for 1.x
+
+**Inline editing.** Cell, row and modal editing modes, with a validator per column, optimistic
+commits that roll back on rejection, and the keyboard model that goes with it — Enter commits and
+moves down, Tab commits and moves right, Escape cancels. The API names are already reserved so
+that adding it is not a breaking change.
+
+**Column virtualization.** Row virtualization landed in 1.0; the column axis has not. It matters
+past roughly fifty columns, where rendering every cell in a row becomes the cost even when only
+twenty are on screen.
+
+**Row drag reordering.** `enableRowOrdering` with an `onRowOrderChange` callback, client mode
+only — reordering rows the server paginates is a different problem.
+
+**Cell range selection and copy.** Selecting a rectangle and copying it as TSV, the way a
+spreadsheet does.
+
+**A leaner entry point.** `import { DataTable }` currently measures close to the full import
+because the features are not yet split into side-effect-free modules. Doing that work — under
+several hundred tests — was deliberately not done immediately before a first stable release. Until
+then, [`react-tablekit/core`](/react-tablekit/headless/) is the small-bundle path.
+
+**More locales.** Four are bundled. More are welcome, and a locale is one of the easiest useful
+contributions.
+
+**A Material UI adapter.** A package of [slots](/react-tablekit/customization/slots/) mapping the
+six primitives onto MUI components, as a reference for what a design-system adapter looks like.
+
+## Deliberately not planned
+
+- **A pivot table.** Grouping with aggregates is not a pivot, and building one inside a data table
+  makes both worse.
+- **Charting.** A chart that shares the table's filters is a good idea; putting it in this package
+  is not.
+- **A styling framework.** [Tokens](/react-tablekit/customization/tokens/) and slots are the
+  extent of the visual API on purpose.
+
+## Influencing it
+
+Open an issue describing the problem rather than the feature — what you are trying to do, what
+you tried, and where it stopped working. A concrete use case moves something up this list far
+more reliably than a request for an API.
+
+## Related
+
+- [Changelog](/react-tablekit/discover-more/changelog/)
+- [Versions](/react-tablekit/getting-started/versions/)
+- [Support](/react-tablekit/getting-started/support/)

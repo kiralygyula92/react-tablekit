@@ -1,0 +1,90 @@
+---
+title: React Query
+description: Let TanStack Query own the fetching and caching while the table owns the query — one effect, no duplicated state.
+archetype: editorial
+group: Integrations
+symbols: [DataTableProps, TableQuery, useDataTable]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## Basics
+
+<Demo id="react-tablekit/integrations/react-query/demo-basics" label="React Query" />
+
+The table already maintains the query; React Query already caches responses. The integration is
+making the table's query the cache key:
+
+```tsx
+function People() {
+  const [query, setQuery] = useState<TableQuery>();
+
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: ['people', query],
+    queryFn: () => api.people(query),
+    placeholderData: keepPreviousData,
+    enabled: query !== undefined,
+  });
+
+  return (
+    <DataTable
+      dataMode="server"
+      onQueryChange={setQuery}
+      data={data?.items ?? []}
+      rowCount={data?.total ?? 0}
+      loading={isLoading}
+      fetching={isFetching}
+      error={error}
+      columns={columns}
+      getRowId={(p) => p.id}
+    />
+  );
+}
+```
+
+That is the whole thing. `onQueryChange` fires once, after debouncing, so the key changes when the
+request should change and not on every keystroke.
+
+### Why not `dataSource`
+
+`dataSource` is the table's own fetching, and it duplicates what React Query gives you: caching,
+deduplication, retries, invalidation, devtools. Pick one. When your application already uses
+React Query, `onQueryChange` is the smaller surface.
+
+### Keeping the previous page
+
+`placeholderData: keepPreviousData` and the table's `fetching` flag do the same job from two
+sides: the old rows stay visible and the table dims them instead of blanking. Together they
+remove the layout jump between pages.
+
+### Invalidating after a mutation
+
+The table does not need to know. Invalidate the key and React Query refetches what is on screen:
+
+```tsx
+await api.archive(ids);
+queryClient.invalidateQueries({ queryKey: ['people'] });
+```
+
+### Infinite queries
+
+`useInfiniteQuery` pairs with `paginationType="infinite"` or `"loadMore"`: flatten the pages into
+`data` and let the table accumulate. Keep `appendPages` in mind — the table appends rather than
+replaces in these modes.
+
+## Limitations
+
+- **The query object is the cache key**, so it must be serializable. It is, but a custom filter
+  value holding a class instance is not.
+- **Two sources of truth for loading.** Map `isLoading` and `isFetching` onto `loading` and
+  `fetching` rather than merging them, or the first load looks like a refetch.
+- **Facets are a second query.** The table's `fetchFacets` belongs to `dataSource`; with React
+  Query, supply `filterOptions` from your own query instead.
+
+## Related
+
+- [Client and server](/react-tablekit/client-and-server/)
+- [Server data](/react-tablekit/guides/server-data/)
+- [Pagination](/react-tablekit/pagination/)
+- [Faceting](/react-tablekit/faceting/)

@@ -1,0 +1,75 @@
+---
+title: Export
+description: CSV of the page, the selection or everything matching — chunked through your API when the result is larger than the browser holds.
+archetype: capability
+capabilityId: export
+group: Automation
+symbols: [DataTableProps, ColumnDef, TableInstance, exportToCsv]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/export
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/export/demo-basics" label="Export" />
+
+`enableExport` adds a toolbar menu with four entries: the current page, everything matching the
+filters, the selected rows, and copy to clipboard. Three of those are different questions and the
+menu asks which one you meant rather than guessing.
+
+```tsx
+<DataTable enableExport exportFileName="people.csv" data={rows} columns={columns} />
+```
+
+### What lands in the file
+
+Headers come from `meta.exportHeader`, then a string `header`, then the column id. Values come
+from `exportValue`, then `format`, then the value stringified — so an exported date matches the
+displayed date, and an exported currency is a number rather than `$1,240.00` if you say so:
+
+```tsx
+col.accessor('total', { format: (v) => money.format(v), exportValue: (v) => v });
+```
+
+Quoting follows RFC 4180, and a UTF-8 byte order mark is written by default so Excel opens
+accented text correctly. Display columns and `enableExport: false` columns are left out.
+
+### Exporting more than the browser has
+
+"All matching" in server mode cannot mean the loaded page. The table walks your data source in
+chunks of `exportChunkSize` up to `exportMaxRows`, showing progress in the button and letting the
+reader cancel.
+
+When your backend already has an export endpoint, `onExport(query, scope)` hands you the query
+and the table does nothing else — which is the right answer for a million rows.
+
+### Saving the file
+
+The default download is a blob and a temporary link. `onExportFile(blob, fileName)` intercepts it
+for a custom destination — a file-system picker, an upload, a preview dialog.
+
+## Customization
+
+`exportToCsv` is exported, so the same serialization is available outside the table for a
+scheduled report or a test. The export button is a [slot](/react-tablekit/customization/slots/)
+and `<DataTable.ExportButton />` places it outside the toolbar.
+
+## Limitations
+
+- **CSV only in 1.0.** Excel and PDF are the caller's job; `onExport` is the hook for them.
+- **`exportMaxRows` is a real ceiling.** It defaults to 10,000 so a mis-click cannot pull a
+  million rows through the browser; raise it deliberately.
+- **What you see is what you get, not what you have.** Hidden columns are excluded — an export is
+  the table as configured, which is usually what the reader means.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableExport`, `exportMode`,
+  `exportFileName`, `exportChunkSize`, `exportMaxRows`, `onExport`, `onExportFile`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableExport`, `exportValue`,
+  `meta.exportHeader`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `exportCsv`, `copyToClipboard`,
+  `getQuery`, `getSelectionQuery`.
+- [Utilities](/react-tablekit/api/utilities/) — `exportToCsv`.

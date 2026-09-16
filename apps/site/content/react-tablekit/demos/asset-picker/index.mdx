@@ -1,0 +1,54 @@
+---
+title: Asset picker
+description: A table inside a dialog — single selection with radio semantics, row-click to choose, and a client-side dataset small enough to filter instantly.
+archetype: editorial
+group: Demos
+symbols: [DataTableProps, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+<Demo id="react-tablekit/demos/asset-picker/demo-basics" label="Asset picker" />
+
+## What it shows
+
+The other kind of table: not a screen, but a control inside a dialog whose job is to return one
+value.
+
+- **Single selection.** `enableMultiRowSelection: false` turns the checkboxes into radios and
+  removes the header checkbox — there is no "select all" in a picker.
+- **The row is the target.** `selectOnRowClick` means the reader does not have to hit a 16-pixel
+  radio, while the edit button inside the row still works because interactive descendants are
+  excluded.
+- **Client mode, deliberately.** The candidate list is small, so it is loaded once and filtered in
+  the browser: no spinner between keystrokes, which matters much more in a dialog than on a page.
+- **Compact by default.** A dialog is short, so the table starts dense and pages in small chunks.
+
+## How it is built
+
+```tsx
+<DataTable
+  data={assets}
+  columns={columns}
+  getRowId={(a) => a.id}
+  enableRowSelection
+  enableMultiRowSelection={false}
+  selectOnRowClick
+  showSelectionBar={false}
+  initialState={{ density: 'compact', pagination: { pageIndex: 0, pageSize: 8 } }}
+  onRowSelectionChange={(selection) => setChosen(firstId(selection))}
+/>
+```
+
+The selection bar is off because the dialog's own footer holds the confirm and cancel buttons —
+two places to act on a selection is one too many.
+
+## Related
+
+- [Row selection](/react-tablekit/row-selection/) — single, multiple and row-click selection.
+- [Density](/react-tablekit/density/) — why a dialog starts compact.
+- [Client and server](/react-tablekit/client-and-server/) — when loading everything is the right
+  call.
+- [Cell building blocks](/react-tablekit/customization/cell-building-blocks/) — the action button
+  and truncated text used here.

@@ -1,0 +1,72 @@
+---
+title: Virtualization
+description: Render the rows on screen instead of all of them — a hundred thousand rows with the same markup, the same keyboard model and the same counts for screen readers.
+archetype: capability
+capabilityId: virtualization
+group: Display & layout
+symbols: [DataTableProps, useVirtualRows, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/hooks/useVirtualRows.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/virtualization/demo-basics" label="Virtualization: 100k rows" />
+
+Virtualization renders only the rows in view plus a small overscan, so the cost of a table stops
+growing with the data. It turns itself on above `virtualizationThreshold` visible rows, which
+means most tables never think about it and the one that suddenly loads 50,000 rows does not fall
+over.
+
+```tsx
+<DataTable data={rows} columns={columns} maxHeight={600} />
+```
+
+The one thing it needs is a bounded height — `maxHeight`, or a parent that has one. Without it
+there is no viewport to virtualize against, and the table says so in development.
+
+### Row height
+
+`estimateRowHeight` is the starting guess, and rows are measured as they render, so variable
+heights settle correctly after the first paint. Give a close estimate and the scrollbar is
+accurate immediately; give a poor one and it corrects itself as you scroll.
+
+`overscan` trades memory for smoothness — a few extra rows above and below the viewport mean
+fewer blank frames during a fast flick.
+
+### Still a real table
+
+Virtualized rows use grid semantics: the table reports `aria-rowcount` for the whole result and
+every row carries its true `aria-rowindex`. A screen reader hears "row 4,201 of 100,000", not
+"row 12 of 20". [Keyboard navigation](/react-tablekit/keyboard-navigation/) is
+virtualization-aware too, so Page Down moves by a screen of rows and `scrollToRow` brings any row
+into view.
+
+### What it composes with
+
+Detail panels (measured), grouping, sticky headers, pinned columns and infinite pagination all
+work under virtualization — which is the point of building it in rather than bolting it on.
+
+## Customization
+
+`useVirtualRows` is exported, so a [headless](/react-tablekit/headless/) table or a custom layout
+can use the same windowing the built-in body uses. `enableRowVirtualization: false` forces it off
+for a table where every row must be in the DOM — a print view, or a test that scrapes markup.
+
+## Limitations
+
+- **Browser find-in-page only finds rendered rows.** This is inherent to windowing; offer search
+  in the table instead.
+- **Columns are not virtualized in 1.0.** Fifty columns render fifty cells per row; column
+  virtualization is on the [roadmap](/react-tablekit/discover-more/roadmap/).
+- **Wildly variable row heights make the scrollbar approximate** until those rows have been
+  measured, because their size is not known before they render.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowVirtualization`,
+  `virtualizationThreshold`, `estimateRowHeight`, `overscan`, `maxHeight`, `layout`.
+- [Hooks](/react-tablekit/api/hooks/) — `useVirtualRows`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `scrollToRow`, `getRowCount`.

@@ -1,0 +1,94 @@
+---
+title: Rows and cells
+description: Prop getters, class and style callbacks, and full row renderers that still let you keep the default markup.
+archetype: capability
+capabilityId: rows-and-cells
+group: Customization
+symbols: [DataTableProps, ColumnDef]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/parts
+---
+
+## Basics
+
+<Demo id="react-tablekit/customization/rows-and-cells/demo-basics" label="Row overrides" />
+
+Row and cell customization has a ladder, and the first rung solves most of it. Start light.
+
+**Additive.** `getRowProps`, `getRowClassName` and `getRowStyle` decorate a row without replacing
+anything. At the column level, `getCellProps`, `cellClassName` and `cellStyle` do the same per
+cell:
+
+```tsx
+<DataTable
+  getRowProps={(row) => ({ 'data-status': row.original.status })}
+  getRowClassName={(row) => (row.original.overdue ? 'is-overdue' : undefined)}
+/>
+```
+
+`getRowProps` is the most useful of the three: a data attribute lets CSS express every state
+without a class name per case.
+
+**Content.** A column's `cell`, `header` and `footer` decide what is rendered inside. That is
+where links, chips, avatars and formatted numbers belong — see
+[Columns](/react-tablekit/columns/).
+
+**Structural.** `renderRow` replaces the row, and hands you `defaultRender()` so you can wrap
+instead of rebuild:
+
+```tsx
+renderRow={({ row, defaultRender }) =>
+  row.original.pinned ? <HighlightWrapper>{defaultRender()}</HighlightWrapper> : defaultRender()
+}
+```
+
+Keeping `defaultRender()` in the tree keeps the row's accessibility attributes, its keyboard
+behaviour and its state classes.
+
+### Reaching the page from a cell
+
+A cell renderer receives the table, and `meta` is where the page puts its callbacks. The column
+stays a pure function of its data and remains reusable across screens:
+
+```tsx
+<DataTable meta={{ onEdit: setEditing }} columns={columns} />;
+
+col.display({
+  id: 'actions',
+  cell: ({ row, table }) => (
+    <button onClick={() => table.options.meta?.onEdit?.(row.original)}>Edit</button>
+  ),
+});
+```
+
+### Clicks inside a row
+
+A clickable row does not steal clicks from its contents: buttons, links, inputs and anything
+marked `data-tk-stop` are excluded. Mark your own custom control with `data-tk-stop` if it should
+not count as a row click.
+
+## Customization
+
+For markup that belongs to the whole table rather than to one column, use
+[slots](/react-tablekit/customization/slots/) — `Row` and `Cell` are slots too. For behaviour, use
+[handlers](/react-tablekit/customization/handlers/): a click that should navigate is a handler,
+not a renderer.
+
+## Limitations
+
+- **`getRowStyle` is inline style**, so it outranks the stylesheet. Prefer a class or a data
+  attribute if a theme should still be able to win.
+- **`renderRow` opts out of the default row**, including the accessibility attributes, unless
+  `defaultRender()` stays in the tree.
+- **Cell renderers run for every visible row.** Keep them cheap; expensive work belongs in the
+  data, not in the render.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `getRowProps`, `getRowClassName`,
+  `getRowStyle`, `renderRow`, `renderDetailPanel`, `meta`, `slotProps`, `classNames`, `styles`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `cell`, `header`, `footer`, `getCellProps`,
+  `cellClassName`, `cellStyle`, `headerClassName`, `headerStyle`, `align`, `verticalAlign`.
+- [Slots](/react-tablekit/api/slots/) — `Row`, `Cell`, `HeaderCell`, `DetailRow`.

@@ -1,0 +1,54 @@
+---
+title: Account list
+description: A server-mode list screen — search in the page header, debounced requests, numbered pages, and the loading, refetch and empty states that go with them.
+archetype: editorial
+group: Demos
+symbols: [DataTableProps, useDataTable, createRestDataSource]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+<Demo id="react-tablekit/demos/account-list/demo-basics" label="Account list" />
+
+## What it shows
+
+This is the shape most application screens take: one server-backed list, searched from the page
+header rather than from inside the table, paged ten at a time.
+
+- **The search lives outside the table.** `<DataTable.Search />` sits in the page header and the
+  toolbar is switched off entirely, which is what [composable
+  parts](/react-tablekit/toolbar/) are for. The table still owns the state.
+- **The request is gated.** A three-character minimum and a 300ms debounce turn typing into one
+  request, and a new search resets to page 1 rather than leaving the reader on page 4 of
+  something else.
+- **All three data states appear.** The first load shows a loading row, a refetch dims the rows
+  already on screen instead of blanking them, and a search with no results gets an empty state.
+- **Ctrl+K focuses the box**, scoped to this table.
+
+## How it is built
+
+```tsx
+const table = useDataTable<Account>({
+  columns: accountColumns,
+  dataSource: accountsDataSource,
+  getRowId: (a) => a.identifiers.id,
+  searchMinLength: 3,
+  searchDebounceMs: 300,
+  searchHotkey: 'mod+k',
+  toolbar: false,
+});
+```
+
+Everything else is rendering: `DataTable.Root` wraps the page, `DataTable.Search` goes in the
+header and `DataTable.Table` and `DataTable.Pagination` go where the design says.
+
+The theme switch above the table is part of the demo, not the library — it swaps the `classic`
+preset for `light` so you can see the same screen in two designs.
+
+## Related
+
+- [Client and server](/react-tablekit/client-and-server/) — the data source behind it.
+- [Global search](/react-tablekit/global-search/) — debouncing, gating and the hotkey.
+- [Loading and empty states](/react-tablekit/loading-and-empty-states/) — the three states.
+- [Asset list](/react-tablekit/demos/asset-list/) — the same screen with interactive cells.

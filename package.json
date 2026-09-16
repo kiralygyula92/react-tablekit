@@ -22,7 +22,7 @@
     "check:package": "pnpm --filter react-tablekit check:package",
     "docs:check": "pnpm --filter react-tablekit docs:check",
     "docs:json": "pnpm --filter react-tablekit docs:json",
-    "verify": "pnpm --filter site build:api && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm e2e",
+    "verify": "pnpm --filter site build:data && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm e2e",
     "changeset": "changeset",
     "version-packages": "changeset version && node scripts/sync-version.mjs && pnpm install --lockfile-only",
     "release": "pnpm build && changeset publish"

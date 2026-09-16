@@ -1,0 +1,76 @@
+---
+title: Accessibility
+description: What the table does for you, what it announces, and the four ways a customization can undo it.
+archetype: editorial
+group: Guides
+symbols: [DataTableProps, TableLocalization]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+Accessibility here is not a mode you turn on. It is the default markup, and the work is in not
+breaking it.
+
+## What you get without asking
+
+- **Real table semantics.** A `table` with a `caption` or an `aria-label`, `th scope="col"`
+  headers, and — with `firstColumnAsRowHeader` — a `th scope="row"` per row, so a screen reader
+  can say which record a cell belongs to.
+- **Sort state.** `aria-sort` on the primary sorted column, which is what the specification
+  allows, and an `aria-description` carrying the priority for the others.
+- **Real counts.** `aria-rowcount` and `aria-rowindex` report the whole result, not the rendered
+  window, so a [virtualized](/react-tablekit/virtualization/) table says "row 4,201 of 100,000".
+- **Busy state.** `aria-busy` while fetching, so a reader is told the table is updating.
+- **Announcements.** A polite, debounced live region for sort changes, page changes, result
+  counts, loading, selection counts and column moves — the things a sighted reader sees happen.
+- **Focus.** A visible ring on every interactive element, from the `--tk-focus-ring` token.
+- **Motion.** `prefers-reduced-motion` disables the animations.
+- **Contrast.** Every default token pair meets WCAG AA, and that is checked in the test suite
+  rather than asserted here.
+
+## The keyboard
+
+Without [keyboard navigation](/react-tablekit/keyboard-navigation/), everything is still reachable
+by Tab: sort buttons, checkboxes, links, menus. Rows are not focusable unless `onRowClick` makes
+them interactive, which is correct — a row you cannot activate should not be a tab stop.
+
+With it, the table becomes a grid: one tab stop, arrow keys between cells, Enter to step into a
+cell's controls and Escape to step back out. That is the WAI-ARIA data grid pattern, and it is the
+right choice for a dense table a person works in all day.
+
+## Four ways to break it
+
+1. **A slot that does not spread its props.** The classes, the ARIA attributes and the handlers
+   arrive as props. Dropping them drops the behaviour.
+2. **A slot that changes the element.** A `HeaderCell` rendered as a `div` is not a header.
+3. **A button inside a button.** The default header cell already contains the sort button, so a
+   custom `HeaderCell` must render `children` _beside_ its addition, not around it. This is the
+   single most common regression.
+4. **An icon button with no name.** `ActionButton` requires a `label` for this reason; a bare
+   icon in a custom cell needs one too.
+
+## Things worth doing yourself
+
+- **Name the table.** `aria-label` or a `caption`. "Table" is not a description, and a page with
+  two tables needs two names.
+- **Localize.** Announcements are read aloud; they should be in the reader's language. See
+  [Localization](/react-tablekit/localization/).
+- **Say why it is empty.** An empty state that distinguishes "no data" from "no matches" is an
+  accessibility feature as much as a usability one.
+- **Test it.** An axe assertion per configuration you ship. See
+  [Testing](/react-tablekit/guides/testing/).
+
+## Known exception
+
+The `classic` preset's header text is `#717680` on `#FAFAFA` — about 4.4:1, just under the AA
+threshold for normal text. Those token values are frozen because the preset reproduces an
+existing design. Every other preset passes, and the exception is asserted in the test suite so it
+cannot spread.
+
+## Related
+
+- [Keyboard navigation](/react-tablekit/keyboard-navigation/)
+- [Slots](/react-tablekit/customization/slots/)
+- [Localization](/react-tablekit/localization/)
+- [Testing](/react-tablekit/guides/testing/)

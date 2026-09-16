@@ -1,0 +1,30 @@
+---
+title: Theme editor
+description: Change any design token and watch the table follow — then copy the CSS or the theme object into your own project.
+archetype: editorial
+group: Demos
+symbols: [createTheme, toCssVars, TableTheme]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+Every visual value in the table is a CSS custom property. Change one here and the table below
+updates immediately — no rebuild, no class names, no specificity fight. When you are happy, copy
+the result out as CSS or as a theme object.
+
+<ThemeEditor />
+
+## What to try
+
+- Change `--tk-color-accent` and notice how far it reaches: the focus ring, the sort indicator,
+  the selected row, the spinner.
+- Adjust the cell padding tokens and see that this is all `compact` density really is.
+- Set `--tk-pinned-shadow` to something visible, then scroll a wide table sideways.
+- Switch the preset and start again from a different set of defaults.
+
+## Related
+
+- [Theming](/react-tablekit/customization/theming/) — presets, overrides and dark mode.
+- [Design tokens](/react-tablekit/customization/tokens/) — what each token controls.
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — the complete generated list.

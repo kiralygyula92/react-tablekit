@@ -1,0 +1,66 @@
+---
+title: Column ordering
+description: Drag headers to reorder, or move them from the columns menu with the keyboard — with pinned groups and locked positions respected.
+archetype: capability
+capabilityId: column-ordering
+group: Display & layout
+symbols: [DataTableProps, ColumnDef, TableInstance, Column]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/columnOrdering.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/column-ordering/demo-basics" label="Column ordering" />
+
+`enableColumnOrdering` lets a reader drag a header to a new position. The drag uses pointer
+events rather than HTML5 drag-and-drop, so it behaves the same with a mouse, a pen and a finger.
+
+The same order is editable from the columns menu, where each column has a drag handle and up and
+down buttons — which is how the feature works without a pointer at all. Every move is announced
+in the live region: _Moved Company name to position 3 of 8_.
+
+### What stays put
+
+Reordering respects the layout rules already in place:
+
+- A [pinned](/react-tablekit/column-pinning/) column moves only within its own side.
+- `lockPosition: 'first'` or `'last'` holds a column at its edge.
+- `enableOrdering: false` takes a column out of the drag entirely, and `static: true` takes it out
+  of everything.
+
+### Reading and setting the order
+
+`state.columnOrder` is an array of column ids; anything missing keeps its declared position. That
+makes a "reset layout" button a one-liner, and a saved layout a stored array.
+
+```tsx
+<button onClick={() => table.resetColumnOrder()}>Reset layout</button>
+```
+
+`moveColumn(id, toIndex)` performs the same move programmatically.
+
+## Customization
+
+Pair ordering with [column visibility](/react-tablekit/column-visibility/) and
+[sizing](/react-tablekit/column-sizing/), then persist all three — see
+[Persistence](/react-tablekit/persistence/). Those three slices together are what people mean by
+"my table layout".
+
+## Limitations
+
+- **Group columns move as a unit.** A leaf cannot be dragged out of its header group.
+- **Order is by id.** Renaming a column id invalidates a stored order, so treat ids as an API.
+- **There is no drop indicator between two pinned sides.** Dragging across the boundary is
+  refused rather than silently ignored.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnOrdering`,
+  `onColumnOrderChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableOrdering`, `lockPosition`, `static`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnOrder`, `resetColumnOrder`,
+  `moveColumn`.
+- [`Column`](/react-tablekit/api/table-instance/) — `getIndex`, `getCanOrder`.

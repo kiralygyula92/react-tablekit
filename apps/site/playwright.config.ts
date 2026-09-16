@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4173;
+// 4173 is Vite's default and is often already taken by another project's preview server;
+// a dedicated port means a stray server cannot be mistaken for this site (reuseExistingServer).
+const PORT = 4183;
 const isCI = !!process.env.CI;
 // Chromium on PRs; all three engines on main / release (docs/09 §5).
 const allBrowsers = process.env.E2E_ALL_BROWSERS === '1';
@@ -35,7 +37,7 @@ export default defineConfig({
     { name: 'visual', use: { ...devices['Desktop Chrome'] }, testMatch: /visual\.spec\.ts/ },
   ],
   webServer: {
-    command: 'pnpm exec vite build && pnpm exec vite preview --port 4173 --strictPort',
+    command: `pnpm exec vite build && pnpm exec vite preview --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !isCI,
     timeout: 180_000,

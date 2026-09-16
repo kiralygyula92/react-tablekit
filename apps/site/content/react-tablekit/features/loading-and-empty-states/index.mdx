@@ -1,0 +1,86 @@
+---
+title: Loading and empty states
+description: Skeletons, a delayed overlay, an empty state that knows why it is empty, and errors that keep the rest of the table usable.
+archetype: capability
+capabilityId: loading-and-empty-states
+group: Interaction
+symbols: [DataTableProps, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/parts/states.tsx
+---
+
+## Basics
+
+<Demo
+  id="react-tablekit/features/loading-and-empty-states/demo-basics"
+  label="Loading, empty and error states"
+/>
+
+A table spends real time in three states that are not "showing rows", and each has its own
+answer.
+
+**Loading.** `loadingDisplay` chooses between a skeleton — rows of placeholder blocks, sized by
+`skeletonRowCount` — and an overlay over the rows that are already there. The skeleton suits a
+first load; the overlay suits a refetch, because keeping the old page visible is less jarring
+than blanking it.
+
+**Empty.** `renderEmptyState` and `emptyStateContent` fill the body when there is nothing to show.
+The most useful empty state distinguishes "no data yet" from "no matches for these filters", and
+offers to clear them:
+
+```tsx
+renderEmptyState={({ table }) =>
+  table.getActiveFilterCount() > 0 ? (
+    <button onClick={() => table.clearAllFilters()}>Clear filters</button>
+  ) : (
+    <p>No people yet.</p>
+  )
+}
+```
+
+**Error.** `error` and `renderErrorState` show the failure without discarding the table around
+it, so the reader can change a filter and try again instead of reloading the page.
+
+### The overlay does not flash
+
+`loadingOverlayDelayMs` — 150ms by default — means a response that arrives quickly never shows a
+spinner at all. A spinner that appears and vanishes in 80 milliseconds is noise, not feedback.
+
+The overlay covers the body from the bottom of the header down, blocks interaction while it is up
+and sets `aria-busy` on the table. `loadingOverlayBlocksInteraction: false` lets a reader keep
+typing in the search box while the previous request finishes.
+
+### Both flags
+
+`loading` is the first load; `fetching` is a refresh of data that already exists. Using both is
+what lets a table show a skeleton once and an overlay after that.
+
+## Customization
+
+Every state is a [slot](/react-tablekit/customization/slots/): `SkeletonRows`, `LoadingRow`,
+`LoadingOverlay`, `EmptyState`, `ErrorState` and `ErrorBanner`. A design system replaces them
+once and every table follows.
+
+With `dataSource`, the states are driven for you — `getDataStatus()` reports which one the table
+is in, and `onStatusChange` fires on every transition.
+
+## Limitations
+
+- **An empty page is not an empty table.** Landing on page 5 of a filtered result shows the empty
+  state; `autoResetPageIndex` exists to avoid it.
+- **The overlay needs a positioned container**, which the table provides — but a custom
+  `LoadingOverlay` slot rendered outside it will not be positioned.
+- **`error` is display, not recovery.** Retrying is your decision; the table only shows what you
+  give it.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `loading`, `fetching`, `error`,
+  `loadingDisplay`, `skeletonRowCount`, `loadingOverlayDelayMs`,
+  `loadingOverlayBlocksInteraction`, `renderEmptyState`, `emptyStateContent`,
+  `renderErrorState`, `onError`, `onStatusChange`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `getDataStatus`, `refresh`,
+  `invalidate`, `getActiveFilterCount`, `clearAllFilters`.
+- [Slots](/react-tablekit/api/slots/) — the six state slots.

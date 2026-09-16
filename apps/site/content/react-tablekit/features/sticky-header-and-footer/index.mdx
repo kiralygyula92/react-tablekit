@@ -1,0 +1,64 @@
+---
+title: Sticky header and footer
+description: Keep the header and the totals in view while the rows scroll, in both axes when columns are pinned.
+archetype: capability
+capabilityId: sticky-header-and-footer
+group: Display & layout
+symbols: [DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/styles
+---
+
+## Basics
+
+<Demo
+  id="react-tablekit/features/sticky-header-and-footer/demo-basics"
+  label="Sticky header and footer"
+/>
+
+`enableStickyHeader` holds the header cells against the top of the scroll container.
+`enableStickyFooter` does the same for the `tfoot`. Both need the container to be the thing that
+scrolls, which means it needs a bounded height:
+
+```tsx
+<DataTable enableStickyHeader maxHeight={480} data={rows} columns={columns} />
+```
+
+`maxHeight` is the usual way to give it one; a parent with a fixed height works just as well.
+
+### Both directions at once
+
+With [pinned columns](/react-tablekit/column-pinning/), a pinned header cell is stuck vertically
+_and_ horizontally — it stays in the corner while the table scrolls both ways. That is one
+position rule, not two features interfering.
+
+### Pagination stays put
+
+The pagination control sits outside the scroll container, so it is always visible. Scrolling to
+the last row and finding no way to reach page two is a bug this layout cannot have.
+
+## Customization
+
+The header background is `--tk-header-bg` and the shadow that appears when content passes
+underneath is a [token](/react-tablekit/customization/tokens/) as well — so a sticky header can
+be flat, raised or bordered without touching the markup.
+
+Sticky headers and [virtualization](/react-tablekit/virtualization/) compose: the header is
+outside the virtual window, so it does not move as rows are recycled.
+
+## Limitations
+
+- **A sticky header needs a bounded height.** Without one the page scrolls instead of the
+  container and nothing sticks; the table warns about this in development.
+- **A very tall header group eats the viewport.** Two header rows plus a filter row on a short
+  screen leaves little for data.
+- **`position: sticky` cannot escape an ancestor with `overflow: hidden`.** If the header will not
+  stick, that ancestor is usually why.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableStickyHeader`,
+  `enableStickyFooter`, `maxHeight`, `minWidth`, `maxWidth`, `layout`, `bordered`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — `--tk-header-bg`, `--tk-z-pinned-header`.

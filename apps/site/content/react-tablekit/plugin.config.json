@@ -1,0 +1,86 @@
+{
+  "$schema": "../../../../docs/ppds/plugin-site.schema.json",
+  "id": "react-tablekit",
+  "name": "react-tablekit",
+  "tagline": "A headless-core React data table where every feature works on the client and on the server.",
+  "description": "A React data table with a framework-agnostic core. Pagination, search, filters, sorting, grouping, expansion, selection and faceting each run in the browser or on your server. Every part is a replaceable slot, every interaction is overridable, and every visual value is a CSS variable.",
+  "categoryId": "data-display",
+  "urlPrefix": "",
+  "repo": "https://github.com/kiralygyula92/react-tablekit",
+  "currentVersion": "1.0.0",
+  "versions": [
+    {
+      "label": "v1",
+      "href": "/react-tablekit/",
+      "current": true,
+      "supported": true
+    }
+  ],
+  "tiers": [
+    {
+      "id": "free",
+      "name": "Free",
+      "badge": null
+    }
+  ],
+  "links": {
+    "issues": "https://github.com/kiralygyula92/react-tablekit/issues",
+    "support": "/react-tablekit/getting-started/support/",
+    "changelog": "/react-tablekit/discover-more/changelog/",
+    "roadmap": "/react-tablekit/discover-more/roadmap/"
+  },
+  "taxonomy": [
+    "Core features",
+    "Advanced features",
+    "Display & layout",
+    "Interaction",
+    "Automation",
+    "Developer tools"
+  ],
+  "sections": [
+    {
+      "id": "getting-started"
+    },
+    {
+      "id": "features"
+    },
+    {
+      "id": "demos"
+    },
+    {
+      "id": "reference"
+    },
+    {
+      "id": "customization"
+    },
+    {
+      "id": "guides"
+    },
+    {
+      "id": "integrations"
+    },
+    {
+      "id": "resources",
+      "enabled": false
+    },
+    {
+      "id": "migration"
+    },
+    {
+      "id": "discover-more"
+    },
+    {
+      "id": "design-resources",
+      "enabled": false
+    }
+  ],
+  "referenceSource": {
+    "kind": "typescript-declarations",
+    "entry": "packages/react-tablekit/src/index.ts",
+    "command": "pnpm --filter react-tablekit docs:json && pnpm --filter site build:api"
+  },
+  "branding": {
+    "accentColor": "#1769c2",
+    "ogImageTemplate": "/api/og?title={title}&description={description}"
+  }
+}

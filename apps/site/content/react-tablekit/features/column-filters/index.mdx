@@ -1,0 +1,105 @@
+---
+title: Column filters
+description: Per-column filters in a panel, a popover or a filter row, with a control chosen from the column's type and values drawn from the data.
+archetype: capability
+capabilityId: column-filters
+group: Core features
+symbols: [DataTableProps, ColumnDef, TableInstance, filterFns]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/columnFilters.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/column-filters/demo-basics" label="Filter panel" />
+
+Each filterable column gets a control, and the control comes from the column: a `number` column
+filters by range, a `date` column by date, a column with `filterOptions` by selection. You can
+override it with `filterVariant`.
+
+The **Filters** button in the toolbar carries a badge with the number of active filters and
+toggles the panel. Active filters also appear as removable chips under the toolbar when
+`showActiveFilterChips` is on, which is what makes "why is this table empty?" answerable at a
+glance.
+
+### Where the controls live
+
+<Demo id="react-tablekit/features/column-filters/demo-row-mode" label="Filter row" />
+
+`filterDisplayMode` decides the surface, not the behaviour:
+
+| Mode        | What the reader sees                                           |
+| ----------- | -------------------------------------------------------------- |
+| `'panel'`   | A collapsible grid of controls under the toolbar. The default. |
+| `'popover'` | The same grid, anchored to the Filters button.                 |
+| `'row'`     | A second header row with one input per column.                 |
+| `'none'`    | No built-in UI — drive `state.columnFilters` yourself.         |
+
+<Demo
+  id="react-tablekit/features/column-filters/demo-popover-mode"
+  label="Filter popover and column menu"
+/>
+
+Independently of the mode, `enableColumnActions` puts a **Filter…** entry in each header menu
+that opens just that column's filter.
+
+### Applying instantly or on demand
+
+`filterApplyMode: 'manual'` adds an Apply button, so a reader can set three filters before the
+table moves. Combined with `filterDebounceMs` on text inputs, it is how a server-mode table
+avoids a request per keystroke.
+
+### Choosing the comparison
+
+`filterFn` picks the comparison and `filterOperators` decides which ones the reader may choose
+from the operator dropdown. The built-ins cover text (`includesString`, `startsWith`,
+`endsWith`, `equalsString`, `fuzzy`), numbers (`equals`, `inNumberRange`), dates (`dateEquals`,
+`before`, `after`, `inDateRange`), arrays (`arrIncludes`, `arrIncludesAll`, `arrIncludesSome`)
+and emptiness (`empty`, `notEmpty`).
+
+```tsx
+col.accessor('city', { filterVariant: 'multiSelect', filterFn: 'arrIncludesSome' });
+col.accessor('price', { type: 'number', filterVariant: 'rangeSlider' });
+```
+
+### Filtering on the server
+
+Filters serialize into the `filters` array of the `TableQuery`, using `filterServerKey` when your
+API names a field differently. Option lists come from `dataSource.fetchFacets` instead of the
+loaded rows — see [Faceting](/react-tablekit/faceting/).
+
+## Customization
+
+`renderFilter` replaces one column's control while the table keeps owning the value:
+
+```tsx
+col.accessor('assignee', {
+  filterVariant: 'custom',
+  renderFilter: ({ value, setValue }) => <UserPicker value={value} onChange={setValue} />,
+});
+```
+
+The panel, the chips row and the Filters button are all [slots](/react-tablekit/customization/slots/),
+and `<DataTable.FilterPanel />` places the panel anywhere on the page.
+
+## Limitations
+
+- **A column has one active filter at a time.** Two conditions on the same column — "after March
+  and before June" — belong in a `range` or `dateRange` variant, or in a custom `filterFn`.
+- **Filters combine with AND.** There is no OR builder across columns; express that on the
+  server, or with a single custom filter over a computed column.
+- **`'row'` mode has no operator dropdown.** It is one input per column by design; use `'panel'`
+  or the column menu when operators matter.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnFilters`,
+  `enableFilters`, `filterDisplayMode`, `filterApplyMode`, `filterDebounceMs`, `filterMode`,
+  `filterFns`, `showActiveFilterChips`, `datePresets`, `onColumnFiltersChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableColumnFilter`, `filterVariant`,
+  `filterFn`, `filterOperators`, `filterOptions`, `filterPlaceholder`, `filterServerKey`,
+  `renderFilter`, `multiSelectDisplay`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnFilters`,
+  `resetColumnFilters`, `clearAllFilters`, `getActiveFilterCount`.

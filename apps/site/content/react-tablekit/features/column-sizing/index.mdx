@@ -1,0 +1,74 @@
+---
+title: Column sizing
+description: Percentage or pixel widths, a keyboard-operable resize handle, and double-click autosizing that measures the rendered rows.
+archetype: capability
+capabilityId: column-sizing
+group: Display & layout
+symbols: [DataTableProps, ColumnDef, TableInstance, Column]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/columnSizing.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/column-sizing/demo-basics" label="Column sizing" />
+
+There are two width models, and which one is in play depends on whether the reader can resize.
+
+Without resizing, widths are CSS: `width`, `minWidth` and `maxWidth` accept percentages or
+pixels, and they are applied through a `colgroup` so the header and the body always agree.
+
+```tsx
+col.accessor('name', { width: '30%', minWidth: 160 });
+```
+
+With `enableColumnResizing`, the table switches to pixels — `size`, `minSize`, `maxSize` — and
+converts any percentage on first measurement. A dragged column needs a number to drag from.
+
+### The resize handle
+
+The handle on the header's trailing edge is a separator with a value, which means the keyboard
+works: arrow keys move it 10 pixels and Shift moves it 50. Double-clicking autosizes the column
+to the content of the rendered rows.
+
+`columnResizeMode: 'onChange'` resizes live as you drag; `'onEnd'` shows a guide line and applies
+the width when you let go, which is the calmer choice for a table with expensive cells.
+
+### Letting a column take the slack
+
+`grow` distributes leftover width. `truncate` and `noWrap` decide what a narrow column does with
+text that does not fit — clip with a tooltip, or refuse to wrap.
+
+### Remembering the widths
+
+Column sizing is a state slice, so adding `columnSizing` to
+[`syncState`](/react-tablekit/persistence/) is all it takes for a reader's layout to survive a
+reload.
+
+## Customization
+
+`enableResizing: false` exempts one column, and `static: true` exempts it from resizing,
+reordering, hiding and pinning at once. `autosizeColumn` and `autosizeAllColumns` run the same
+measurement the double-click uses, so a toolbar button can offer "fit to content".
+
+## Limitations
+
+- **Autosizing measures rendered rows only.** On a paginated table it fits the current page,
+  because the other rows are not in the DOM to measure.
+- **Percentages and resizing do not mix.** Turning resizing on converts them once; after that the
+  table is in pixels.
+- **`minSize` wins over the available width.** A table whose minimums exceed its container will
+  scroll rather than shrink below them.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnResizing`,
+  `columnResizeMode`, `columnResizeDirection`, `tableLayout`, `minWidth`, `maxWidth`,
+  `onColumnSizingChange`, `onColumnSizingInfoChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `width`, `minWidth`, `maxWidth`, `size`,
+  `minSize`, `maxSize`, `grow`, `enableResizing`, `truncate`, `noWrap`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnSizing`, `resetColumnSizing`,
+  `autosizeColumn`, `autosizeAllColumns`, `getTotalSize`.
+- [`Column`](/react-tablekit/api/table-instance/) — `getSize`, `resetSize`, `getIsResizing`.

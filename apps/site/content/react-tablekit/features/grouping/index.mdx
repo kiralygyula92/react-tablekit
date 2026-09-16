@@ -1,0 +1,88 @@
+---
+title: Grouping
+description: Group rows by one column or several, with aggregates in the group row and totals in the footer.
+archetype: capability
+capabilityId: grouping
+group: Advanced features
+symbols: [DataTableProps, ColumnDef, TableInstance, Column]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/grouping.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/grouping/demo-basics" label="Grouping and aggregation" />
+
+`enableGrouping` lets a column collapse its rows into groups. A group row shows the value, the
+number of rows under it and a toggle; the other columns show whatever their `aggregationFn`
+computes — a sum for an amount, an average for a rating, a count for anything.
+
+```tsx
+col.accessor('country', { enableGrouping: true });
+col.accessor('total', { type: 'currency', aggregationFn: 'sum' });
+```
+
+`state.grouping` is an array, so grouping by country and then by city is a two-element list and
+the group rows nest.
+
+### Where a grouped column goes
+
+`groupedColumnMode` decides what happens to the column you grouped by: `'reorder'` moves it to
+the front, `'remove'` hides it because the group row already says it, and `false` leaves it where
+it is.
+
+A reader can group from the column menu, and — when [column
+ordering](/react-tablekit/column-ordering/) is on — by dragging a header into the toolbar drop
+zone.
+
+### Aggregating a custom value
+
+`aggregationFn` accepts a name or a function, and `aggregatedCell` renders the result. That is
+the difference between a number and `12 of 40 overdue`:
+
+```tsx
+col.accessor('status', {
+  aggregationFn: (ids, rows) => rows.filter((r) => r.original.overdue).length,
+  aggregatedCell: ({ getValue, row }) => getValue() + ' of ' + row.subRows.length + ' overdue',
+});
+```
+
+### Footers
+
+`enableColumnFooters` renders a `tfoot` with the same aggregates across the whole table.
+`footerAggregationScope` chooses between the current page and everything the filters left — see
+[Column footers](/react-tablekit/column-footers/).
+
+### Grouping on the server
+
+With `groupingMode: 'server'` the server returns group rows and the table renders them as they
+arrive. It does not re-group anything locally.
+
+## Customization
+
+`groupedCell` replaces the group row's leading cell, `getGroupingValue` changes what a row groups
+_by_ without changing what it displays — bucketing dates by month, for instance — and the group
+toggle is a [slot](/react-tablekit/customization/slots/).
+
+## Limitations
+
+- **Server grouping requires server pagination.** Grouping on the server and paging in the
+  browser throws in development, because the table cannot slice groups it did not build.
+- **Aggregates ignore hidden rows, not hidden columns.** A hidden column still aggregates; a
+  filtered-out row does not count.
+- **Grouping by more than two or three columns** is legal and rarely readable. A pivot is a
+  different component.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableGrouping`, `groupingMode`,
+  `manualGrouping`, `groupedColumnMode`, `aggregationFns`, `enableColumnFooters`,
+  `footerAggregationScope`, `onGroupingChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableGrouping`, `aggregationFn`,
+  `aggregatedCell`, `groupedCell`, `getGroupingValue`, `footer`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setGrouping`, `resetGrouping`,
+  `getGroupedRowModel`, `getFooterGroups`.
+- [`Column`](/react-tablekit/api/table-instance/) — `toggleGrouping`, `getIsGrouped`,
+  `getAggregationFn`.

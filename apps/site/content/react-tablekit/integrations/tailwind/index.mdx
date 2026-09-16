@@ -1,0 +1,83 @@
+---
+title: Tailwind CSS
+description: Utility classes on any part of the table, tokens driven from your Tailwind theme, and why the cascade layer means no !important.
+archetype: editorial
+group: Integrations
+symbols: [DataTableProps, TableSlots]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## Classes where you want them
+
+`classNames` takes the slot names in camelCase and merges rather than replaces, so a utility class
+lands on exactly one part of the table:
+
+```tsx
+<DataTable
+  classNames={{
+    root: 'rounded-xl shadow-sm',
+    headerCell: 'uppercase tracking-wide text-xs',
+    cell: ({ column }) => (column.id === 'amount' ? 'tabular-nums text-right' : undefined),
+    row: ({ row }) => (row.original.overdue ? 'bg-red-50' : undefined),
+  }}
+/>
+```
+
+The function form receives the same context the slot receives, which is how a class can depend on
+the row or the column without a renderer.
+
+## The cascade layer
+
+The library's stylesheet is inside `@layer tablekit`. Tailwind's utilities are in its own layers,
+and unlayered CSS beats both. That means a utility class wins over the table's own rule without
+`!important` and without specificity games — which is the usual reason component libraries and
+Tailwind fight.
+
+If you want the table's defaults to win in a particular place, put your rule in a lower layer
+rather than reaching for `!important`.
+
+## Driving the tokens from your theme
+
+Utilities style the parts you name; [tokens](/react-tablekit/customization/tokens/) style
+everything else. Point the tokens at the same variables Tailwind generates and the table follows
+your palette by default:
+
+```css
+@theme {
+  --color-brand-500: oklch(0.55 0.2 275);
+}
+
+.tk-root {
+  --tk-color-accent: var(--color-brand-500);
+  --tk-border-color: var(--color-gray-200);
+  --tk-row-hover-bg: var(--color-gray-50);
+}
+```
+
+This is usually the better first move: one block, and the focus ring, the sort indicator, the
+selected row and the spinner all match your design without a single utility class.
+
+## Going further
+
+For a table that should look nothing like the default, `unstyled` drops the presentational CSS and
+keeps the structural rules, leaving you free to style it entirely with utilities. See [Overriding
+structure](/react-tablekit/customization/structure/).
+
+## Limitations
+
+- **Dynamic class names must be complete strings.** Tailwind scans source text, so
+  `'bg-' + color + '-50'` produces nothing. Use a lookup of full class names.
+- **`classNames` merges, it does not resolve conflicts.** Two utilities setting the same property
+  are resolved by CSS order, not by intent — a merge helper such as `tailwind-merge` is worth
+  wrapping the function form in.
+- **Utilities do not reach pseudo-content.** Sticky offsets and pinned positions are computed in
+  the structural CSS, which is not something to override with a utility.
+
+## Related
+
+- [Design tokens](/react-tablekit/customization/tokens/)
+- [Slots](/react-tablekit/customization/slots/)
+- [Overriding structure](/react-tablekit/customization/structure/)
+- [Theming](/react-tablekit/customization/theming/)

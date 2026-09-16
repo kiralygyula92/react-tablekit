@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 const rows = (page: Page, name: string) =>
   page.getByRole('table', { name }).locator('tbody tr[data-row-id]');
@@ -12,7 +13,7 @@ async function selectByLabel(select: Locator, text: RegExp) {
 
 test.describe('global search', () => {
   test('highlights matches, folds diacritics and honours the minimum length', async ({ page }) => {
-    await page.goto('/examples/global-search');
+    await page.goto(demoUrl('features/global-search/demo-basics'));
     const search = page.getByRole('searchbox', { name: 'Search' }).first();
     await search.fill('z');
     // Below `searchMinLength`, nothing is filtered.
@@ -28,7 +29,7 @@ test.describe('global search', () => {
   });
 
   test('the Ctrl+K hotkey is scoped to the table you last touched (B10)', async ({ page }) => {
-    await page.goto('/examples/global-search');
+    await page.goto(demoUrl('features/global-search/demo-basics'));
     const employees = page.getByRole('searchbox', { name: 'Search' }).first();
     const contractors = page.getByRole('searchbox', { name: 'Search' }).last();
 
@@ -44,7 +45,7 @@ test.describe('global search', () => {
 
 test.describe('filter panel', () => {
   test('filters, shows a chip with the count and clears back to the full set', async ({ page }) => {
-    await page.goto('/examples/filters-panel');
+    await page.goto(demoUrl('features/column-filters/demo-basics'));
     const table = 'People';
     const before = await page.getByRole('table', { name: table }).getAttribute('aria-rowcount');
 
@@ -70,7 +71,7 @@ test.describe('filter panel', () => {
   });
 
   test('the row mode filters from the header row', async ({ page }) => {
-    await page.goto('/examples/filters-row');
+    await page.goto(demoUrl('features/column-filters/demo-row-mode'));
     const filterRow = page.locator('.tk-filter-row-cell');
     await expect(filterRow.first()).toBeVisible();
     await selectByLabel(filterRow.getByLabel('Department'), /^Sales/);
@@ -82,7 +83,7 @@ test.describe('filter panel', () => {
 
 test.describe('server mode', () => {
   test('server sorting sends the sortServerKey, not the column id', async ({ page }) => {
-    await page.goto('/examples/server-sorting');
+    await page.goto(demoUrl('features/sorting/demo-server'));
     await expect(rows(page, 'People (server sorting)').first()).toBeVisible();
     await page.getByRole('button', { name: /^Name/ }).click();
     // The request log renders what the "server" received.
@@ -90,7 +91,7 @@ test.describe('server mode', () => {
   });
 
   test('hybrid mode sorts the current page without a request', async ({ page }) => {
-    await page.goto('/examples/hybrid-mode');
+    await page.goto(demoUrl('features/client-and-server/demo-hybrid'));
     await expect(rows(page, 'People (hybrid mode)').first()).toBeVisible();
     const requestsBefore = await page.locator('.example-log li').count();
     await page.getByRole('button', { name: /^Age/ }).click();
@@ -100,7 +101,7 @@ test.describe('server mode', () => {
 });
 
 test('localization switches every visible string', async ({ page }) => {
-  await page.goto('/examples/localization');
+  await page.goto(demoUrl('features/localization/demo-basics'));
   await expect(page.getByRole('searchbox', { name: 'Keresés' })).toBeVisible();
   await page.getByLabel('Language').selectOption('de');
   await expect(page.getByRole('searchbox', { name: 'Suche' })).toBeVisible();

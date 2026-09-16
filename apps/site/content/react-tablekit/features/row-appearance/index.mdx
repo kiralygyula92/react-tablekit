@@ -1,0 +1,77 @@
+---
+title: Row appearance
+description: Striping, hover and per-row classes, styles and props — the way a row shows what it is without a custom renderer.
+archetype: capability
+capabilityId: row-appearance
+group: Display & layout
+symbols: [DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/parts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/row-appearance/demo-basics" label="Row appearance" />
+
+`enableStriped` and `enableHover` are table-wide and tokenized, so they follow the theme rather
+than hard-coded greys. For anything that depends on the row's data, three callbacks cover almost
+every case:
+
+```tsx
+<DataTable
+  getRowClassName={(row) => (row.original.overdue ? 'is-overdue' : undefined)}
+  getRowStyle={(row) => (row.original.pinned ? { fontWeight: 600 } : undefined)}
+  getRowProps={(row) => ({ 'data-status': row.original.status })}
+/>
+```
+
+`getRowProps` is the one that reaches furthest: it puts data attributes on the row, which lets
+CSS do the rest without a class name for every state.
+
+### Interaction
+
+`onRowClick`, `onRowDoubleClick` and `onRowContextMenu` make the row itself interactive, and a
+row only becomes focusable when one of them is set — an unclickable row should not be a tab stop.
+`onRowMouseEnter` and `onRowMouseLeave` cover hover previews.
+
+Clicks that land on a button, a link, an input or an element marked `data-tk-stop` do not count
+as row clicks, so a row menu keeps working inside a clickable row.
+
+### Rows that are not available
+
+`isRowDisabled` marks a row unavailable everywhere at once: it is not selectable, select-all
+skips it, and it is styled from the disabled tokens. That is one answer instead of three.
+
+## Customization
+
+When the callbacks are not enough, `renderRow` replaces the whole row and hands you
+`defaultRender()` so you can wrap rather than rebuild:
+
+```tsx
+renderRow={({ row, defaultRender }) => (
+  <Tooltip content={row.original.note}>{defaultRender()}</Tooltip>
+)}
+```
+
+Cell-level work belongs in [Rows and cells](/react-tablekit/customization/rows-and-cells/), and
+the colours themselves are [tokens](/react-tablekit/customization/tokens/).
+
+## Limitations
+
+- **Striping counts rendered rows.** With detail panels or grouping, the alternation follows what
+  is on screen, which is not always the data order.
+- **`getRowStyle` is inline style**, so it wins over the stylesheet. Prefer a class or a data
+  attribute when a theme should still be able to override it.
+- **`renderRow` opts out of the table's own row markup**, including its accessibility
+  attributes — keep `defaultRender()` in the tree unless you are replacing those deliberately.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableStriped`, `enableHover`,
+  `getRowClassName`, `getRowStyle`, `getRowProps`, `renderRow`, `isRowDisabled`, `onRowClick`,
+  `onRowDoubleClick`, `onRowContextMenu`, `onRowMouseEnter`, `onRowMouseLeave`, `onCellClick`,
+  `bordered`, `noWrap`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — `--tk-row-bg`, `--tk-row-hover-bg`,
+  `--tk-row-selected-bg`, `--tk-row-stripe-bg`.

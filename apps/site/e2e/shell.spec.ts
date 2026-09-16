@@ -1,68 +1,61 @@
 import { expect, expectNoA11yViolations, test } from './fixtures';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROUTES = [
-  { path: '/', heading: 'react-tablekit' },
-  { path: '/docs/getting-started', heading: 'Getting started' },
-  { path: '/docs/guides/client-vs-server', heading: 'Client vs. server' },
-  { path: '/docs/guides/server-data', heading: 'Server data' },
-  { path: '/docs/guides/columns', heading: 'Columns' },
-  { path: '/docs/guides/theming', heading: 'Theming' },
-  { path: '/docs/guides/accessibility', heading: 'Accessibility' },
-  { path: '/docs/guides/sorting', heading: 'Sorting' },
-  { path: '/docs/guides/filtering', heading: 'Filtering' },
-  { path: '/docs/guides/search', heading: 'Global search' },
-  { path: '/docs/guides/pagination', heading: 'Pagination' },
-  { path: '/docs/guides/selection', heading: 'Selection' },
-  { path: '/docs/guides/expansion', heading: 'Expansion and detail panels' },
-  { path: '/docs/guides/grouping', heading: 'Grouping and aggregation' },
-  { path: '/docs/guides/pinning', heading: 'Column pinning' },
-  { path: '/docs/guides/sizing', heading: 'Column sizing' },
-  { path: '/docs/guides/ordering-and-visibility', heading: 'Ordering and visibility' },
-  { path: '/docs/guides/virtualization', heading: 'Virtualization' },
-  { path: '/docs/guides/keyboard', heading: 'Keyboard navigation' },
-  { path: '/docs/guides/export', heading: 'Export' },
-  { path: '/docs/guides/persistence', heading: 'Persistence' },
-  { path: '/docs/guides/responsive', heading: 'Responsive' },
-  { path: '/docs/guides/customization', heading: 'Customization' },
-  { path: '/docs/guides/localization', heading: 'Localization' },
-  { path: '/docs/versioning', heading: 'Versioning policy' },
-  { path: '/changelog', heading: 'Changelog' },
-  { path: '/examples', heading: 'Examples' },
-  { path: '/playground', heading: 'Playground' },
-  { path: '/theme-editor', heading: 'Theme editor' },
-  { path: '/api', heading: 'API reference' },
-  { path: '/api/data-table', heading: '<DataTable> props' },
-  { path: '/api/column-def', heading: 'ColumnDef' },
-  { path: '/api/instance', heading: 'TableInstance' },
-  { path: '/api/state', heading: 'State and query' },
-  { path: '/api/hooks', heading: 'Hooks' },
-  { path: '/api/utilities', heading: 'Utilities' },
-  { path: '/api/slots', heading: 'Slots' },
-  { path: '/api/handlers', heading: 'Handlers' },
-  { path: '/api/theme-tokens', heading: 'Theme tokens' },
-  { path: '/api/localization', heading: 'Localization' },
-  { path: '/api/icons', heading: 'Icons' },
-  { path: '/does-not-exist', heading: 'Page not found' },
-] as const;
+/** The generated content index, read from disk so this file needs no JSON import attribute. */
+interface IndexedPage {
+  pathname: string;
+  frontmatter: { title: string };
+}
+const indexPath = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  'src',
+  'generated',
+  'content',
+  'index.json',
+);
+const pages = JSON.parse(readFileSync(indexPath, 'utf8')) as IndexedPage[];
 
-for (const { path, heading } of ROUTES) {
-  test(`${path} renders without console errors and passes axe`, async ({ page }) => {
-    await page.goto(path);
-    await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+/**
+ * Every page the content tree defines renders, logs nothing to the console and passes axe. The
+ * list is generated, so a page added without a route — or a route left behind without a page —
+ * cannot slip past this suite.
+ */
+for (const page_ of pages) {
+  test(`${page_.pathname} renders without console errors and passes axe`, async ({ page }) => {
+    await page.goto(page_.pathname);
+    // A documentation page's heading is its title, written in one place (PPDS P10). The marketing
+    // surface writes its own headline, so there only the presence of an h1 is asserted.
+    await expect(
+      page_.pathname.startsWith('/react-tablekit/')
+        ? page.getByRole('heading', { level: 1, name: page_.frontmatter.title })
+        : page.getByRole('heading', { level: 1 }),
+    ).toBeVisible();
     await expectNoA11yViolations(page);
   });
 }
 
+test('an unknown URL renders the not-found page', async ({ page }) => {
+  await page.goto('/does-not-exist');
+  await expect(page.getByRole('heading', { level: 1, name: 'Page not found' })).toBeVisible();
+});
+
 /**
- * The generated API pages once rendered a heading and nothing else, because the symbols
- * resolved to empty re-export stubs. Asserting the heading alone did not catch it, so each
- * page has to show real documented members.
+ * The generated API pages once rendered a heading and nothing else, because the symbols resolved
+ * to empty re-export stubs. Asserting the heading alone did not catch it, so each page has to
+ * show real documented members.
  */
 const API_PAGES = [
-  { path: '/api/data-table', symbol: 'DataTableProps', member: 'enableRowSelection' },
-  { path: '/api/column-def', symbol: 'ColumnDefBase', member: 'cell' },
-  { path: '/api/instance', symbol: 'TableInstance', member: 'getRowModel' },
-  { path: '/api/state', symbol: 'TableState', member: 'pagination' },
+  {
+    path: '/react-tablekit/api/data-table-props/',
+    symbol: 'DataTableProps',
+    member: 'enableRowSelection',
+  },
+  { path: '/react-tablekit/api/column-def/', symbol: 'ColumnDefBase', member: 'cell' },
+  { path: '/react-tablekit/api/table-instance/', symbol: 'TableInstance', member: 'getRowModel' },
+  { path: '/react-tablekit/api/table-state/', symbol: 'TableState', member: 'pagination' },
 ] as const;
 
 for (const { path, symbol, member } of API_PAGES) {
@@ -75,9 +68,9 @@ for (const { path, symbol, member } of API_PAGES) {
     // rendered, which also keeps this test honest if another symbol grows past the threshold.
     await page.getByPlaceholder(`Filter ${symbol}`).fill(member);
 
-    // Each member name carries an anchor id, which is what `/api/instance#getRowModel` links to.
-    // The cell's accessible name would also include the " required" marker, and the same name can
-    // appear under two symbols on one page (`TableState.pagination`, `TableQuery.pagination`).
+    // Each member name carries an anchor id, which is what `…/table-instance/#getRowModel` links
+    // to. The cell's accessible name would also include the " required" marker, and the same name
+    // can appear under two symbols on one page (`TableState.pagination`, `TableQuery.pagination`).
     await expect(page.locator(`#${member}`).first()).toBeVisible();
   });
 }
@@ -88,7 +81,7 @@ test('a long virtualized member table scrolls all the way to its last row', asyn
   // first attempt and never followed the scroll, so this 217-row table showed its first 9 rows
   // (ending at `autoResetPageIndex`) however far it was scrolled. It is a browser-only ordering
   // effect, which is why this lives in e2e rather than jsdom.
-  await page.goto('/api/data-table');
+  await page.goto('/react-tablekit/api/data-table-props/');
   const table = page
     .getByRole('grid', { name: 'DataTableProps members' })
     .or(page.getByRole('table', { name: 'DataTableProps members' }));
@@ -116,15 +109,28 @@ test('a long virtualized member table scrolls all the way to its last row', asyn
   }).toPass({ timeout: 10_000 });
 });
 
-test('primary navigation routes between sections', async ({ page }) => {
+test('the marketing header routes into the documentation', async ({ page }) => {
   await page.goto('/');
+  // Crossing into the documentation swaps the header for the docs surface (PPDS P1), so the
+  // marketing nav is gone on the other side — each link is followed from the home page.
   const nav = page.getByRole('navigation', { name: 'Primary' });
-  await nav.getByRole('link', { name: 'Examples' }).click();
-  await expect(page).toHaveURL(/\/examples$/);
-  await expect(page.getByRole('heading', { level: 1, name: 'Examples' })).toBeVisible();
-  await expect(page.locator('.site-card').first()).toBeVisible();
-  await nav.getByRole('link', { name: 'API' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'API reference' })).toBeVisible();
+  await nav.getByRole('link', { name: 'Features' }).click();
+  await expect(page).toHaveURL(/\/react-tablekit\/all-features\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'All features' })).toBeVisible();
+  await expect(nav).toHaveCount(0);
+
+  await page.goto('/');
+  await nav.getByRole('link', { name: 'Docs' }).click();
+  await expect(page).toHaveURL(/\/react-tablekit\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Overview' })).toBeVisible();
+});
+
+test('the documentation sidebar links to every page in the navigation', async ({ page }) => {
+  await page.goto('/react-tablekit/');
+  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+  await sidebar.getByRole('link', { name: 'Sorting', exact: true }).click();
+  await expect(page).toHaveURL(/\/react-tablekit\/sorting\/$/);
+  await expect(page.getByRole('heading', { level: 1, name: 'Sorting' })).toBeVisible();
 });
 
 test('theme toggle switches light / dark / classic and persists', async ({ page }) => {
@@ -142,8 +148,8 @@ test('theme toggle switches light / dark / classic and persists', async ({ page 
 
 test('is usable at 375px width', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto('/docs/getting-started');
-  await expect(page.getByRole('heading', { level: 1, name: 'Getting started' })).toBeVisible();
+  await page.goto('/react-tablekit/getting-started/quickstart/');
+  await expect(page.getByRole('heading', { level: 1, name: 'Quickstart' })).toBeVisible();
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
   );

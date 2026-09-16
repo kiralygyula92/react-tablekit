@@ -1,0 +1,30 @@
+---
+title: 'How to customize'
+description: 'Nine levels of customization, from a class name to replacing the renderer entirely.'
+archetype: editorial
+plan: free
+---
+
+Customization here is a ladder, not a switch. Most tables stop at the second rung. The higher ones exist so that needing something unusual never means forking the library.
+
+## The levels
+
+| Level | What you change                   | Where                                                                                                     |
+| ----- | --------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| 0     | Props and option objects          | Every capability page                                                                                     |
+| 1     | Tokens and class names            | [Theming](/react-tablekit/customization/theming/), [Design tokens](/react-tablekit/customization/tokens/) |
+| 2     | Cell, header and footer rendering | [Cell building blocks](/react-tablekit/customization/cell-building-blocks/)                               |
+| 3     | Row rendering and props           | [Rows and cells](/react-tablekit/customization/rows-and-cells/)                                           |
+| 4     | Whole parts replaced              | [Slots](/react-tablekit/customization/slots/)                                                             |
+| 5     | Interaction middleware            | [Handler middleware](/react-tablekit/customization/handlers/)                                             |
+| 6     | Layout composition                | [Overriding structure](/react-tablekit/customization/structure/)                                          |
+| 7     | The engine without the UI         | [Headless](/react-tablekit/headless/)                                                                     |
+| 8     | The core without React            | [Headless](/react-tablekit/headless/)                                                                     |
+
+## Choosing a level
+
+Go as low as the problem allows. A colour is a token, not a slot. A different empty state is a slot, not a fork. If you find yourself reimplementing behaviour that already exists in order to change how it looks, you have gone one level too high.
+
+## Recipes
+
+Task-shaped walkthroughs live in [Recipes](/react-tablekit/customization/recipes/).

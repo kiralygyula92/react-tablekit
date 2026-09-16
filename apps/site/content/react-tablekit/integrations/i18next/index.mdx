@@ -1,0 +1,97 @@
+---
+title: i18next
+description: Build the table's localization object from your existing catalogue, so its strings live where all your other strings live.
+archetype: editorial
+group: Integrations
+symbols: [TableLocalization, DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## Basics
+
+The table takes its strings as an object. Your catalogue already has strings. The integration is a
+function that builds one from the other:
+
+```tsx
+import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
+
+function usePeopleTableLocalization() {
+  const { t, i18n } = useTranslation('table');
+
+  return useMemo(
+    () => ({
+      locale: i18n.language,
+      localization: {
+        search: { placeholder: t('search.placeholder') },
+        pagination: { next: t('pagination.next'), previous: t('pagination.previous') },
+        selection: { count: (n: number) => t('selection.count', { count: n }) },
+        empty: { noResults: t('empty.noResults') },
+      },
+    }),
+    [t, i18n.language],
+  );
+}
+```
+
+```tsx
+const { locale, localization } = usePeopleTableLocalization();
+<DataTable locale={locale} localization={localization} data={rows} columns={columns} />;
+```
+
+Two things matter here. The object is memoized on the language, so switching locale rebuilds it
+and nothing else does. And `locale` is passed as well as `localization` — the strings and the
+number, date and sorting behaviour should agree.
+
+## Plurals
+
+Keys that depend on a count are functions, which is exactly what i18next's `count` option wants:
+
+```tsx
+selection: {
+  count: (n) => t('selection.count', { count: n });
+}
+```
+
+A language with three plural forms is then i18next's problem, which is the right place for it.
+
+## Only what you translate
+
+The object is merged over the defaults, so an incomplete catalogue is not an error — untranslated
+keys fall back to English. That makes incremental translation practical: ship the toolbar first
+and the column menu later.
+
+The complete list of keys, each with its English default, is on [Localization
+keys](/react-tablekit/api/localization-keys/). Generating your catalogue's skeleton from that page
+is less work than discovering the keys by clicking.
+
+## Right-to-left
+
+Pass `dir="rtl"` when the language needs it. The layout uses logical properties, so pinned sides
+and alignment flip on their own — but the direction itself has to be told to it.
+
+```tsx
+<DataTable dir={i18n.dir()} locale={i18n.language} localization={localization} />
+```
+
+## Everywhere at once
+
+`TableDefaultsProvider` takes localization and icons for every table beneath it, so an application
+configures this once rather than per table.
+
+## Limitations
+
+- **Rebuilding the object on every render defeats memoization** in the table as well as in your
+  component. Memoize on the language.
+- **Lazy-loaded namespaces render the defaults first.** If the catalogue arrives after mount, the
+  table briefly shows English; suspend or gate on `ready` if that matters.
+- **The bundled locales are a starting point.** Review them with a native speaker before shipping.
+
+## Related
+
+- [Localization](/react-tablekit/localization/)
+- [Localization keys](/react-tablekit/api/localization-keys/)
+- [Icons](/react-tablekit/api/icons/)
+- [Overriding structure](/react-tablekit/customization/structure/)

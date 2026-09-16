@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 const headers = (page: Page) => page.locator('thead th[data-leaf]');
 const headerIds = async (page: Page) =>
@@ -7,7 +8,7 @@ const headerIds = async (page: Page) =>
 
 test.describe('column features', () => {
   test('resizes a column with the keyboard', async ({ page }) => {
-    await page.goto('/examples/column-features');
+    await page.goto(demoUrl('features/column-visibility/demo-basics'));
     const handle = page.getByRole('separator', { name: 'Resize column' }).first();
     const before = Number(await handle.getAttribute('aria-valuenow'));
     await handle.focus();
@@ -23,7 +24,7 @@ test.describe('column features', () => {
   });
 
   test('reorders columns by dragging a header', async ({ page }) => {
-    await page.goto('/examples/column-features');
+    await page.goto(demoUrl('features/column-visibility/demo-basics'));
     await expect(headers(page).first()).toBeVisible();
     const before = await headerIds(page);
     const source = headers(page).first();
@@ -35,7 +36,7 @@ test.describe('column features', () => {
   });
 
   test('the column menu sorts, pins and hides', async ({ page }) => {
-    await page.goto('/examples/column-features');
+    await page.goto(demoUrl('features/column-visibility/demo-basics'));
     const menuButton = page.getByRole('button', { name: /^Column actions: age/ });
     const ageHeader = page.locator('thead th[data-column-id="age"]');
     await menuButton.click();
@@ -53,7 +54,7 @@ test.describe('column features', () => {
 });
 
 test('sticky header and footer stay visible while the body scrolls', async ({ page }) => {
-  await page.goto('/examples/sticky-header-footer');
+  await page.goto(demoUrl('features/sticky-header-and-footer/demo-basics'));
   const container = page.locator('.tk-container');
   // Stickiness lives on the cells (a `thead` cannot be sticky in every browser).
   const headerCell = page.locator('thead th').first();
@@ -75,7 +76,7 @@ test('sticky header and footer stay visible while the body scrolls', async ({ pa
 
 test.describe('pagination modes', () => {
   test('infinite pagination appends the next page when scrolled to the end', async ({ page }) => {
-    await page.goto('/examples/infinite-scroll');
+    await page.goto(demoUrl('features/pagination/demo-infinite'));
     const container = page.locator('.tk-container');
     await expect(container.locator('tbody tr[data-row-id]').first()).toBeVisible();
     // The scroll content grows as pages are appended.
@@ -93,7 +94,7 @@ test.describe('pagination modes', () => {
   });
 
   test('cursor pagination moves with next and previous, without a page count', async ({ page }) => {
-    await page.goto('/examples/cursor-pagination');
+    await page.goto(demoUrl('features/pagination/demo-cursor'));
     const rows = page.locator('.tk-container tbody tr[data-row-id]');
     await expect(rows.first()).toBeVisible();
     const firstId = await rows.first().getAttribute('data-row-id');

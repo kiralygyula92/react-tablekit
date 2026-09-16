@@ -1,23 +1,22 @@
-import { isValidElement, type ReactNode } from 'react';
 import { handlerMeta, iconNames, localeMeta, slotMeta, tokenMeta } from 'react-tablekit/meta';
-import columnDef from '../generated/api/column-def.json';
-import dataTable from '../generated/api/data-table.json';
-import hooks from '../generated/api/hooks.json';
-import instance from '../generated/api/instance.json';
-import state from '../generated/api/state.json';
-import utilities from '../generated/api/utilities.json';
-import { examples } from '../examples/registry';
-import { GUIDES } from '../pages/guides/registry';
-import type { ApiSymbol } from '../pages/api/PropsPage';
+import columnDef from '../../src/generated/api/column-def.json';
+import dataTable from '../../src/generated/api/data-table.json';
+import hooks from '../../src/generated/api/hooks.json';
+import instance from '../../src/generated/api/instance.json';
+import state from '../../src/generated/api/state.json';
+import utilities from '../../src/generated/api/utilities.json';
+import { pages } from '../content/pages';
+import type { ApiSymbol } from '../interactive/api/PropsPage';
+import { sectionFor } from '../nav/nav';
 
 /** Where a result came from; also the group heading in the palette. */
-export type SearchSection = 'Pages' | 'Guides' | 'Examples' | 'API' | 'Tokens' | 'Icons';
+export type SearchSection = 'Pages' | 'Headings' | 'API' | 'Tokens' | 'Icons';
 
-/** One entry in the in-memory index (08 §1: no external service). */
+/** One entry in the in-memory index (PPDS §2.2: search, with no external service). */
 export interface SearchEntry {
   id: string;
   title: string;
-  /** The line under the title: a description, a type, or the parent symbol. */
+  /** The line under the title: a description, a type, or the parent page. */
   detail: string;
   section: SearchSection;
   to: string;
@@ -25,76 +24,34 @@ export interface SearchEntry {
   haystack: string;
 }
 
-/* ── guide headings ───────────────────────────────────────────────────────
-   A guide body is JSX rather than markdown, so the headings are read back out
-   of the element tree. That keeps the index honest: a heading exists in the
-   search results only because it exists on the page. */
-
-function textOf(node: ReactNode): string {
-  if (node === null || node === undefined || typeof node === 'boolean') return '';
-  if (typeof node === 'string' || typeof node === 'number') return String(node);
-  // `Array.isArray` widens a ReactNode to `any[]`, so the element type is restated.
-  if (Array.isArray(node)) return (node as ReactNode[]).map(textOf).join('');
-  if (isValidElement(node)) {
-    const props = node.props as { children?: ReactNode };
-    return textOf(props.children);
-  }
-  return '';
-}
-
-/** Collects the `<h2>` headings of a guide body, in document order. */
-function headingsOf(node: ReactNode, found: string[] = []): string[] {
-  if (Array.isArray(node)) {
-    for (const child of node as ReactNode[]) headingsOf(child, found);
-    return found;
-  }
-  if (!isValidElement(node)) return found;
-  const props = node.props as { children?: ReactNode };
-  if (node.type === 'h2') {
-    const text = textOf(props.children).trim();
-    if (text) found.push(text);
-    return found;
-  }
-  headingsOf(props.children, found);
-  return found;
-}
-
-/* ── API pages ────────────────────────────────────────────────────────────── */
-
 const API_PAGES: { route: string; label: string; symbols: ApiSymbol[] }[] = [
-  { route: '/api/data-table', label: '<DataTable>', symbols: dataTable as ApiSymbol[] },
-  { route: '/api/column-def', label: 'ColumnDef', symbols: columnDef as ApiSymbol[] },
-  { route: '/api/instance', label: 'TableInstance', symbols: instance as ApiSymbol[] },
-  { route: '/api/state', label: 'State and query', symbols: state as ApiSymbol[] },
-  { route: '/api/hooks', label: 'Hooks', symbols: hooks as ApiSymbol[] },
-  { route: '/api/utilities', label: 'Utilities', symbols: utilities as ApiSymbol[] },
-];
-
-/** The pages that are not generated from a list. */
-const STATIC_PAGES: { title: string; detail: string; to: string }[] = [
   {
-    title: 'Getting started',
-    detail: 'Install, import the CSS, render your first table',
-    to: '/docs/getting-started',
-  },
-  { title: 'Examples', detail: 'The gallery, filterable by tag', to: '/examples' },
-  {
-    title: 'Playground',
-    detail: 'Every option as a control, with the code it produces',
-    to: '/playground',
+    route: '/react-tablekit/api/data-table-props/',
+    label: 'DataTableProps',
+    symbols: dataTable as ApiSymbol[],
   },
   {
-    title: 'Theme editor',
-    detail: 'Edit the tokens live and export the result',
-    to: '/theme-editor',
+    route: '/react-tablekit/api/column-def/',
+    label: 'ColumnDef',
+    symbols: columnDef as ApiSymbol[],
   },
-  { title: 'API reference', detail: 'The index of every documented symbol', to: '/api' },
+  {
+    route: '/react-tablekit/api/table-instance/',
+    label: 'TableInstance',
+    symbols: instance as ApiSymbol[],
+  },
+  { route: '/react-tablekit/api/table-state/', label: 'TableState', symbols: state as ApiSymbol[] },
+  { route: '/react-tablekit/api/hooks/', label: 'Hooks', symbols: hooks as ApiSymbol[] },
+  {
+    route: '/react-tablekit/api/utilities/',
+    label: 'Utilities',
+    symbols: utilities as ApiSymbol[],
+  },
 ];
 
 /**
- * Builds the whole index once, at module scope. It is a few hundred small objects — far cheaper
- * than a network round trip, and it cannot go stale, because every entry is derived from the
- * same source the pages render from.
+ * The index is built once at module scope from the same content the pages render from, so it
+ * cannot describe a page that does not exist.
  */
 function build(): SearchEntry[] {
   const entries: SearchEntry[] = [];
@@ -102,44 +59,24 @@ function build(): SearchEntry[] {
     entries.push({ ...entry, haystack: `${entry.title} ${entry.detail}`.toLowerCase() });
   };
 
-  for (const page of STATIC_PAGES) {
+  for (const page of pages) {
+    const section = sectionFor(page.pathname);
     push({
-      id: `page:${page.to}`,
-      title: page.title,
-      detail: page.detail,
+      id: `page:${page.pathname}`,
+      title: page.frontmatter.title,
+      detail: page.frontmatter.description,
       section: 'Pages',
-      to: page.to,
+      to: page.pathname,
     });
-  }
-
-  for (const guide of GUIDES) {
-    const to = `/docs/guides/${guide.slug}`;
-    push({
-      id: `guide:${guide.slug}`,
-      title: guide.title,
-      detail: guide.lead,
-      section: 'Guides',
-      to,
-    });
-    for (const heading of headingsOf(guide.body)) {
+    for (const heading of page.headings) {
       push({
-        id: `guide:${guide.slug}#${heading}`,
-        title: heading,
-        detail: guide.title,
-        section: 'Guides',
-        to,
+        id: `heading:${page.pathname}#${heading.id}`,
+        title: heading.text,
+        detail: `${page.frontmatter.title}${section?.subheader ? ` · ${section.subheader}` : ''}`,
+        section: 'Headings',
+        to: `${page.pathname}#${heading.id}`,
       });
     }
-  }
-
-  for (const example of examples) {
-    push({
-      id: `example:${example.slug}`,
-      title: example.title,
-      detail: `${example.description} ${example.tags.join(' ')}`,
-      section: 'Examples',
-      to: `/examples/${example.slug}`,
-    });
   }
 
   for (const page of API_PAGES) {
@@ -151,7 +88,6 @@ function build(): SearchEntry[] {
         section: 'API',
         to: page.route,
       });
-      // Members are anchored, so searching for a prop lands on that prop.
       for (const member of symbol.members) {
         push({
           id: `api:${symbol.name}.${member.name}`,
@@ -170,7 +106,7 @@ function build(): SearchEntry[] {
       title: slot.name,
       detail: `Slot · renders <${slot.element}>`,
       section: 'API',
-      to: '/api/slots',
+      to: '/react-tablekit/api/slots/',
     });
   }
   for (const handler of handlerMeta) {
@@ -179,7 +115,7 @@ function build(): SearchEntry[] {
       title: handler.name,
       detail: 'Handler',
       section: 'API',
-      to: '/api/handlers',
+      to: '/react-tablekit/api/handlers/',
     });
   }
   for (const entry of localeMeta) {
@@ -188,7 +124,7 @@ function build(): SearchEntry[] {
       title: entry.key,
       detail: `Localization · ${entry.english}`,
       section: 'API',
-      to: '/api/localization',
+      to: '/react-tablekit/api/localization-keys/',
     });
   }
   for (const token of tokenMeta) {
@@ -197,11 +133,17 @@ function build(): SearchEntry[] {
       title: token.path,
       detail: token.cssVar,
       section: 'Tokens',
-      to: '/api/theme-tokens',
+      to: '/react-tablekit/api/theme-tokens/',
     });
   }
   for (const name of iconNames) {
-    push({ id: `icon:${name}`, title: name, detail: 'Icon', section: 'Icons', to: '/api/icons' });
+    push({
+      id: `icon:${name}`,
+      title: name,
+      detail: 'Icon',
+      section: 'Icons',
+      to: '/react-tablekit/api/icons/',
+    });
   }
 
   return entries;
@@ -209,7 +151,7 @@ function build(): SearchEntry[] {
 
 export const SEARCH_INDEX: SearchEntry[] = build();
 
-const SECTION_ORDER: SearchSection[] = ['Pages', 'Guides', 'Examples', 'API', 'Tokens', 'Icons'];
+const SECTION_ORDER: SearchSection[] = ['Pages', 'Headings', 'API', 'Tokens', 'Icons'];
 
 /**
  * Ranks entries against a query. A title match always beats a body match, and a prefix beats a

@@ -1,0 +1,86 @@
+---
+title: Localization
+description: Every string the table can show, in one object — with number, date and currency formatting that follows the same locale.
+archetype: capability
+capabilityId: localization
+group: Developer tools
+symbols: [DataTableProps, TableLocalization]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/locales
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/localization/demo-basics" label="Localization" />
+
+No English is hard-coded. Every label, placeholder, menu entry, announcement and empty-state
+message comes from the `localization` object, and `locale` drives the formatting that goes with
+it.
+
+```tsx
+import { hu } from 'react-tablekit/locales/hu';
+
+<DataTable locale="hu-HU" localization={hu} data={rows} columns={columns} />;
+```
+
+`locale` is what `Intl` receives: numbers, currencies, dates and the collator that orders
+`text`-sorted columns all follow it. Setting the strings without the locale gives you translated
+labels beside American dates, which is worse than either.
+
+### Changing a few strings
+
+The object is merged over the defaults, so overriding one label does not mean supplying all of
+them:
+
+```tsx
+<DataTable localization={{ search: { placeholder: 'Find a customer…' } }} />
+```
+
+That is also how you adjust wording for a domain — _records_ instead of _rows_ — without a
+translation file.
+
+### Values with a count
+
+Strings that depend on a number are functions rather than templates, which is what lets a
+language with three plural forms be correct:
+
+```tsx
+localization={{
+  selection: { count: (n) => (n === 1 ? '1 kiválasztva' : n + ' kiválasztva') },
+}}
+```
+
+### With an i18n library
+
+The object can be built from your existing catalogue, so the table's strings live where the rest
+of your application's strings live. See [i18next](/react-tablekit/integrations/i18next/).
+
+## Customization
+
+Every key is listed on [Localization keys](/react-tablekit/api/localization-keys/) with its
+English default, so a translation can be checked against a complete list rather than discovered
+by clicking around.
+
+`formatters` handles the values rather than the chrome — the row range, numbers, dates and
+currencies — and takes the same locale.
+
+Right-to-left needs `dir="rtl"`; the layout uses logical properties, so pinning sides and
+alignment flip on their own.
+
+## Limitations
+
+- **The bundled locales are a starting point**, not a guarantee of tone. Review them before
+  shipping to native speakers.
+- **`locale` does not change the data.** A date stored as a string is formatted only if the column
+  is a `date` column or has a `format`.
+- **One locale per table.** A page showing two locales needs two tables; the state is per
+  instance.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `locale`, `localization`,
+  `formatters`, `dir`, `icons`.
+- [Localization keys](/react-tablekit/api/localization-keys/) — every key and its default.
+- [Icons](/react-tablekit/api/icons/) — the icon set, replaceable the same way.

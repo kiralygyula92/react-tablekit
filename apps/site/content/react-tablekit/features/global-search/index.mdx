@@ -1,0 +1,85 @@
+---
+title: Global search
+description: One input that matches across every searchable column, with debouncing, a minimum length and optional match highlighting.
+archetype: capability
+capabilityId: global-search
+group: Core features
+symbols: [DataTableProps, ColumnDef, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/globalFilter.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/global-search/demo-basics" label="Global search" />
+
+The toolbar search box matches every column that has not opted out. Matching ignores case and
+diacritics, so `zurich` finds `Zürich`. Escape clears the box while it has focus.
+
+Two props keep it from firing on every keystroke: `searchDebounceMs` waits for typing to stop,
+and `searchMinLength` ignores queries shorter than a threshold — together they are the difference
+between one request and eight.
+
+### What a word matches
+
+By default a multi-word query is an AND across words: `ada london` matches a row containing both,
+in any column and any order. `globalFilterMatch` changes that to `'any-word'`, or to `'phrase'`
+for a literal substring.
+
+A column decides what text it contributes. `getSearchValue` wins, then `format`, then the raw
+value stringified — so a formatted date is searched as it is displayed. Setting
+`enableGlobalFilter: false` removes a column from search entirely, which is worth doing for ids
+nobody types.
+
+### Highlighting and the hotkey
+
+`highlightSearchMatches` wraps hits in a `mark` element inside text cells. `searchHotkey` — for
+example `'mod+k'` — focuses this table's box, and `showSearchHotkeyHint` prints the
+platform-correct chip next to it. With two tables on a page the hotkey goes to the one most
+recently focused or hovered, and it is ignored while you are typing in an unrelated field.
+
+### Searching on the server
+
+In server mode the query travels as `search` in the `TableQuery` and the server decides what it
+means. Nothing about the control changes. See [Client and
+server](/react-tablekit/client-and-server/).
+
+## Customization
+
+The box is a slot, and it is also a composable part: `<DataTable.Search table={table} />` renders
+it anywhere on the page — a page header, a dialog title bar — while the table keeps owning the
+state.
+
+```tsx
+<DataTable.Root table={table}>
+  <PageHeader>
+    <DataTable.Search table={table} />
+  </PageHeader>
+  <DataTable.Table />
+</DataTable.Root>
+```
+
+`searchPlaceholder` changes the prompt; every other string comes from
+[localization](/react-tablekit/localization/).
+
+## Limitations
+
+- **Search filters, it does not rank.** Rows are kept or dropped, never scored or reordered. For
+  fuzzy ranking use a `fuzzy` [column filter](/react-tablekit/column-filters/), or search on the
+  server.
+- **Highlighting only applies to the default cell renderer.** A custom `cell` renders whatever
+  you return, so the table cannot mark inside it.
+- **`searchMinLength` also gates the server request**, which means a two-character query shows
+  the unfiltered data rather than an empty table. That is deliberate, and it is why the threshold
+  defaults low.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableGlobalFilter`,
+  `searchDebounceMs`, `searchMinLength`, `searchMode`, `searchPlaceholder`, `searchHotkey`,
+  `showSearchHotkeyHint`, `globalFilterFn`, `globalFilterMatch`, `highlightSearchMatches`,
+  `onGlobalFilterChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableGlobalFilter`, `getSearchValue`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setGlobalFilter`, `resetGlobalFilter`.

@@ -1,5 +1,6 @@
 import type { Page, Request } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 interface SearchBody {
   queryCriteria?: string;
@@ -23,14 +24,14 @@ const search = (page: Page) => page.getByRole('searchbox', { name: 'Search' });
 
 async function open(page: Page, latency = 0) {
   const bodies = recordSearches(page);
-  await page.goto(`/examples/showcase-account-list?mockLatency=${latency}`);
+  await page.goto(demoUrl('demos/account-list/demo-basics', `?mockLatency=${latency}`));
   await expect(dataRows(page)).toHaveCount(10);
   return bodies;
 }
 
 test('initial load shows the "Loading..." row, then 10 accounts from page 0', async ({ page }) => {
   const bodies = recordSearches(page);
-  await page.goto('/examples/showcase-account-list?mockLatency=1000');
+  await page.goto(demoUrl('demos/account-list/demo-basics', '?mockLatency=1000'));
   await expect(table(page).getByRole('cell', { name: 'Loading...' })).toBeVisible();
   await expect(dataRows(page)).toHaveCount(10);
   expect(bodies).toEqual([{ queryCriteria: '', listingCriteria: { pageNumber: 0, pageSize: 10 } }]);

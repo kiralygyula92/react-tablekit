@@ -1,0 +1,83 @@
+---
+title: Security
+description: What the table does with the data you give it, what it sends, and the places where a table can become an injection or disclosure problem.
+archetype: editorial
+group: Guides
+symbols: [DataTableProps, TableQuery]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## Rendering is React's rendering
+
+Cell values are rendered as React children, so they are escaped. A value containing `<script>`
+appears as text. The table never sets `dangerouslySetInnerHTML`, and neither should a cell
+renderer unless you have sanitized the value yourself — at which point the risk is yours, not the
+table's.
+
+The same applies to `format`: it returns a string that React escapes.
+
+## The query is input to your server
+
+`TableQuery` is a description of what the reader asked for: column ids, filter values, a search
+string, a sort list. It is not a query language and it does not compile to SQL.
+
+Treat everything in it as untrusted, because it is:
+
+- **Validate column ids against a whitelist.** A reader can ask to sort by any id the table knows;
+  a modified client can ask for anything at all. Never interpolate an id into SQL.
+- **Bound the page size.** `pageSize` arrives from the client. Clamp it server-side; an
+  unclamped page size is a denial-of-service request with extra steps.
+- **Check authorization per row, not per query.** Filters are a convenience for the reader, never
+  a security boundary. If a row should not be visible, it must not be returned.
+
+`sortServerKey` and `filterServerKey` make the mapping from column to field explicit, which is a
+good place to enforce the whitelist.
+
+## Export leaves your application
+
+CSV is opened in spreadsheets, and spreadsheets execute formulas. A value beginning with `=`,
+`+`, `-` or `@` can become a formula in Excel — CSV injection. The table quotes per RFC 4180,
+which is correct CSV, but correct CSV is not the same as safe-to-open-in-Excel.
+
+If your data can contain arbitrary text, prefix such values in `exportValue`:
+
+```tsx
+col.accessor('note', {
+  exportValue: (v) => (/^[=+\-@]/.test(String(v)) ? "'" + v : v),
+});
+```
+
+Export also means the reader is taking a copy of the data somewhere you cannot control. If
+"everything matching" is more than they are entitled to, use `onExport` and enforce the scope
+server-side.
+
+## Persistence writes to places you can read
+
+[`syncState`](/react-tablekit/persistence/) puts state in the URL and in browser storage. Neither
+is a secret store:
+
+- A **URL** is shared, logged by proxies and stored in history. Do not sync a filter value that is
+  itself sensitive — a national id being searched for, for instance.
+- **Storage** persists after logout on a shared machine. Keep layout preferences there and nothing
+  else, and clear the key on sign-out if the layout itself is sensitive.
+
+## Third-party content in cells
+
+A cell can render anything, including an iframe, an image from a URL in the data, or a link. A
+link built from user data should carry `rel="noopener noreferrer"` if it opens in a new tab, and
+an `href` from untrusted data should be checked for a `javascript:` scheme before it is rendered.
+
+## Reporting a problem
+
+Security issues should not be opened as public issues first. Use GitHub's private vulnerability
+reporting on the [repository](https://github.com/kiralygyula92/react-tablekit/security/advisories),
+or the contact route on [Support](/react-tablekit/getting-started/support/).
+
+## Related
+
+- [Server data](/react-tablekit/guides/server-data/)
+- [Export](/react-tablekit/export/)
+- [Persistence](/react-tablekit/persistence/)
+- [Support](/react-tablekit/getting-started/support/)

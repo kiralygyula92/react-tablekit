@@ -1,0 +1,90 @@
+---
+title: Pagination
+description: Six presentations of the same state — numbered, compact, simple, load-more, infinite or none — including cursor-based paging.
+archetype: capability
+capabilityId: pagination
+group: Core features
+symbols: [DataTableProps, TableInstance, getPageItems]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/pagination.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/pagination/demo-basics" label="Pagination variants" />
+
+Pagination is one piece of state — page index and page size — and several ways to show it.
+`paginationType` picks the presentation:
+
+| Variant    | Shape                                                                      |
+| ---------- | -------------------------------------------------------------------------- |
+| `numbered` | Previous, page buttons, Next. The desktop default.                         |
+| `compact`  | First/previous/next/last icons with a tight page list. The mobile default. |
+| `simple`   | `11–20 of 235` between two arrows. Required for cursor paging.             |
+| `loadMore` | A button that appends the next page to the rows already shown.             |
+| `infinite` | The next page loads when the end of the list comes into view.              |
+| `none`     | No control; the state still applies.                                       |
+
+The variant accepts a responsive value, so the classic default is literally
+`{ base: 'compact', md: 'numbered' }` — small screens get icons, wide screens get page numbers.
+
+### Rows per page
+
+`pageSizeOptions` fills the "Rows per page" select. Changing the size keeps the first visible row
+on screen rather than throwing the reader back to page 1. `showRowRange` prints the range and
+total, and when the total is unknown — a server that does not count — it says `11–20 of many`
+instead of inventing a number.
+
+### Which page buttons appear
+
+`getPageItems` is the pure function behind the number row, and you can call it yourself. The
+default `classic` algorithm never hides exactly one page behind an ellipsis: if the gap is a
+single number, it shows the number. The `stable` algorithm always renders the same number of
+slots, so the bar never changes width as you page through.
+
+### Cursor paging
+
+<Demo id="react-tablekit/features/pagination/demo-cursor" label="Cursor pagination" />
+
+When the API hands back a cursor rather than a page number, the table follows it: Next is enabled
+while the server says there is more, and Previous walks back through the cursors already seen.
+Page _numbers_ are not available in this mode, which is why `simple` is the required variant.
+
+### Infinite scrolling
+
+<Demo id="react-tablekit/features/pagination/demo-infinite" label="Infinite scroll" />
+
+`infinite` observes a sentinel at the end of the rows and fetches the next page when it appears.
+It composes with [virtualization](/react-tablekit/virtualization/), so a hundred thousand
+accumulated rows still render a screenful at a time.
+
+## Customization
+
+The whole control is a slot, and `<DataTable.Pagination />` places it anywhere — above the table,
+in a sticky page footer, beside a summary. `formatters.rowRange` rewrites the range text, and
+every label comes from [localization](/react-tablekit/localization/).
+
+`hideOnSinglePage` is on by default: with one page there is nothing to navigate, so the control
+disappears and the container takes its bottom border back.
+
+## Limitations
+
+- **Cursor mode has no page count**, so it cannot show page numbers or a "last page" button, and
+  `showRowRange` needs a total from the server to print one.
+- **`loadMore` and `infinite` accumulate rows.** Sorting or filtering resets the accumulation to
+  the first page, because the rows already loaded are no longer the first rows of the result.
+- **Page state is not automatically preserved across mounts.** Put `pagination` in
+  [`syncState`](/react-tablekit/persistence/) if a reader should come back to the page they left.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enablePagination`,
+  `paginationType`, `paginationMode`, `pagination`, `pageCount`, `rowCount`, `manualPagination`,
+  `appendPages`, `resetPageOn`, `autoResetPageIndex`, `scrollToTopOnPageChange`,
+  `disablePaginationWhileFetching`, `compactPagination`, `onPaginationChange`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setPageIndex`, `setPageSize`,
+  `nextPage`, `previousPage`, `firstPage`, `lastPage`, `getPageCount`, `getPageItems`,
+  `getCursors`.
+- [Utilities](/react-tablekit/api/utilities/) — `getPageItems`.

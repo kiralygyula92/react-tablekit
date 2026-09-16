@@ -51,7 +51,8 @@ test('results are grouped, and Enter opens the highlighted one', async ({ page }
   // Enter opens whatever is highlighted.
   await page.keyboard.press('Enter');
   await expect(page.getByRole('dialog', { name: 'Search the documentation' })).toBeHidden();
-  await expect(page).not.toHaveURL(/\/$/);
+  // Every documentation URL ends in a slash, so "left the home page" is what this checks.
+  await expect(page).toHaveURL(/\/react-tablekit\/./);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 });
 
@@ -84,7 +85,8 @@ test('the open palette passes axe', async ({ page }) => {
 });
 
 test('a table on the page keeps the hotkey for its own search', async ({ page }) => {
-  await page.goto('/examples/global-search');
+  // A documentation page, not an embed: this test also checks the site header's own trigger.
+  await page.goto('/react-tablekit/global-search/');
   const tableSearch = page.getByRole('searchbox').first();
   await expect(tableSearch).toBeVisible();
 

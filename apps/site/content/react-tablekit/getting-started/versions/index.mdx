@@ -1,0 +1,38 @@
+---
+title: 'Versions'
+description: 'Which versions are supported, and what a minor release is allowed to change.'
+archetype: getting-started
+plan: free
+---
+
+## Current version
+
+**1.0.0** — the first stable release.
+
+| Version | Status    | Documentation |
+| ------- | --------- | ------------- |
+| v1      | Supported | This site     |
+
+## What the public API covers
+
+More than the exported names. All of the following are public, and changing or removing any of them is a **major** release:
+
+- every name and signature in the [API reference](/react-tablekit/api/);
+- the `tk-*` class names, so a stylesheet that targets them keeps working;
+- the `--tk-*` CSS variables;
+- the `data-*` attributes the table puts on its elements;
+- slot names, handler names and localization keys.
+
+## What a minor release may change
+
+Token default _values_. A minor may retune a colour or a spacing step. If you depend on an exact value, set it yourself rather than relying on the default.
+
+The `classic` preset is the exception: its values are frozen, because its whole purpose is to look exactly the way it looks.
+
+## Deprecations
+
+A deprecated API is marked `@deprecated` in its TSDoc, warns once per session in development builds, and is removed in the next major release at the earliest.
+
+## Pre-releases
+
+Pre-release versions are published under the `next` dist-tag, so `pnpm add react-tablekit` always installs a stable version.

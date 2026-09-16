@@ -1,0 +1,87 @@
+---
+title: Expansion
+description: Detail panels that open under a row, lazily rendered, animated, and pinned to the viewport width so a wide table cannot scroll them away.
+archetype: capability
+capabilityId: expansion
+group: Core features
+symbols: [DataTableProps, TableInstance, Row, useDetailPanelData]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/expanding.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/expansion/demo-basics" label="Detail panels" />
+
+`renderDetailPanel` puts a full-width row under the row it belongs to, and an expand column with
+a chevron appears automatically.
+
+```tsx
+<DataTable
+  renderDetailPanel={({ row }) => <OrderLines orderId={row.id} />}
+  columns={columns}
+  data={orders}
+/>
+```
+
+The panel is not rendered until it is opened, so a hundred collapsed rows cost nothing. Pass
+`detailPanelProps.keepMounted` when the content is expensive to rebuild and should survive a
+collapse.
+
+### Loading panel content
+
+A panel usually needs data the table never fetched. `useDetailPanelData` loads it per row and
+caches it by row id, so re-opening is instant:
+
+```tsx
+function Panel({ row }) {
+  const { data, loading, error } = useDetailPanelData(row, () => api.lines(row.id));
+  if (loading) return <Spinner />;
+  if (error) return <ErrorText error={error} />;
+  return <OrderLines lines={data} />;
+}
+```
+
+### One at a time
+
+`expandMode: 'single'` collapses the previous panel when another opens — an accordion.
+`expandOnRowClick` makes the whole row the toggle, with the same exclusion for buttons and links
+that [row selection](/react-tablekit/row-selection/) uses. `enableExpandAll` puts an expand-all
+toggle in the header.
+
+### Rows with children
+
+Sub-rows use the same expansion state and the same toggle. That is a capability of its own — see
+[Tree data](/react-tablekit/tree-data/).
+
+## Customization
+
+The panel is sticky to the left at the container's width, so scrolling a wide table sideways does
+not drag the panel out of view. `detailPanelProps.fullWidth: false` opts out and lets the panel
+scroll with the columns.
+
+The toggle is a [slot](/react-tablekit/customization/slots/), and `positionExpandColumn` moves
+the column to the other end. The open/close animation is a CSS grid transition that
+`prefers-reduced-motion` disables.
+
+## Limitations
+
+- **A row has one panel.** Two kinds of detail — history and comments — belong in tabs inside the
+  panel, not in two panels.
+- **A panel is not a cell.** It is a separate row, so it takes no part in sorting, filtering,
+  search or CSV export.
+- **The expanded state is keyed by row id**, so it resets on refetch unless `getRowId` is stable
+  and `autoResetExpanded` is off.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableExpanding`,
+  `renderDetailPanel`, `detailPanelProps`, `expandMode`, `expandOnRowClick`, `enableExpandAll`,
+  `getRowCanExpand`, `positionExpandColumn`, `paginateExpandedRows`, `autoResetExpanded`,
+  `manualExpanding`, `onExpandedChange`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setExpanded`, `resetExpanded`,
+  `toggleAllRowsExpanded`, `getIsAllRowsExpanded`, `getExpandedRowModel`.
+- [`Row`](/react-tablekit/api/table-instance/) — `toggleExpanded`, `getIsExpanded`, `getCanExpand`.
+- [Hooks](/react-tablekit/api/hooks/) — `useDetailPanelData`.

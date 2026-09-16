@@ -1,0 +1,95 @@
+---
+title: Best practices
+description: The choices that make a table pleasant to use and cheap to maintain — and the ones that quietly make it neither.
+archetype: editorial
+group: Guides
+symbols: [DataTableProps, ColumnDef]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+## Give every row a stable id
+
+`getRowId` is the single most consequential prop. Selection, expansion, row pinning and the
+detail-panel cache are all keyed by it. Without it they reset on every refetch, and the bug looks
+like "selection randomly clears" rather than "we forgot an id".
+
+```tsx
+<DataTable getRowId={(person) => person.id} />
+```
+
+## Define columns outside the render
+
+A new `columns` array on every render is a new column model: sizing, order and visibility have
+nothing to attach to.
+
+```tsx
+const columns = [col.accessor('name', { header: 'Name' })]; // module scope, or useMemo
+```
+
+The same applies to `data`. If it is derived, memoize it.
+
+## Say what a column is
+
+`type` is short and sets the alignment, the formatting, the comparator and the filter control at
+once. A `number` column typed as one is right-aligned, range-filtered and sorted numerically
+without four more props.
+
+## Keep display and value apart
+
+`format` changes what is shown; the underlying value keeps sorting, filtering and exporting
+correctly. Reaching for `cell` to format text loses all three.
+
+```tsx
+col.accessor('joined', { type: 'date', format: (v) => v.toLocaleDateString() }); // good
+col.accessor('joined', { cell: ({ getValue }) => fmt(getValue()) }); // loses sorting semantics
+```
+
+## Fewer columns
+
+A table with twenty columns is a table nobody reads. Use `defaultHidden` for the ones that matter
+occasionally, `hideBelow` for the ones that do not fit on a phone, and a detail panel for the
+rest. The columns menu is there to be used.
+
+## Decide where the work happens, once
+
+Client mode for data that fits — a picker, a settings list, anything under a few thousand rows.
+Server mode for anything that grows. Hybrid only when you can say out loud why, which is what the
+acknowledgement flags are for. See [Server data](/react-tablekit/guides/server-data/).
+
+## Persist the right things
+
+The URL is for what a reader would send to a colleague: search, filters, sort, page. Storage is
+for what belongs to them alone: visible columns, order, widths, density. Putting the second group
+in the URL makes ugly links; putting the first in storage makes links that lie.
+
+## Make empty states useful
+
+"No results" is a dead end. "No people match these filters — clear filters" is a way out. The
+table gives you `getActiveFilterCount()` and `clearAllFilters()` precisely so the empty state can
+tell the difference.
+
+## Reach for the lightest override
+
+Tokens before class names, class names before `slotProps`, `slotProps` before slots, slots before
+composable parts, composable parts before headless. Each step up costs maintenance; most tables
+never leave the first two.
+
+## Do not fight the accessibility
+
+The semantics — `th scope`, `aria-sort`, live-region announcements, the roving tabindex — come
+from the default markup. A slot that drops the props it was given drops those too. Spread what
+you receive.
+
+## Test the behaviour, not the DOM
+
+Query by role and accessible name. `getByRole('columnheader', { name: 'Name' })` survives a
+redesign; a class selector does not. See [Testing](/react-tablekit/guides/testing/).
+
+## Related
+
+- [Server data](/react-tablekit/guides/server-data/)
+- [Performance](/react-tablekit/guides/performance/)
+- [Accessibility](/react-tablekit/guides/accessibility/)
+- [Recipes](/react-tablekit/customization/recipes/)

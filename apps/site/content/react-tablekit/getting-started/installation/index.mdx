@@ -1,0 +1,46 @@
+---
+title: 'Installation'
+description: 'Install the package, import the stylesheet and render your first table.'
+archetype: getting-started
+plan: free
+---
+
+## Prerequisites
+
+- **React 18.2 or newer** (React 18 and 19 are both supported), with `react-dom` at the same version.
+- **TypeScript 5.4 or newer** if you use TypeScript. The package ships its own types; nothing extra to install.
+- A bundler that understands ES modules — Vite, Next.js, Remix, Rspack, webpack 5 or Parcel.
+
+## Install
+
+```sh
+pnpm add react-tablekit
+```
+
+```sh
+npm install react-tablekit
+```
+
+```sh
+yarn add react-tablekit
+```
+
+## Import the stylesheet
+
+Import it once, wherever your application starts.
+
+```ts
+import 'react-tablekit/styles.css';
+```
+
+The styles live inside `@layer tablekit`, so any rule you write outside that layer wins without `!important`.
+
+## Verify
+
+Render the table from the [quickstart](/react-tablekit/getting-started/quickstart/). You should see a table with sortable headers, a search box above it and pagination below it. If the table renders but has no borders or spacing, the stylesheet import is missing.
+
+## Next steps
+
+- [Quickstart](/react-tablekit/getting-started/quickstart/) — a complete, copy-pasteable first table.
+- [Columns](/react-tablekit/columns/) — how a column is defined.
+- [Client and server](/react-tablekit/client-and-server/) — moving the work to your API.

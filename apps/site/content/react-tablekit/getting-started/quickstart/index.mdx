@@ -1,0 +1,67 @@
+---
+title: 'Quickstart'
+description: 'A complete first table: data, columns and the features that are on by default.'
+archetype: getting-started
+plan: free
+---
+
+## Prerequisites
+
+The package installed and `react-tablekit/styles.css` imported — see [Installation](/react-tablekit/getting-started/installation/).
+
+## A complete table
+
+This is the whole file. Nothing is elided.
+
+<Demo id="react-tablekit/features/columns/demo-basics" label="A minimal table" />
+
+```tsx
+import 'react-tablekit/styles.css';
+import { createColumnHelper, DataTable } from 'react-tablekit';
+
+interface Person {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  age: number;
+}
+
+const people: Person[] = [
+  { id: '1', firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com', age: 36 },
+  { id: '2', firstName: 'Grace', lastName: 'Hopper', email: 'grace@example.com', age: 45 },
+];
+
+const col = createColumnHelper<Person>();
+
+const columns = [
+  col.accessor((p) => `${p.firstName} ${p.lastName}`, { id: 'name', header: 'Name' }),
+  col.accessor('email', { header: 'Email' }),
+  col.accessor('age', { header: 'Age', type: 'number' }),
+];
+
+export function People() {
+  return (
+    <DataTable
+      aria-label="People"
+      data={people}
+      columns={columns}
+      getRowId={(person) => person.id}
+    />
+  );
+}
+```
+
+## Verify
+
+You should now see a table with three columns. Click a header to sort it, type in the search box to filter, and use the toolbar to hide a column. None of that needed configuration: sorting, global search, column filters, column visibility, density and pagination are on by default.
+
+## What you did not have to write
+
+`getRowId` is the only prop that looks like bookkeeping, and it earns its place: stable row identity is what lets selection survive a refetch, expansion survive a sort, and "select all matching" work across server pages.
+
+## Next steps
+
+- [All features](/react-tablekit/all-features/) — everything the table can do.
+- [Sorting](/react-tablekit/sorting/) — comparators, multi-sort and server sorting.
+- [Client and server](/react-tablekit/client-and-server/) — one prop moves the work to your API.

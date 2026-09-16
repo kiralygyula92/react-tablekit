@@ -1,0 +1,87 @@
+---
+title: Overriding structure
+description: Unstyled mode, primitive slots and composable parts — how to put a design system's own components in charge without losing the engine.
+archetype: capability
+capabilityId: structure
+group: Customization
+symbols: [DataTableProps, TableSlots, useDataTable]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/parts
+---
+
+## Basics
+
+<Demo id="react-tablekit/customization/structure/demo-basics" label="Design-system adapter" />
+
+There are three levels of taking over the markup, and most projects need only the first.
+
+**Unstyled.** `unstyled` drops the presentational CSS and keeps the structural rules — sticky
+positioning, pinned offsets, the scroll container. You get a correct table with no opinions about
+how it looks.
+
+```tsx
+<DataTable unstyled slots={designSystemSlots} data={rows} columns={columns} />
+```
+
+**Primitives.** Six [slots](/react-tablekit/customization/slots/) — `Button`, `IconButton`,
+`Checkbox`, `Select`, `TextInput`, `Menu` — account for nearly every control in the table.
+Replacing those is what makes an adapter small:
+
+```tsx
+export const designSystemSlots = {
+  Button: DsButton,
+  IconButton: DsIconButton,
+  Checkbox: DsCheckbox,
+  Select: DsSelect,
+  TextInput: DsTextField,
+  Menu: DsMenu,
+};
+```
+
+**Layout.** When the arrangement itself is wrong — search in the page header, filters in a
+sidebar, pagination in a sticky footer — use `DataTable.Root` and the composable parts. The table
+instance is shared, so every piece stays in sync:
+
+```tsx
+const table = useDataTable({ data, columns });
+
+<DataTable.Root table={table}>
+  <DataTable.Search table={table} />
+  <DataTable.Table />
+  <DataTable.Pagination />
+</DataTable.Root>;
+```
+
+### Shared defaults
+
+`TableDefaultsProvider` applies slots, localization, icons and handlers to every table beneath
+it, so an adapter is configured once for an application rather than per table. Props on a table
+still win over the provider.
+
+### All the way down
+
+If even the table element is wrong for what you are building — cards, a list, a chart —
+[headless](/react-tablekit/headless/) keeps the engine and gives up the rendering entirely.
+
+## Customization
+
+The levels compose. An adapter usually means: unstyled, the six primitives, the provider, and
+tokens for what is left. That is a file, not a fork.
+
+## Limitations
+
+- **Unstyled is not style-free.** The structural rules remain, because sticky headers and pinned
+  columns are layout, not decoration.
+- **Composable parts still need the instance.** They are not context-free; passing the table is
+  what keeps them consistent.
+- **Replacing primitives replaces their accessibility too.** A `Checkbox` that does not support
+  the indeterminate state breaks tri-state select-all.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `unstyled`, `slots`, `slotProps`,
+  `classNames`, `styles`, `handlers`, `icons`, `localization`.
+- [Slots](/react-tablekit/api/slots/) — the full list, primitives included.
+- [Hooks](/react-tablekit/api/hooks/) — `useDataTable` for the composable form.

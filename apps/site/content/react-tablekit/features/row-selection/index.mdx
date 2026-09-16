@@ -1,0 +1,88 @@
+---
+title: Row selection
+description: Checkboxes or radios, range selection with shift-click, a selection bar for bulk actions, and select-all that survives server paging.
+archetype: capability
+capabilityId: row-selection
+group: Core features
+symbols: [DataTableProps, TableInstance, Row, TableSelectionQuery]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/rowSelection.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/row-selection/demo-basics" label="Row selection" />
+
+`enableRowSelection` inserts a selection column and a selection bar. The header checkbox is
+tri-state — all, some, none — and shift-clicking a second row selects the range between them.
+
+Set `enableMultiRowSelection: false` for picker semantics: radios instead of checkboxes, no
+header checkbox, one row at a time. `selectOnRowClick` makes the whole row the target, and it
+still ignores clicks that land on a button, a link, an input, or anything marked
+`data-tk-stop` — so the row menu keeps working.
+
+### Which rows may be selected
+
+`enableRowSelection` also accepts a predicate, and `isRowDisabled` marks rows as unavailable
+everywhere at once. Select-all skips disabled rows rather than silently including them.
+
+```tsx
+<DataTable enableRowSelection={(row) => row.original.status !== 'archived'} />
+```
+
+With [tree data](/react-tablekit/tree-data/), `enableSubRowSelection` cascades a parent's
+checkbox to its children and shows the parent as indeterminate when only some are selected.
+
+### The selection bar and bulk actions
+
+The bar appears once something is selected: `3 selected · Select all 235 matching · Clear`, plus
+whatever `renderBulkActions` returns. It is the place for Delete, Export and Assign, and it gets
+the selection in a form you can send:
+
+```tsx
+renderBulkActions={({ selectedRows, selectionQuery }) => (
+  <button onClick={() => api.archive(selectionQuery)}>
+    Archive {selectedRows.length}
+  </button>
+)}
+```
+
+### Selecting everything on the server
+
+"Select all 235 matching" cannot mean 235 ids when the browser holds ten rows. It is recorded as
+the current query plus the rows the reader has since _deselected_, and `getSelectionQuery()`
+hands that to you — so a bulk action applies to the filter, not to a page. `selectAllMode`
+chooses between the page and the whole result set.
+
+## Customization
+
+The checkbox, the selection column and the selection bar are [slots](/react-tablekit/customization/slots/).
+`positionSelectionColumn` moves the column, and `<DataTable.SelectionBar />` renders the bar
+outside the table — at the bottom of a dialog, for instance.
+
+Selected rows carry `aria-selected` and `data-selected`, and their background is the
+`--tk-row-selected-bg` [token](/react-tablekit/customization/tokens/); pinned cells inherit it,
+so a selected row looks selected all the way across.
+
+## Limitations
+
+- **Selection is keyed by row id.** Without a stable `getRowId` the selection resets whenever the
+  data is refetched, because the rows are new objects.
+- **`selectionQuery` is an exclusion model, not a list of ids.** Your API has to accept a query
+  with exclusions; if it only accepts ids, keep `selectAllMode` on the page.
+- **Cross-page selection is not remembered in client mode.** Paging keeps the selection because
+  the rows stay loaded; refetching does not.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowSelection`,
+  `enableMultiRowSelection`, `enableSubRowSelection`, `enableRangeSelection`, `selectOnRowClick`,
+  `selectAllMode`, `showSelectionBar`, `renderBulkActions`, `getRowCanSelect`, `isRowDisabled`,
+  `positionSelectionColumn`, `clearSelectionOnQueryChange`, `autoResetSelection`,
+  `onRowSelectionChange`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setRowSelection`, `resetRowSelection`,
+  `toggleAllRowsSelected`, `toggleAllPageRowsSelected`, `selectAllMatching`, `selectRange`,
+  `getSelectedRowModel`, `getSelectedRowIds`, `getSelectedCount`, `getSelectionQuery`.
+- [`Row`](/react-tablekit/api/table-instance/) — `toggleSelected`, `getIsSelected`, `getCanSelect`.

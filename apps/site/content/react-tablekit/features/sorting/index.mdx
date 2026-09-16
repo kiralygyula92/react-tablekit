@@ -1,0 +1,90 @@
+---
+title: Sorting
+description: Click to sort, shift-click to add a column, and comparators that understand text, dates and your own domain order.
+archetype: capability
+capabilityId: sorting
+group: Core features
+symbols: [DataTableProps, ColumnDef, TableInstance, sortingFns]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/fns/sortingFns.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/sorting/demo-basics" label="Sorting" />
+
+Sorting is on by default. A click cycles ascending → descending → unsorted; holding **Shift**
+adds a column to the sort instead of replacing it, and each header shows its position in the
+chain.
+
+### Choosing a comparator
+
+The column `type` already picks a sensible comparator, so most tables need nothing here.
+Override it with `sortingFn` when the default ordering is wrong for your data:
+
+```tsx
+col.accessor('name', { sortingFn: 'alphanumeric' }); // "Room 2" before "Room 10"
+col.accessor('city', { sortingFn: 'text' }); // locale-aware: "Ávila" next to "Avila"
+col.accessor('status', {
+  sortingFn: (a, b) => RANK[a.original.status] - RANK[b.original.status],
+});
+```
+
+The built-ins are `alphanumeric`, `alphanumericCaseSensitive`, `text`, `textCaseSensitive`,
+`datetime`, `basic` and `boolean`.
+
+### Missing values and direction
+
+`sortUndefined` decides where empty cells go. `'last'` keeps them out of the way in both
+directions, which is usually what people expect. `sortDescFirst` makes the first click
+descending, which suits money and dates, and `invertSorting` suits ranks where lower is better.
+
+When the value you sort by differs from the value you display — a formatted date, a chip label —
+give the column a `sortValue`.
+
+### Sorting on the server
+
+<Demo id="react-tablekit/features/sorting/demo-server" label="Server sorting" />
+
+In server mode the sort list is sent rather than applied. Map column ids to your API's field
+names with `sortServerKey`; nothing else changes.
+
+```tsx
+col.accessor('name', { sortServerKey: 'LastName' });
+```
+
+## Customization
+
+The sort indicator, the clickable header and the header cell itself are all slots. Replacing the
+indicator alone is the common case:
+
+```tsx
+<DataTable slots={{ SortIcon: ({ direction }) => <MyChevron direction={direction} /> }} />
+```
+
+To change what a click _does_ rather than how it looks, wrap the `onSortToggle` handler — it can
+observe the intent, change it, or cancel it by not calling `next`. See
+[Handler middleware](/react-tablekit/customization/handlers/).
+
+## Limitations
+
+- **Multi-sort priority cannot be reordered by dragging.** A column joins the chain in the order
+  it was shift-clicked. To reorder, clear the sort and rebuild it, or set `state.sorting`
+  yourself.
+- **Server mode sorts whatever the server returns.** If you enable client sorting alongside
+  server pagination, only the fetched page is ordered — the table warns about this in
+  development unless you pass `acknowledgePageLocalSorting`. See
+  [Client and server](/react-tablekit/client-and-server/).
+- **Grouped rows sort within their group**, never across groups; the group order comes from the
+  grouping column. See [Grouping](/react-tablekit/grouping/).
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableSorting`, `enableMultiSort`,
+  `enableSortingRemoval`, `sortingMode`, `onSortingChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `sortingFn`, `sortValue`, `sortDescFirst`,
+  `sortUndefined`, `invertSorting`, `sortServerKey`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setSorting`, `resetSorting`.
+- [Utilities](/react-tablekit/api/utilities/) — the `sortingFns` registry.

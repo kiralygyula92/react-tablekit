@@ -1,0 +1,71 @@
+---
+title: Density
+description: Three row heights the reader can switch between — compact, standard and comfortable — driven entirely by tokens.
+archetype: capability
+capabilityId: density
+group: Display & layout
+symbols: [DataTableProps, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/styles/base
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/density/demo-basics" label="Density" />
+
+Density changes cell padding and row height, and nothing else. No column moves, no text is
+hidden, no layout is recomputed — which is why switching it feels instant and why it is safe to
+let the reader do it.
+
+```tsx
+<DataTable enableDensityToggle initialState={{ density: 'compact' }} />
+```
+
+`enableDensityToggle` puts the control in the toolbar. Without it, `state.density` still applies —
+useful when density belongs to your own settings screen rather than the table's toolbar.
+
+### Choosing a default
+
+`compact` fits roughly a third more rows on a screen and suits dashboards and monitoring views.
+`standard` is the default. `comfortable` suits touch and long reading sessions, where a taller
+target matters more than another row.
+
+### Remembering it
+
+Density is a state slice, so adding it to [`syncState`](/react-tablekit/persistence/) makes the
+reader's choice stick across visits. It is one of the slices most worth persisting, because it is
+a preference rather than a query.
+
+## Customization
+
+Each level is a set of [tokens](/react-tablekit/customization/tokens/), so a design system can
+redefine what "compact" means without forking the component:
+
+```css
+[data-density='compact'] {
+  --tk-cell-py: 4px;
+  --tk-cell-px: 8px;
+}
+```
+
+`toggleDensity` and `setDensity` drive it from your own control — a keyboard shortcut, a settings
+menu, a global preference applied to every table at once.
+
+## Limitations
+
+- **Density does not change font size.** Text stays legible; only the space around it shrinks. Set
+  `--tk-font-size` yourself if you want both.
+- **Row height still depends on content.** A cell with two lines is two lines tall at every
+  density.
+- **With [virtualization](/react-tablekit/virtualization/), changing density re-measures.** Pass
+  the matching `estimateRowHeight` if you set a non-default density up front.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableDensityToggle`,
+  `initialState.density`, `state.density`, `estimateRowHeight`, `onDensityChange`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setDensity`, `toggleDensity`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — the `--tk-cell-*` and `--tk-row-height`
+  families.

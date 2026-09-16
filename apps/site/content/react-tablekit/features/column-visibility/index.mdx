@@ -1,0 +1,82 @@
+---
+title: Column visibility
+description: A columns menu for the reader, a per-column menu for actions, and responsive hiding that needs no state at all.
+archetype: capability
+capabilityId: column-visibility
+group: Display & layout
+symbols: [DataTableProps, ColumnDef, TableInstance, Column]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/columnVisibility.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/column-visibility/demo-basics" label="Column features" />
+
+The toolbar's **Columns** button opens a checkbox per column, plus Show all, Hide all and Reset.
+Past ten columns the menu grows a search box, because scanning thirty checkboxes is not a
+feature.
+
+`defaultHidden` starts a column off, without removing it from the menu:
+
+```tsx
+col.accessor('internalId', { header: 'Internal id', defaultHidden: true });
+col.accessor('audit', { header: 'Audit trail', enableHiding: false });
+```
+
+### Hiding by screen width
+
+`hideBelow` and `hideAbove` are responsive and deliberately _not_ state: a column hidden because
+the screen is narrow does not show up as unchecked in the menu, because the reader did not
+uncheck it.
+
+```tsx
+col.accessor('city', { hideBelow: 'md' });
+```
+
+That is the difference between "there is no room for this" and "I do not want this".
+
+### The column actions menu
+
+`enableColumnActions` adds a menu button to each header with sort, filter, group, pin, hide,
+autosize and reset-size entries — the per-column versions of what the toolbar offers for the
+whole table.
+
+`renderColumnActionsMenuItems` receives the default items, so you can add one, drop one or
+reorder them rather than rebuilding the menu:
+
+```tsx
+renderColumnActionsMenuItems={({ column, defaultItems }) => [
+  ...defaultItems,
+  { id: 'copy', label: 'Copy column', onSelect: () => copy(column.id) },
+]}
+```
+
+## Customization
+
+The Columns button, the menu and the header menu are all
+[slots](/react-tablekit/customization/slots/), and `<DataTable.ColumnsButton />` places the
+control outside the toolbar. Visibility is a state slice, so
+[persisting](/react-tablekit/persistence/) `columnVisibility` remembers the reader's choice.
+
+## Limitations
+
+- **A hidden column is still computed.** It keeps its filter and its aggregate; hiding is
+  presentation. Remove it from `columns` to stop the work.
+- **`hideBelow` cannot be overridden by the reader**, by design — there is no checkbox for it.
+- **Hiding every column** leaves an empty table rather than an error; the menu's Hide all stops
+  one short only when a column sets `enableHiding: false`.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableHiding`,
+  `enableColumnActions`, `renderColumnActionsMenuItems`, `onColumnVisibilityChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `defaultHidden`, `enableHiding`, `hideBelow`,
+  `hideAbove`, `enableColumnActions`, `static`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnVisibility`,
+  `resetColumnVisibility`, `toggleAllColumnsVisible`, `getIsAllColumnsVisible`,
+  `getVisibleLeafColumns`.
+- [`Column`](/react-tablekit/api/table-instance/) — `toggleVisibility`, `getIsVisible`,
+  `getCanHide`.

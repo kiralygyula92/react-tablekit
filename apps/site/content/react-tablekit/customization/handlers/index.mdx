@@ -1,0 +1,87 @@
+---
+title: Handler middleware
+description: Wrap any interaction — observe it, change its input, or cancel it — without reimplementing what it does.
+archetype: capability
+capabilityId: handlers
+group: Customization
+symbols: [DataTableProps, TableHandlers]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/handlers.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/customization/handlers/demo-basics" label="Handler middleware" />
+
+Every interaction the table performs goes through a named handler, and you can wrap any of them.
+A handler receives the intent and a `next` function that runs the default:
+
+```ts
+type Handler<Ctx> = (ctx: Ctx, next: (override?: Partial<Ctx>) => void | Promise<void>) => void;
+```
+
+Three things you can do with `next`, which is the whole model:
+
+```tsx
+handlers={{
+  // Observe, then proceed
+  onSortToggle: (ctx, next) => { track('sort', ctx.column.id); next(); },
+
+  // Change the intent — never multi-sort, whatever was clicked
+  onColumnPin: (ctx, next) => next({ position: 'left' }),
+
+  // Cancel — a row click navigates instead of selecting
+  onRowClick: ({ row }) => navigate('/people/' + row.id),
+}}
+```
+
+Not calling `next` cancels the default. That is how a row click becomes navigation without
+turning selection off and rebuilding it.
+
+### Asking first
+
+A handler may be async, so a confirmation is a normal `await`:
+
+```tsx
+handlers={{
+  onPageChange: async (ctx, next) => {
+    if (!dirty || (await confirm('Discard unsaved changes?'))) next();
+  },
+}}
+```
+
+### What can be wrapped
+
+Sorting, search input, column filters, clearing filters, page and page-size changes, row clicks
+and double-clicks, row selection and select-all, expansion, column resize, move, pin and hide,
+export, refresh, hotkeys and cell activation. The full list with each context object is on
+[Handlers](/react-tablekit/api/handlers/).
+
+### They compose
+
+`TableDefaultsProvider` handlers wrap the library's defaults, and a handler passed to a table
+wraps the provider's. Analytics can live at the provider and a screen-specific rule at the table,
+and both run.
+
+## Customization
+
+Handlers are for _behaviour_. Appearance is [slots](/react-tablekit/customization/slots/) and
+[tokens](/react-tablekit/customization/tokens/); content is a cell renderer. Keeping them apart is
+what lets a handler survive a redesign.
+
+## Limitations
+
+- **Calling `next` twice runs the default twice.** The middleware does not deduplicate.
+- **A cancelled interaction leaves no trace.** If a reader needs to know why their click did
+  nothing, say so — the table will not.
+- **A handler cannot invent an interaction.** It wraps the ones that exist; anything else is your
+  own control calling the [instance](/react-tablekit/api/table-instance/).
+
+## API
+
+- [Handlers](/react-tablekit/api/handlers/) — every handler, its context and its default.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `handlers`, `onRowClick`,
+  `onStateChange`, `onQueryChange`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — what the defaults call.

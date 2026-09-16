@@ -1,0 +1,33 @@
+---
+title: Playground
+description: Every prop of DataTable, generated from the types, with a live table and the code for whatever you have configured.
+archetype: editorial
+group: Demos
+symbols: [DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+The controls below are generated from `DataTableProps` itself, so the playground cannot drift from
+the component: a prop added to the type appears here, and one that is removed disappears. Change
+anything and the table re-renders with it; the code panel shows exactly the props you have set.
+
+<Playground />
+
+## What to try
+
+- Turn on **grouping** and then **column footers**, and switch `footerAggregationScope` between
+  `page` and `filtered` to see which total you actually want.
+- Set **pagination type** to `loadMore` or `infinite` and watch the rows accumulate rather than
+  replace.
+- Switch **density** and **striping** together — the whole visual system is tokens, so nothing
+  reflows.
+- Turn off **rows per page** and see the control disappear while paging still works.
+
+## Related
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — the same props, with their types and
+  documentation.
+- [Theme editor](/react-tablekit/demos/theme-editor/) — the same idea for the visual tokens.
+- [All features](/react-tablekit/all-features/) — a page per capability, each with its own demo.

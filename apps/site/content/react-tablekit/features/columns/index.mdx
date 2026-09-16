@@ -1,0 +1,98 @@
+---
+title: Columns
+description: Accessors, headers, types and formatting — the column definition is where most of a table is decided.
+archetype: capability
+capabilityId: columns
+group: Core features
+symbols: [ColumnDef, createColumnHelper, defineColumns, DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/columns
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/columns/demo-basics" label="Columns" />
+
+A column says where its value comes from and what it looks like. `createColumnHelper<Row>()`
+gives you an `accessor` that keeps the value type attached, so `cell` and `sortingFn` are typed
+against the real field rather than `unknown`.
+
+```tsx
+const col = createColumnHelper<Person>();
+
+const columns = [
+  col.accessor('firstName', { header: 'First name' }),
+  col.accessor((p) => p.firstName + ' ' + p.lastName, { id: 'name', header: 'Name' }),
+  col.display({ id: 'actions', header: '', cell: ({ row }) => <RowMenu id={row.id} /> }),
+];
+```
+
+An **accessor column** reads a value and can therefore sort, filter, group and export. A
+**display column** has no value — it renders something, and the table leaves it out of sorting,
+filtering and CSV. A **group column** has `columns` of its own and produces a second header row.
+
+### Column types
+
+<Demo id="react-tablekit/features/columns/demo-types" label="Column types" />
+
+`type` sets the defaults a column would otherwise repeat: alignment, formatting, the comparator
+and the filter control. `'number'` right-aligns and filters by range, `'date'` formats through
+the locale and filters by date, `'boolean'` renders a yes/no and filters tri-state.
+
+```tsx
+col.accessor('total', { type: 'currency', meta: { currency: 'EUR' } });
+```
+
+Anything you set explicitly still wins; the type only supplies what you left out.
+
+### Formatting a value
+
+`format(value, row)` changes what is displayed while sorting, filtering, searching and export
+keep the underlying value — which is why a formatted date still sorts chronologically. Use
+`cell` when you need markup rather than text.
+
+```tsx
+col.accessor('createdAt', { type: 'date', format: (v) => relativeTime(v) });
+col.accessor('status', { cell: ({ getValue }) => <StatusChip value={getValue()} /> });
+```
+
+For empty values, `renderFallbackValue` replaces `null`, `undefined` and the empty string in one
+place instead of a guard in every cell.
+
+### Widths and truncation
+
+`width`, `minWidth` and `maxWidth` are CSS widths and accept percentages; `size`, `minSize` and
+`maxSize` are the pixel model used once [column resizing](/react-tablekit/column-sizing/) is on.
+`truncate` clips with an ellipsis and keeps the full text as a tooltip, and `noWrap` stops a long
+cell wrapping to a second line.
+
+## Customization
+
+`columnDefaults` applies a partial definition to every column, so a table-wide convention is
+written once:
+
+```tsx
+<DataTable columnDefaults={{ enableHiding: false, truncate: true }} columns={columns} />
+```
+
+`defineColumns` is the same list without the helper's binding, useful when the columns are
+assembled somewhere the row type is not in scope yet. Header and cell rendering are replaceable
+through [slots](/react-tablekit/customization/slots/).
+
+## Limitations
+
+- **A column's `id` must be unique and stable.** An accessor function column has no natural id,
+  so one must be given; changing ids between renders resets sizing, ordering and visibility.
+- **Display columns never appear in CSV.** They have no value to export. If a computed column
+  should be exported, make it an accessor column with `accessorFn` and an `exportValue`.
+- **Group columns cannot be sorted or filtered themselves.** They are header containers; their
+  leaves carry the behaviour.
+
+## API
+
+- [`ColumnDef`](/react-tablekit/api/column-def/) — the whole definition.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `columns`, `columnDefaults`,
+  `defaultColumn`, `displayColumnDefs`, `renderFallbackValue`.
+- [Utilities](/react-tablekit/api/utilities/) — `createColumnHelper`, `defineColumns`.

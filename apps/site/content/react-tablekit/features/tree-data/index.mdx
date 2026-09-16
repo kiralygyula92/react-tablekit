@@ -1,0 +1,84 @@
+---
+title: Tree data
+description: Hierarchical rows with indentation, expand toggles and children that can be loaded from the server when a branch is opened.
+archetype: capability
+capabilityId: tree-data
+group: Advanced features
+symbols: [DataTableProps, Row, TableDataSource]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/expanding.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/tree-data/demo-basics" label="Tree data" />
+
+`getSubRows` turns a flat list of objects into a tree. Every row keeps its depth, the first
+visible data column is indented by it, and the expand toggle appears on rows that have children.
+
+```tsx
+<DataTable data={departments} getSubRows={(row) => row.children} columns={columns} />
+```
+
+Children are ordinary rows: they sort, filter, select and export like any other. Sorting orders
+siblings within their parent rather than flattening the tree.
+
+### Loading children when a branch opens
+
+<Demo id="react-tablekit/features/tree-data/demo-lazy-children" label="Lazy server children" />
+
+A tree that is too big to send at once loads a branch at a time.
+`dataSource.fetchChildren` is called when a row is expanded; the toggle shows a spinner while it
+runs and reports an error inline if it fails.
+
+The table cannot know whether an unloaded row _has_ children, so tell it:
+
+```tsx
+<DataTable dataSource={dataSource} getRowCanExpand={(row) => row.original.childCount > 0} />
+```
+
+Loaded children are cached per row and invalidated when the query changes, so re-opening a branch
+does not refetch and a new filter does not show stale children.
+
+### Filtering a tree
+
+By default a row is matched on its own values. `filterFromLeafRows` keeps a parent whenever any
+descendant matches and auto-expands the path to it — the behaviour you want when searching a
+file tree. `maxLeafRowFilterDepth` caps how deep that search goes.
+
+### Selection
+
+`enableSubRowSelection` cascades a parent's checkbox down to its children, and shows the parent
+as indeterminate when only some are selected. See [Row
+selection](/react-tablekit/row-selection/).
+
+## Customization
+
+`treeColumnId` moves the indentation and the toggle to a specific column instead of the first
+visible one. The indentation step is the `--tk-tree-indent` token, and the toggle is a
+[slot](/react-tablekit/customization/slots/), so a file tree can show folder icons rather than
+chevrons.
+
+A selectable tree is announced as a `treegrid`, so assistive technology gets the level and
+expanded state without any extra attributes from you.
+
+## Limitations
+
+- **Sorting never reorders across levels.** Children stay inside their parent; that is what makes
+  it a tree rather than a list.
+- **Pagination counts top-level rows** unless `paginateExpandedRows` is set, so an expanded branch
+  does not push its siblings onto the next page.
+- **Lazily loaded children cannot be searched before they are loaded.** Client-side search only
+  sees rows the browser has; move search to the server for a lazy tree.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `getSubRows`, `getRowCanExpand`,
+  `treeColumnId`, `filterFromLeafRows`, `maxLeafRowFilterDepth`, `paginateExpandedRows`,
+  `enableSubRowSelection`, `enableExpandAll`, `manualExpanding`.
+- [`Row`](/react-tablekit/api/table-instance/) — `depth`, `subRows`, `getParentRow`,
+  `getLeafRows`, `getCanExpand`, `toggleExpanded`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `getRowChildrenStatus`,
+  `getExpandedRowModel`.

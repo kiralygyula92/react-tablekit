@@ -1,0 +1,93 @@
+---
+title: Cell building blocks
+description: Chips, truncated text, two-line text, tooltips and a row actions menu — the small components a cell usually needs, already themed and accessible.
+archetype: capability
+capabilityId: cell-building-blocks
+group: Customization
+symbols:
+  [ActionButton, Chip, ChipList, TruncatedText, TwoLineText, MultiLineList, RowActionsMenu, Tooltip]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/components
+---
+
+## Basics
+
+<Demo
+  id="react-tablekit/customization/cell-building-blocks/demo-basics"
+  label="Cell building blocks"
+/>
+
+Cells need the same few things over and over: text that has to fit, a list that has to collapse, a
+status that has to be recognisable, an action that must not be mistaken for the row. These
+components are those things, already using the theme
+[tokens](/react-tablekit/customization/tokens/) and already accessible.
+
+```tsx
+import { ActionButton, Chip, ChipList, TruncatedText, TwoLineText } from 'react-tablekit';
+```
+
+| Component        | For                                                                    |
+| ---------------- | ---------------------------------------------------------------------- |
+| `TruncatedText`  | Text that clips with an ellipsis and keeps the full value as a tooltip |
+| `TwoLineText`    | A primary value with a quieter second line — a name over an email      |
+| `MultiLineList`  | Several values in one cell, stacked and clipped after a limit          |
+| `Chip`           | A status or label, coloured from its own definition                    |
+| `ChipList`       | Several chips with a `+N` overflow so the row height stays put         |
+| `ActionButton`   | An icon button sized for a cell, with a required accessible name       |
+| `RowActionsMenu` | The `…` menu at the end of a row                                       |
+| `Tooltip`        | The table's own tooltip, so hints look the same everywhere             |
+
+### Using them
+
+```tsx
+col.accessor('name', {
+  cell: ({ row }) => <TwoLineText primary={row.original.name} secondary={row.original.email} />,
+});
+
+col.display({
+  id: 'actions',
+  cell: ({ row, table }) => (
+    <ActionButton
+      label="Edit"
+      icon={<PenIcon />}
+      onClick={() => table.options.meta?.onEdit?.(row.original)}
+    />
+  ),
+});
+```
+
+`ActionButton` requires a `label` — an icon button without an accessible name is a dead end for a
+screen reader, so the type will not let you write one.
+
+### They do not swallow the row click
+
+Every one of these is treated as interactive content, so clicking a chip or an action button does
+not also fire the row's `onRowClick`. That is why a picker with an edit button in each row
+behaves the way a reader expects.
+
+## Customization
+
+They are ordinary components: pass a class name, wrap them, or ignore them entirely. If your
+design system has its own, use those — these exist so that a table looks finished before you have
+written any, not to be mandatory.
+
+`Chip` takes colours per value, and the same definitions are reused by the [filter
+chips](/react-tablekit/column-filters/), so a status looks the same in the cell and in the filter
+bar.
+
+## Limitations
+
+- **They are presentational.** None of them touches table state; an `ActionButton` does whatever
+  its `onClick` does.
+- **`TruncatedText` needs a bounded width** to truncate — in an auto-width column with no
+  `maxWidth` there is nothing to clip against.
+- **`ChipList` measures nothing.** The overflow threshold is a count you pass, not a width
+  calculation.
+
+## API
+
+- [Utilities](/react-tablekit/api/utilities/) — the components and their prop types.
+- [Rows and cells](/react-tablekit/customization/rows-and-cells/) — where a cell renderer fits.
+- [Slots](/react-tablekit/api/slots/) — replacing the table's own primitives instead.

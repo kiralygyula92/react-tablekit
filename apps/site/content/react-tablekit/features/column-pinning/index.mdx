@@ -1,0 +1,76 @@
+---
+title: Column pinning
+description: Freeze columns to either edge, stacked and responsive, with a shadow that appears only when content actually scrolls underneath.
+archetype: capability
+capabilityId: column-pinning
+group: Display & layout
+symbols: [DataTableProps, ColumnDef, TableInstance, Column]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/features/columnPinning.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/column-pinning/demo-basics" label="Column pinning" />
+
+A pinned column stays put while the rest of the table scrolls sideways. Pin it on the column, or
+put it in state, or let the reader do it from the header menu:
+
+```tsx
+col.accessor('name', { pin: 'left' });
+col.display({ id: 'actions', pin: 'right', static: true });
+```
+
+Any number of columns can be pinned on each side. Their offsets stack, so the second left-pinned
+column sits exactly after the first however wide it is.
+
+### The edge shadow
+
+The shadow at the boundary is not decoration that is always there — it appears only when content
+is actually scrolled underneath, which is what makes it mean something. It is the
+`--tk-pinned-shadow` [token](/react-tablekit/customization/tokens/), and the classic preset sets
+it to `none`.
+
+### Pinning only on wide screens
+
+`pin` takes a responsive value, so a column can be frozen where there is room and released where
+there is not:
+
+```tsx
+col.display({ id: 'actions', pin: { base: false, md: 'right' } });
+```
+
+`stickyActions` is the shorthand for the common case — an actions column pinned right on desktop.
+
+### Columns a reader may not move
+
+`static: true` locks a column completely: it cannot be unpinned, hidden, reordered, resized or
+edited from the menu. It is what the selection, expand and actions columns use. `lockPin` locks
+only the pinning.
+
+## Customization
+
+Pinned cells take their background from `--tk-row-bg`, which follows hover, striping and
+selection — so a selected row stays selected across the frozen edge. In right-to-left text the
+sides swap, because the layout uses logical properties rather than left and right.
+
+## Limitations
+
+- **Pinning needs a horizontal scroll to be visible.** In a table that fits, a pinned column
+  looks like any other.
+- **A pinned column is still in the tab order where it sits**, not where it appears. Pinning is
+  presentation, not structure.
+- **Very wide pinned columns can leave no room to scroll.** The table does not enforce a maximum;
+  that judgement is yours.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnPinning`,
+  `stickyActions`, `rowActionsColumn`, `positionActionsColumn`, `onColumnPinningChange`.
+- [`ColumnDef`](/react-tablekit/api/column-def/) — `pin`, `lockPin`, `static`, `lockPosition`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnPinning`,
+  `resetColumnPinning`, `getEffectiveColumnPinning`, `getLeftHeaderGroups`,
+  `getRightHeaderGroups`.
+- [`Column`](/react-tablekit/api/table-instance/) — `pin`, `getIsPinned`, `getCanPin`.

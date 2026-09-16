@@ -1,0 +1,124 @@
+---
+title: Recipes
+description: Short answers to the questions that come up once a table is real — saved views, row navigation, custom sort orders, bulk actions and more.
+archetype: editorial
+group: Customization
+symbols: [DataTableProps, TableInstance]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+Each of these is a few lines. They are collected here because they are the questions that arrive
+after the table is working, not before.
+
+## A row that navigates instead of selecting
+
+Cancel the default by not calling `next`:
+
+```tsx
+handlers={{ onRowClick: ({ row }) => navigate('/people/' + row.id) }}
+```
+
+The row still gets focus and keyboard activation; only the selection behaviour is replaced. See
+[Handler middleware](/react-tablekit/customization/handlers/).
+
+## A domain sort order
+
+Status columns rarely sort alphabetically. Register a comparator and name it:
+
+```tsx
+const RANK = { critical: 0, high: 1, normal: 2, low: 3 };
+
+<DataTable
+  sortingFns={{ severity: (a, b, id) => RANK[a.getValue(id)] - RANK[b.getValue(id)] }}
+  columns={[col.accessor('severity', { sortingFn: 'severity' })]}
+/>;
+```
+
+## Saved views
+
+A view is a state object. Store it and apply it:
+
+```tsx
+const view = table.getState(); // save
+table.setState(savedView); // restore
+```
+
+For the reader's own layout — visible columns, order, widths, density — use
+[`syncState.storage`](/react-tablekit/persistence/) instead and it happens automatically.
+
+## A bulk action over everything matching
+
+Send the query, not a list of ids — there may be a hundred thousand of them:
+
+```tsx
+renderBulkActions={({ selectionQuery, selectedRows }) => (
+  <button onClick={() => api.archive(selectionQuery)}>
+    Archive {selectedRows.length}
+  </button>
+)}
+```
+
+See [Row selection](/react-tablekit/row-selection/).
+
+## An empty state that knows why it is empty
+
+```tsx
+renderEmptyState={({ table }) =>
+  table.getActiveFilterCount() > 0 ? (
+    <>
+      <p>No people match these filters.</p>
+      <button onClick={() => table.clearAllFilters()}>Clear filters</button>
+    </>
+  ) : (
+    <p>No people yet.</p>
+  )
+}
+```
+
+## A refresh button
+
+```tsx
+renderToolbarEnd={() => <button onClick={() => table.refresh()}>Refresh</button>}
+```
+
+`refresh()` refetches with the current query; `invalidate()` also drops cached facets and lazily
+loaded children.
+
+## A column that exports differently from how it displays
+
+```tsx
+col.accessor('total', {
+  format: (v) => money.format(v),
+  exportValue: (v) => v,
+});
+```
+
+The reader sees `$1,240`, the spreadsheet gets `1240`. See [Export](/react-tablekit/export/).
+
+## Two tables sharing one filter
+
+Lift the state. Both tables are controlled from the same value:
+
+```tsx
+const [globalFilter, setGlobalFilter] = useState('');
+
+<DataTable state={{ globalFilter }} onGlobalFilterChange={setGlobalFilter} />
+<DataTable state={{ globalFilter }} onGlobalFilterChange={setGlobalFilter} />
+```
+
+## Prefetching a detail panel on hover
+
+```tsx
+slotProps={{ row: ({ row }) => ({ onMouseEnter: () => prefetch(row.id) }) }}
+```
+
+Handlers chain, so this does not replace the table's own mouse handling.
+
+## Related
+
+- [Handler middleware](/react-tablekit/customization/handlers/) — the cancellation model.
+- [Slots](/react-tablekit/customization/slots/) — `slotProps`, `classNames` and `styles`.
+- [Persistence](/react-tablekit/persistence/) — saving state properly.
+- [Best practices](/react-tablekit/guides/best-practices/) — the longer-form advice.

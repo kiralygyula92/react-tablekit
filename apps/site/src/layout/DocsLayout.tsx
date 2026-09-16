@@ -1,0 +1,175 @@
+import { MDXProvider } from '@mdx-js/react';
+import { Suspense } from 'react';
+import { NavLink, Outlet, useLocation } from 'react-router';
+import { Badge } from '../components/Badge';
+import { mdxComponents } from '../components/mdx';
+import { componentFor, pageByPath } from '../content/pages';
+import { PageMeta } from '../head/PageMeta';
+import { isGroup, nav, orderedPages, pluginConfig, titleFor, type NavNode } from '../nav/nav';
+import { SiteFooter } from './SiteFooter';
+import { SiteHeader } from './SiteHeader';
+
+const REPO_EDIT_BASE = `${pluginConfig.repo}/edit/main/apps/site/content`;
+
+function SidebarNode({ node }: { node: NavNode }) {
+  if (isGroup(node)) {
+    return (
+      <li className="site-sidebar__group">
+        <p className="site-sidebar__subheader">{node.subheader}</p>
+        <ul>
+          {(node.children ?? []).map((child) => (
+            <SidebarNode key={child.pathname} node={child} />
+          ))}
+        </ul>
+      </li>
+    );
+  }
+  return (
+    <li>
+      <NavLink to={node.pathname} end className="site-sidebar__link">
+        {titleFor(node.pathname)}
+        <Badge node={node} />
+      </NavLink>
+      {node.children && node.children.length > 0 && (
+        <ul>
+          {node.children.map((child) => (
+            <SidebarNode key={child.pathname} node={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+}
+
+/** Prev/next follow sidebar order, which is the order a reader is expected to meet the pages. */
+function PageNav({ pathname }: { pathname: string }) {
+  const index = orderedPages.findIndex((p) => p.pathname === pathname);
+  const previous = index > 0 ? orderedPages[index - 1] : undefined;
+  const next = index >= 0 && index < orderedPages.length - 1 ? orderedPages[index + 1] : undefined;
+  return (
+    <nav aria-label="Pages" className="page-nav">
+      {previous ? (
+        <NavLink to={previous.pathname}>← {titleFor(previous.pathname)}</NavLink>
+      ) : (
+        <span />
+      )}
+      {next && <NavLink to={next.pathname}>{titleFor(next.pathname)} →</NavLink>}
+    </nav>
+  );
+}
+
+/** Edit-this-page and per-page feedback (PPDS §7.3). Layout, never content. */
+function FooterActions({ pathname, sourceFile }: { pathname: string; sourceFile: string }) {
+  const feedback = `${pluginConfig.links?.issues ?? pluginConfig.repo}/new?title=${encodeURIComponent(
+    `Docs feedback: ${pathname}`,
+  )}&body=${encodeURIComponent(`Page: ${pathname}\n\nWhat was unclear or missing?`)}`;
+  return (
+    <div className="page-actions">
+      <a href={`${REPO_EDIT_BASE}/${sourceFile}`} target="_blank" rel="noreferrer">
+        Edit this page
+      </a>
+      <a href={feedback} target="_blank" rel="noreferrer">
+        Was this page helpful?
+      </a>
+    </div>
+  );
+}
+
+export function DocsPage({ pathname }: { pathname: string }) {
+  const page = pageByPath.get(pathname);
+  const Component = componentFor(pathname);
+  const location = useLocation();
+  if (!page || !Component) return null;
+
+  const { frontmatter: fm, headings: toc } = page;
+  const navNode = orderedPages.find((p) => p.pathname === pathname);
+
+  return (
+    <>
+      <PageMeta title={fm.title} description={fm.description} pathname={pathname} />
+      <div className="docs-body">
+        <nav aria-label="Documentation" className="site-sidebar">
+          <ul>
+            {nav.map((section) => (
+              <SidebarNode key={section.pathname} node={section} />
+            ))}
+          </ul>
+        </nav>
+
+        <main id="main" className="docs-main" tabIndex={-1} key={location.pathname}>
+          <article className="site-prose">
+            <header className="page-header">
+              <h1>
+                {fm.title}
+                {navNode && <Badge node={navNode} />}
+              </h1>
+              <p className="site-lead">{fm.description}</p>
+              {fm.links && (
+                <p className="resource-chips">
+                  {fm.links.issues && (
+                    <a href={fm.links.issues} target="_blank" rel="noreferrer">
+                      Report an issue
+                    </a>
+                  )}
+                  {fm.links.source && (
+                    <a
+                      href={`${pluginConfig.repo}/tree/main/${fm.links.source}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Source
+                    </a>
+                  )}
+                  {fm.links.spec && (
+                    <a href={fm.links.spec} target="_blank" rel="noreferrer">
+                      Standard
+                    </a>
+                  )}
+                </p>
+              )}
+            </header>
+            <MDXProvider components={mdxComponents}>
+              <Suspense fallback={<p className="site-muted">Loading…</p>}>
+                {/* eslint-disable-next-line react-hooks/static-components --
+                    a lookup, not a creation: every lazy component is built once at module scope, so
+                    its identity is stable and its state survives re-renders. */}
+                <Component />
+              </Suspense>
+            </MDXProvider>
+            <FooterActions pathname={pathname} sourceFile={page.file} />
+            <PageNav pathname={pathname} />
+          </article>
+        </main>
+
+        <aside className="site-toc" aria-label="On this page">
+          {toc.length > 0 && (
+            <>
+              <p className="site-toc__title">On this page</p>
+              <ul>
+                {toc.map((entry) => (
+                  <li key={entry.id} data-level={entry.level}>
+                    <a href={`#${entry.id}`}>{entry.text}</a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </aside>
+      </div>
+    </>
+  );
+}
+
+/** The chrome every documentation page shares; the page itself renders into the outlet. */
+export function DocsLayout() {
+  return (
+    <div className="site">
+      <a className="site-skip-link" href="#main">
+        Skip to content
+      </a>
+      <SiteHeader surface="docs" />
+      <Outlet />
+      <SiteFooter />
+    </div>
+  );
+}

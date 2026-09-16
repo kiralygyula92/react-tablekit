@@ -1,0 +1,85 @@
+---
+title: Persistence
+description: Put table state in the URL, in storage, or in both — so a link reproduces a view and a reload does not lose one.
+archetype: capability
+capabilityId: persistence
+group: Automation
+symbols: [DataTableProps, useSyncState, useRouterSync]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/react/hooks/useSyncState.ts
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/persistence/demo-basics" label="URL and storage sync" />
+
+`syncState` writes chosen state slices somewhere they survive. Two destinations, and the choice
+between them is about who the state belongs to:
+
+```tsx
+<DataTable
+  syncState={{
+    url: ['pagination', 'sorting', 'globalFilter', 'columnFilters'],
+    storage: { key: 'people-table', slices: ['columnVisibility', 'columnOrder', 'density'] },
+  }}
+/>
+```
+
+The **URL** is for what a reader would send to a colleague: the search, the filters, the sort, the
+page. Paste the link and you get the same view.
+
+**Storage** is for what belongs to the reader alone: which columns they keep, how they ordered
+them, how dense they like their rows. Nobody wants those in a shared link.
+
+### Reading state from a link
+
+The table reads the URL on mount, so a link with `?tk.q=ava&tk.sort=age.desc` opens already
+searched and sorted. The prefix keeps the parameters out of the way of the rest of your query
+string.
+
+### Storage that outlives a schema change
+
+Stored layouts fail badly when the columns change under them. A `version` and a `migrate`
+function turn that into a handled case:
+
+```tsx
+storage: {
+  key: 'people-table',
+  version: 2,
+  migrate: (old, version) => (version < 2 ? { ...old, columnOrder: undefined } : old),
+}
+```
+
+Without a migration, a stored payload from an older version is discarded rather than applied —
+the table would rather start fresh than render a layout that no longer exists.
+
+### Working with your router
+
+`useRouterSync` connects the URL sync to a router's own history — React Router, Next.js — so a
+filter change is a navigation your application knows about rather than a `history.replaceState`
+behind its back. See [React Router](/react-tablekit/integrations/react-router/).
+
+## Customization
+
+`useSyncState` is exported for state that is not the table's: a page's own tab, a sidebar's
+collapsed flag, kept in the same place with the same encoding. `syncState.storage.storage`
+accepts any `Storage`-shaped object, which is how you point it at `sessionStorage` or a memory
+stub in tests.
+
+## Limitations
+
+- **URLs have a practical length limit.** A multi-select with fifty values will produce an ugly
+  link; keep large filter sets in storage or on the server.
+- **Storage is per browser, not per user.** A reader who switches machines starts over; persist
+  server-side if the layout must follow the account.
+- **A stored page index can point at nothing.** The table clamps it to the last available page
+  rather than showing an empty body.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `syncState`, `initialState`,
+  `state`, `onStateChange`.
+- [Hooks](/react-tablekit/api/hooks/) — `useSyncState`, `useRouterSync`, `useTableState`.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `getState`, `setState`, `reset`.

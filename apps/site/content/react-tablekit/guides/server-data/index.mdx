@@ -1,0 +1,108 @@
+---
+title: Server data
+description: Wiring a table to an API end to end — the query, the adapter, the states, and the decisions that are easy to get wrong.
+archetype: editorial
+group: Guides
+symbols: [DataTableProps, TableQuery, createRestDataSource, useDataSource]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+---
+
+This is the long version of [Client and server](/react-tablekit/client-and-server/): what to do,
+in order, when the data lives behind an API.
+
+## Decide what the server owns
+
+`dataMode="server"` moves everything — paging, sorting, filtering, search, grouping, faceting.
+That is the right default for a list that can grow, and the decision worth making explicitly is
+which parts you take back:
+
+```tsx
+<DataTable dataMode="server" sortingMode="client" acknowledgePageLocalSorting />
+```
+
+Client sorting under server paging sorts _the page_. Sometimes that is exactly right — a
+ten-row page the reader wants ordered differently. Usually it is a bug. The acknowledgement flag
+exists so the choice is visible in the code rather than discovered in production.
+
+## Write the adapter once
+
+Your API's parameter names are its own. Translate them in one place and nothing else has to know:
+
+```tsx
+const people = createRestDataSource<Person, PeopleResponse>({
+  url: '/api/people',
+  method: 'GET',
+  mapQuery: (q) => ({
+    page: q.pagination.pageIndex,
+    size: q.pagination.pageSize,
+    sort: q.sorting.map((s) => s.id + ',' + (s.desc ? 'desc' : 'asc')),
+    q: q.globalFilter,
+    ...Object.fromEntries(q.columnFilters.map((f) => [f.id, f.value])),
+  }),
+  mapResult: (body) => ({ rows: body.content, rowCount: body.totalElements }),
+});
+```
+
+Where a column id and a server field genuinely differ, `sortServerKey` and `filterServerKey` keep
+the mapping next to the column instead of in a lookup table.
+
+## Let the server win
+
+Have the response say what it actually applied, and adopt that. A server that clamps page 900 to
+page 12 should leave the table on page 12, not on a page that does not exist:
+
+```tsx
+mapResult: (body) => ({
+  rows: body.content,
+  rowCount: body.totalElements,
+  query: { pagination: { pageIndex: body.page, pageSize: body.size } },
+}),
+```
+
+## Fetch fewer times
+
+- `searchMinLength` and `searchDebounceMs` turn typing into one request.
+- `filterApplyMode: 'manual'` lets a reader set three filters before anything is sent.
+- `dedupeMs` collapses duplicates when several things change at once.
+- `keepPreviousData` keeps the previous page visible during the next fetch, which removes the
+  layout jump as well as the spinner.
+
+## Handle all four states
+
+A server table is in one of four states, and each needs an answer: first load, refetch, empty,
+error. `loadingDisplay` covers the first two, `renderEmptyState` the third — distinguishing "no
+data" from "no matches" — and `error` with `renderErrorState` the fourth. See [Loading and empty
+states](/react-tablekit/loading-and-empty-states/).
+
+## Facets and exports
+
+Options and counts cannot be computed from one page. Implement `fetchFacets` — see
+[Faceting](/react-tablekit/faceting/) — and decide how "export all matching" should work: the
+table can walk your data source in chunks, or `onExport(query, scope)` can hand the job to a
+backend endpoint. Past a few tens of thousands of rows, the backend endpoint is the right answer.
+
+## Selection across pages
+
+"Select all 235 matching" is a query with exclusions, not a list of ids.
+`table.getSelectionQuery()` returns it; your API has to accept it. If it can only take ids, keep
+`selectAllMode` on the page and say so in the UI.
+
+## Checklist
+
+- [ ] `getRowId` returns a stable id — selection and expansion depend on it.
+- [ ] Sorting and filtering happen where you think they do.
+- [ ] The response's real page is adopted.
+- [ ] Requests are debounced and deduplicated.
+- [ ] Empty distinguishes "no data" from "no matches".
+- [ ] Errors are visible and the table stays usable.
+- [ ] Facets come from the server if filters have option lists.
+- [ ] Export has a plan for more rows than the browser should hold.
+
+## Related
+
+- [Client and server](/react-tablekit/client-and-server/)
+- [React Query](/react-tablekit/integrations/react-query/)
+- [Performance](/react-tablekit/guides/performance/)
+- [Reading history](/react-tablekit/demos/reading-history/) — a working adapter.

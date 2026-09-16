@@ -1,0 +1,38 @@
+---
+title: 'Requirements and compatibility'
+description: 'Supported React versions, browsers, bundlers and rendering environments.'
+archetype: getting-started
+plan: free
+---
+
+## React
+
+| Requirement | Version                       |
+| ----------- | ----------------------------- |
+| `react`     | >= 18.2 (18 and 19 supported) |
+| `react-dom` | >= 18.2                       |
+
+Both are peer dependencies. The package itself has **zero runtime dependencies**.
+
+## Browsers
+
+The last two versions of evergreen browsers, and Safari 15.4 or newer. The baseline features are `@layer` and `inset`; `:has()` is used only as an enhancement.
+
+## Bundlers and frameworks
+
+The package ships ESM and CJS with type definitions for both, and declares `sideEffects` so bundlers can tree-shake it. The React entry carries a `"use client"` banner, so it works in the Next.js App Router without extra wrapping. See [Next.js](/react-tablekit/integrations/next-js/).
+
+## Server rendering
+
+The table renders on the server: rows, `role="grid"` and the cards layout are all present in the server HTML. Because there is no viewport to measure, responsive values need a declared breakpoint — see `ssrBreakpoint` in [Responsive](/react-tablekit/responsive/).
+
+## Bundle size
+
+| Entry                                        | min+gzip |
+| -------------------------------------------- | -------- |
+| `import { DataTable } from 'react-tablekit'` | 56.5 kB  |
+| Full import                                  | 60.1 kB  |
+| `react-tablekit/core`                        | 20.8 kB  |
+| `react-tablekit/styles.css`                  | 6.1 kB   |
+
+`DataTable` is batteries-included, so the first two numbers are close together. If you need a small bundle, use [`react-tablekit/core`](/react-tablekit/headless/) with your own markup.

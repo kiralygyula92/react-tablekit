@@ -1,0 +1,115 @@
+---
+title: Client and server
+description: The same table, the same props — with the work done in the browser, on your API, or split feature by feature.
+archetype: capability
+capabilityId: client-and-server
+group: Core features
+symbols: [DataTableProps, TableQuery, TableDataSource, useDataSource]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/core/engine
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/client-and-server/demo-basics" label="Client and server" />
+
+A table in client mode holds all the rows and computes everything itself. A table in server mode
+holds one page and asks the API. Both are the same component with the same props; what changes is
+who does the work.
+
+```tsx
+<DataTable data={people} columns={columns} getRowId={(p) => p.id} />
+
+<DataTable dataMode="server" dataSource={dataSource} columns={columns} getRowId={(p) => p.id} />
+```
+
+`dataMode="server"` switches pagination, sorting, filtering, search, grouping and faceting to the
+server at once. Expansion stays local, because sub-rows can still come from the data you already
+have.
+
+### The query
+
+Whichever mode you are in, the table maintains one normalized query: page, sort list, search term,
+column filters and grouping. That object is what a server mode table sends, and you can read it
+at any time with `table.getQuery()`.
+
+`onQueryChange(query, change)` fires once, after debouncing, whenever something that affects
+server data changes — and it tells you _why_ it changed. It is the single place to hang a fetch,
+instead of six callbacks racing each other.
+
+```tsx
+<DataTable
+  dataMode="server"
+  onQueryChange={(query) => void refetch(query)}
+  data={page.items}
+  rowCount={page.total}
+/>
+```
+
+The per-slice callbacks — `onSortingChange`, `onPaginationChange` and the rest — still fire
+immediately, for controlled state.
+
+### A data source instead of an effect
+
+`dataSource` packages the fetch, so the table drives the request itself and gets loading, error,
+refetch and facet handling for free:
+
+```tsx
+const dataSource = createRestDataSource<Person>({
+  url: '/api/people',
+  toParams: (query) => ({
+    page: query.pagination.pageIndex,
+    size: query.pagination.pageSize,
+    sort: query.sorting.map((s) => s.id + ',' + (s.desc ? 'desc' : 'asc')),
+    q: query.globalFilter,
+  }),
+  fromResponse: (body) => ({ rows: body.content, total: body.totalElements }),
+});
+```
+
+`keepPreviousData` keeps the old page visible while the next one loads, `dedupeMs` collapses
+duplicate requests, and `refetchInterval` and `refetchOnWindowFocus` cover live data.
+
+### Mixing the two
+
+<Demo id="react-tablekit/features/client-and-server/demo-hybrid" label="Hybrid mode" />
+
+Per-feature modes override `dataMode`, so you can page and filter on the server while sorting the
+loaded page in the browser:
+
+```tsx
+<DataTable dataMode="server" sortingMode="client" acknowledgePageLocalSorting />
+```
+
+That combination sorts _the current page only_, which is sometimes exactly what you want and
+sometimes a bug. The table warns about it in development until you acknowledge it in the props —
+which is also the documentation of the decision for whoever reads the code next.
+
+## Customization
+
+`createLocalDataSource` gives an in-memory array the same interface as a REST source, which makes
+tests and prototypes behave like production. `useDataSource` exposes the same machinery outside a
+table, and [`useDataTable`](/react-tablekit/headless/) gives you the whole engine with no markup.
+
+## Limitations
+
+- **Server grouping with client pagination is not supported** and throws in development: the
+  table cannot slice group rows it did not build.
+- **Client faceting under server pagination describes the loaded page**, not the result set. Use
+  `fetchFacets` — see [Faceting](/react-tablekit/faceting/).
+- **A server that does not return a total** cannot produce page numbers. Pass `rowCount: -1` and
+  the table shows `of many` and switches to cursor-style navigation.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `dataMode`, `dataSource`,
+  `paginationMode`, `sortingMode`, `filterMode`, `searchMode`, `groupingMode`, `facetingMode`,
+  the `manual*` flags, `onQueryChange`, `rowCount`, `pageCount`, `keepPreviousData`, `dedupeMs`,
+  `fetchOnMount`, `refetchInterval`, `refetchOnWindowFocus`, `acknowledgePageLocalSorting`,
+  `acknowledgePageLocalFiltering`.
+- [`TableState`](/react-tablekit/api/table-state/) — `TableQuery` and every state slice.
+- [`TableInstance`](/react-tablekit/api/table-instance/) — `getQuery`, `flushQuery`, `refresh`,
+  `invalidate`, `getDataStatus`.
+- [Utilities](/react-tablekit/api/utilities/) — `createRestDataSource`, `createLocalDataSource`.

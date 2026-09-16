@@ -1,0 +1,46 @@
+---
+title: Overview
+description: A headless-core React data table where every feature works on the client and on the server.
+archetype: overview
+plan: free
+---
+
+## Introduction
+
+react-tablekit renders tabular data in React. The engine is framework-agnostic and renders
+nothing on its own; the components on top of it are a default you can replace part by part.
+
+Its organising idea is that **where the work happens should not change your code**. Pagination,
+global search, column filters, sorting, grouping, expansion, selection and faceting each run
+either in the browser or on your server, chosen per feature. Starting client-side and moving to
+the server later is a prop, not a rewrite.
+
+What it is not: a spreadsheet, a chart library, or a data-fetching library. It has no opinion
+about how rows reach it — `fetch`, React Query, a router loader or an array in memory all work.
+
+## Why react-tablekit
+
+- **Client and server are the same code.** Each feature picks its side; the table handles the
+  debouncing, aborting, race conditions and out-of-range pages that make server mode tedious.
+- **Nothing is sealed.** Every part is a slot, every interaction is middleware you can wrap, and
+  every visual value is a CSS variable.
+- **Headless underneath.** `useDataTable` is the whole engine with no markup; `createTable` runs
+  without React at all.
+- **Accessible by default.** Correct table semantics, the right ARIA role for the features you
+  enable, the data-grid keyboard pattern and polite live announcements.
+- **Zero runtime dependencies.** Only React as a peer. ESM and CJS with types for both, tree
+  shakeable and server-render safe.
+
+## Start now
+
+- [Installation](/react-tablekit/getting-started/installation/) — install the package and the stylesheet.
+- [Quickstart](/react-tablekit/getting-started/quickstart/) — a complete first table, nothing elided.
+- [All features](/react-tablekit/all-features/) — every capability, each with a live demo.
+- [Client and server](/react-tablekit/client-and-server/) — the defining feature, in one page.
+- [Customization](/react-tablekit/customization/) — the nine levels, from a token to the core.
+- [API reference](/react-tablekit/api/) — generated from the source, so it cannot drift.
+
+## Licence
+
+MIT, with no paid tier and no feature gating. Everything documented on this site is in the
+package you install.

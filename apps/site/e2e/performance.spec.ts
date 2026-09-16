@@ -1,4 +1,5 @@
 import { expect, test } from './fixtures';
+import { demoUrl } from './demos';
 
 /**
  * The browser-side performance budget of 09 §4: scrolling 100 000 virtualized rows for ~2s must
@@ -6,7 +7,7 @@ import { expect, test } from './fixtures';
  * what the budget is really about (a frozen main thread), rather than a trace file.
  */
 test('scrolling 100k virtualized rows has no long tasks over 50ms', async ({ page }) => {
-  await page.goto('/examples/virtualization-100k');
+  await page.goto(demoUrl('features/virtualization/demo-basics'));
   const container = page.locator('.tk-container');
   await expect(container.locator('tbody tr[data-row-id]').first()).toBeVisible();
 

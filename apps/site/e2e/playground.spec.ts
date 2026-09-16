@@ -8,7 +8,7 @@ const schema = JSON.parse(
 ) as { controls: unknown[] };
 
 test('every controllable prop has a control', async ({ page }) => {
-  await page.goto('/playground');
+  await page.goto('/react-tablekit/demos/playground/');
   const panel = page.getByRole('complementary', { name: 'Options' });
   await expect(panel.locator('.prop-control')).toHaveCount(schema.controls.length);
   // The generated count is the real contract; guard against it collapsing.
@@ -18,7 +18,7 @@ test('every controllable prop has a control', async ({ page }) => {
 test('the rows-per-page dropdown can be switched off, and the link keeps it off', async ({
   page,
 }) => {
-  await page.goto('/playground');
+  await page.goto('/react-tablekit/demos/playground/');
   await expect(page.getByLabel('Rows per page:')).toBeVisible();
 
   const panel = page.getByRole('complementary', { name: 'Options' });
@@ -46,7 +46,7 @@ test('the rows-per-page dropdown can be switched off, and the link keeps it off'
 });
 
 test('resetting a prop removes it from the code', async ({ page }) => {
-  await page.goto('/playground');
+  await page.goto('/react-tablekit/demos/playground/');
   const panel = page.getByRole('complementary', { name: 'Options' });
   await panel.getByPlaceholder(/Filter props/).fill('enableRowSelection');
   await panel.getByLabel('enableRowSelection', { exact: true }).selectOption('true');
@@ -58,7 +58,7 @@ test('resetting a prop removes it from the code', async ({ page }) => {
 });
 
 test('the playground with every group open passes axe', async ({ page }) => {
-  await page.goto('/playground');
+  await page.goto('/react-tablekit/demos/playground/');
   await page.getByPlaceholder(/Filter props/).fill('pagination');
   await expectNoA11yViolations(page);
 });
