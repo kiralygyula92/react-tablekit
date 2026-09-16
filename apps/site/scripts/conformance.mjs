@@ -28,7 +28,7 @@ const symbols = json(path.join(generated, 'api', 'symbols.json'));
 const nav = json(path.join(contentRoot, 'react-tablekit', 'nav.json'));
 const titles = json(path.join(contentRoot, 'react-tablekit', 'titles.json'));
 const config = json(path.join(contentRoot, 'react-tablekit', 'plugin.config.json'));
-const vercel = json(path.join(repoRoot, 'vercel.json'));
+const vercel = json(path.join(siteRoot, 'vercel.json'));
 
 const byPath = new Map(pages.map((p) => [p.pathname, p]));
 const bodyOf = (page) =>

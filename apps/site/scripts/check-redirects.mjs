@@ -24,7 +24,7 @@ const arg = (name, fallback) => {
 const base = arg('base', 'http://localhost:4183').replace(/\/$/, '');
 const out = arg('out', 'docs/ppds/qa/redirect-check.csv');
 
-const vercel = JSON.parse(readFileSync(path.join(repoRoot, 'vercel.json'), 'utf8'));
+const vercel = JSON.parse(readFileSync(path.join(siteRoot, 'vercel.json'), 'utf8'));
 
 /** A demo frame is served by the SPA fallback, so its URL is checked, not its file. */
 const isEmbed = (url) => url.startsWith('/embed/');

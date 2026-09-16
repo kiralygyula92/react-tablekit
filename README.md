@@ -51,17 +51,23 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
 
 ## Deploying the site
 
-The site is a static build plus one edge function, configured entirely by `vercel.json` — build
-command, output directory, trailing-slash canonicalisation, cache headers and 132 permanent
-redirects generated from `apps/site/content/react-tablekit/migration/url-map.csv`.
+The site is a static build plus one edge function (`apps/site/api/og.tsx`, the social preview
+images), configured entirely by `apps/site/vercel.json` — build command, output directory,
+trailing-slash canonicalisation, cache headers and 133 permanent redirects generated from
+`apps/site/content/react-tablekit/migration/url-map.csv`.
+
+**The Vercel project's Root Directory must be `apps/site`.** Vercel reads `vercel.json` from that
+directory and resolves every path in it against it; the function directory is discovered the
+same way. The build command is then simply:
 
 ```sh
-pnpm --filter react-tablekit build && pnpm docs:json && pnpm --filter site build
+pnpm run build
 ```
 
-That is the command Vercel runs. It produces `apps/site/dist`: an HTML document per route with
-its metadata in `<head>`, the Markdown twin of every page, `llms.txt`, `sitemap.xml`,
-`robots.txt` and `changelog.xml`.
+run in `apps/site`. pnpm finds the workspace root two levels up and installs all of it; the site
+aliases the library to its source and generates its own reference data, so nothing has to run
+first. It produces `apps/site/dist`: an HTML document per route with its metadata in `<head>`,
+the Markdown twin of every page, `llms.txt`, `sitemap.xml`, `robots.txt` and `changelog.xml`.
 
 **One setting.** `VITE_SITE_ORIGIN` is the origin canonical URLs, social images and the machine
 surface are built from. On Vercel it defaults to the project's own production domain, so a first

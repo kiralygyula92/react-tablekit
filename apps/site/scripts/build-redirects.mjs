@@ -2,6 +2,11 @@
  * Turns `content/react-tablekit/migration/url-map.csv` into the host's redirect table
  * (`vercel.json`), so the one place a moved URL is recorded is the one place it is served from.
  *
+ * The file is written beside this package, not at the repository root: the Vercel project's
+ * Root Directory is `apps/site`, and Vercel reads its configuration from — and resolves every
+ * path in it against — that directory. A root-level config with `outputDirectory:
+ * apps/site/dist` was looked for at `apps/site/apps/site/dist`.
+ *
  * PPDS P12: a URL is never deleted. Everything the legacy site answered still resolves, by 301
  * where it moved.
  */
@@ -10,7 +15,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const siteRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const repoRoot = path.join(siteRoot, '..', '..');
 const mapFile = path.join(siteRoot, 'content', 'react-tablekit', 'migration', 'url-map.csv');
 const indexFile = path.join(siteRoot, 'src', 'generated', 'content', 'index.json');
 
@@ -53,11 +57,11 @@ if (errors.length > 0) {
 
 const vercel = {
   $schema: 'https://openapi.vercel.sh/vercel.json',
-  // One step. The site aliases the library to its source and generates its own reference
-  // data, so nothing has to run before this and no order can be got wrong. `run` is explicit
-  // because a bare `pnpm --filter x <script>` was read as `exec` on the deploy host.
-  buildCommand: 'pnpm --filter site run build',
-  outputDirectory: 'apps/site/dist',
+  // One step, run in this directory. The site aliases the library to its source and generates
+  // its own reference data, so nothing has to run before this and no order can be got wrong.
+  buildCommand: 'pnpm run build',
+  outputDirectory: 'dist',
+  // pnpm finds the workspace root two levels up and installs all of it from here.
   installCommand: 'pnpm install --frozen-lockfile',
   framework: null,
   // Every canonical URL ends in a slash, and every page is a directory index, so this is the
@@ -80,5 +84,5 @@ const vercel = {
   ],
 };
 
-writeFileSync(path.join(repoRoot, 'vercel.json'), `${JSON.stringify(vercel, null, 2)}\n`);
+writeFileSync(path.join(siteRoot, 'vercel.json'), `${JSON.stringify(vercel, null, 2)}\n`);
 console.log(`[redirects] vercel.json written with ${redirects.length} permanent redirects`);
