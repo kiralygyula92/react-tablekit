@@ -619,6 +619,25 @@ export interface DataTableViewProps<TData> {
   maxWidth?: ResponsiveValue<number | string>;
   /** @default 'outer' + row dividers */
   bordered?: 'outer' | 'rows' | 'all' | 'none';
+  /**
+   * The surface the table sits on.
+   *
+   * `'card'` wraps the table and its pagination in one bordered, filled panel. `'plain'` removes
+   * that panel: the table stands directly on the page and the pagination becomes a separate block
+   * beneath it, which is what you want when the page already provides the surface.
+   *
+   * @default 'card'
+   * @example
+   * <DataTable surface="plain" data={rows} columns={columns} />
+   */
+  surface?: 'card' | 'plain';
+  /**
+   * Round the table's outer corners. The radius itself is the `--tk-radius` token, so this is a
+   * switch rather than a measurement.
+   *
+   * @default true on a card, false on a plain surface
+   */
+  rounded?: boolean;
   /** First data cell rendered as `<th scope="row">`. @default true */
   firstColumnAsRowHeader?: boolean;
   /** `white-space: nowrap` in cells. @default true */

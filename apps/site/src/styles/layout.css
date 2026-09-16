@@ -294,20 +294,26 @@
 .site-prose li {
   line-height: 1.7;
 }
-.site-prose table {
+/*
+ * Direct children only. A Markdown table is written in the page and lands here; a table inside a
+ * demo belongs to the library and is styled by the library. Unlayered site CSS beats the
+ * library's `@layer tablekit`, so an unscoped `.site-prose table` rule silently restyles every
+ * demo on the site — which is exactly what it did: cell borders, padding and a 20px top margin
+ * that looked like a gap above the header.
+ */
+.site-prose > table {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
   font-size: 0.9375rem;
 }
-.site-prose th,
-.site-prose td {
+.site-prose > table :is(th, td) {
   padding: 8px 12px;
   border: 1px solid var(--site-border);
   text-align: start;
   vertical-align: top;
 }
-.site-prose th {
+.site-prose > table th {
   background: var(--site-bg-muted);
 }
 .site-prose :not(pre) > code {

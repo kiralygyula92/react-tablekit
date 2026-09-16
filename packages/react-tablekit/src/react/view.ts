@@ -33,6 +33,7 @@ type AnyView = DataTableViewProps<unknown>;
 export const VIEW_DEFAULTS: AnyView = {
   layout: 'table',
   tableLayout: 'auto',
+  surface: 'card',
   firstColumnAsRowHeader: true,
   noWrap: true,
   loadingDisplay: 'skeleton',

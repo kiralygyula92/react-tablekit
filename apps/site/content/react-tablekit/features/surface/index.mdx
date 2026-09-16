@@ -1,0 +1,76 @@
+---
+title: Surface
+description: The panel the table sits on — a bordered card with its pagination attached, or nothing at all, with corners you choose.
+archetype: capability
+capabilityId: surface
+group: Display & layout
+symbols: [DataTableProps]
+plan: free
+links:
+  issues: https://github.com/kiralygyula92/react-tablekit/issues
+  source: packages/react-tablekit/src/styles/theme.css
+---
+
+## Basics
+
+<Demo id="react-tablekit/features/surface/demo-basics" label="Surface" />
+
+By default the table and its pagination share one panel: a border, a background and rounded
+corners, with the seam between them removed so they read as a single card.
+
+`surface="plain"` takes the panel away. The table stands on whatever the page already provides,
+and the pagination becomes a separate block beneath it rather than the bottom of a card.
+
+```tsx
+<DataTable surface="plain" data={rows} columns={columns} />
+```
+
+That is the one to reach for when the table is already inside a panel of your own — a dialog, a
+dashboard tile, a section with its own border — where a second frame around it is one frame too
+many.
+
+### Corners
+
+`rounded` switches the outer corners. A card is rounded unless you say otherwise; a plain surface
+is square unless you ask, because rounding something with no border and no fill only shows where a
+cell has a background of its own.
+
+```tsx
+<DataTable surface="plain" rounded data={rows} columns={columns} />
+```
+
+The radius itself is the `--tk-radius` [token](/react-tablekit/customization/tokens/), so
+`rounded` is a switch rather than a measurement: set the token once and every table that opts in
+follows the same curve.
+
+### Borders inside the table
+
+`bordered` is a different question — it draws the lines _between_ cells rather than around the
+table. `'outer'` keeps the frame and the row dividers, `'rows'` keeps only the dividers, `'all'`
+draws a full grid, and `'none'` leaves the table unruled.
+
+## Customization
+
+Everything here is a token, so a design system can set the surface once for every table rather
+than passing props: `--tk-container-border`, `--tk-container-shadow`, `--tk-color-surface` and
+`--tk-radius` are what `card` is made of.
+
+The container is a [slot](/react-tablekit/customization/slots/) as well, so a table that needs to
+sit inside something more particular than a border can be given one.
+
+## Limitations
+
+- **A plain surface still scrolls.** The container element remains, because sticky headers and
+  pinned columns are positioned against it; only its border, fill and shadow are removed.
+- **`rounded` rounds the outside, not the cells.** Individual cells have no radius; that is a
+  cell renderer's decision.
+- **The card's seam is only removed for pagination.** A table with `paginationType="none"` and a
+  footer of your own beneath it will show the container's bottom border between them.
+
+## API
+
+- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `surface`, `rounded`, `bordered`,
+  `maxHeight`, `minWidth`, `maxWidth`, `unstyled`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/) — `--tk-radius`, `--tk-container-border`,
+  `--tk-container-shadow`, `--tk-color-surface`.
+- [Slots](/react-tablekit/api/slots/) — `Container`, `Pagination`.

@@ -28,9 +28,20 @@ export function Root<TData>({ table, children, ...viewProps }: RootProps<TData>)
   const status = table.getDataStatus();
   const dataTheme = viewProps['data-theme'] ?? (cssVars ? theme.name : undefined);
 
+  // A card is rounded unless told otherwise; a plain surface is square unless asked, because
+  // rounding something with no border or fill only shows up where a cell has a background.
+  const rounded = props.rounded ?? props.surface !== 'plain';
+
   const base = {
     className: cx('tk-root', props.className),
-    style: { ...(cssVars as CSSProperties | undefined), ...props.style },
+    style: {
+      ...(cssVars as CSSProperties | undefined),
+      // The radius is a token, so squaring the corners is one variable rather than a rule per
+      // surface. It has to be set here rather than in the stylesheet: a resolved theme writes its
+      // tokens as inline styles, which no stylesheet rule can outrank.
+      ...(rounded ? undefined : { '--tk-radius': '0px' }),
+      ...props.style,
+    } as CSSProperties,
     'data-theme': dataTheme,
     'data-color-scheme': view.colorScheme,
     'data-density': state.density,
@@ -38,6 +49,8 @@ export function Root<TData>({ table, children, ...viewProps }: RootProps<TData>)
     'data-mobile': view.isMobile || undefined,
     'data-loading': status.loading || status.fetching || undefined,
     'data-unstyled': props.unstyled || undefined,
+    'data-surface': props.surface,
+    'data-rounded': String(rounded),
     'data-hover': props.enableHover === false ? undefined : true,
     'data-striped': props.enableStriped || undefined,
     'data-nowrap': props.noWrap === false ? undefined : true,

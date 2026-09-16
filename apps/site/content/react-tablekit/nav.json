@@ -4,13 +4,27 @@
     "subheader": "Getting started",
     "icon": "rocket",
     "children": [
-      { "pathname": "/react-tablekit/" },
-      { "pathname": "/react-tablekit/getting-started/installation/" },
-      { "pathname": "/react-tablekit/getting-started/quickstart/" },
-      { "pathname": "/react-tablekit/getting-started/requirements/" },
-      { "pathname": "/react-tablekit/getting-started/faq/" },
-      { "pathname": "/react-tablekit/getting-started/support/" },
-      { "pathname": "/react-tablekit/getting-started/versions/" }
+      {
+        "pathname": "/react-tablekit/"
+      },
+      {
+        "pathname": "/react-tablekit/getting-started/installation/"
+      },
+      {
+        "pathname": "/react-tablekit/getting-started/quickstart/"
+      },
+      {
+        "pathname": "/react-tablekit/getting-started/requirements/"
+      },
+      {
+        "pathname": "/react-tablekit/getting-started/faq/"
+      },
+      {
+        "pathname": "/react-tablekit/getting-started/support/"
+      },
+      {
+        "pathname": "/react-tablekit/getting-started/versions/"
+      }
     ]
   },
   {
@@ -18,71 +32,137 @@
     "subheader": "Features",
     "icon": "grid",
     "children": [
-      { "pathname": "/react-tablekit/all-features/" },
+      {
+        "pathname": "/react-tablekit/all-features/"
+      },
       {
         "pathname": "/react-tablekit/core-features-group",
         "subheader": "Core features",
         "children": [
-          { "pathname": "/react-tablekit/columns/" },
-          { "pathname": "/react-tablekit/sorting/" },
-          { "pathname": "/react-tablekit/global-search/" },
-          { "pathname": "/react-tablekit/column-filters/" },
-          { "pathname": "/react-tablekit/faceting/" },
-          { "pathname": "/react-tablekit/pagination/" },
-          { "pathname": "/react-tablekit/row-selection/" },
-          { "pathname": "/react-tablekit/expansion/" },
-          { "pathname": "/react-tablekit/client-and-server/" }
+          {
+            "pathname": "/react-tablekit/columns/"
+          },
+          {
+            "pathname": "/react-tablekit/sorting/"
+          },
+          {
+            "pathname": "/react-tablekit/global-search/"
+          },
+          {
+            "pathname": "/react-tablekit/column-filters/"
+          },
+          {
+            "pathname": "/react-tablekit/faceting/"
+          },
+          {
+            "pathname": "/react-tablekit/pagination/"
+          },
+          {
+            "pathname": "/react-tablekit/row-selection/"
+          },
+          {
+            "pathname": "/react-tablekit/expansion/"
+          },
+          {
+            "pathname": "/react-tablekit/client-and-server/"
+          }
         ]
       },
       {
         "pathname": "/react-tablekit/advanced-features-group",
         "subheader": "Advanced features",
         "children": [
-          { "pathname": "/react-tablekit/tree-data/" },
-          { "pathname": "/react-tablekit/grouping/" }
+          {
+            "pathname": "/react-tablekit/tree-data/"
+          },
+          {
+            "pathname": "/react-tablekit/grouping/"
+          }
         ]
       },
       {
         "pathname": "/react-tablekit/display-layout-group",
         "subheader": "Display & layout",
         "children": [
-          { "pathname": "/react-tablekit/column-pinning/" },
-          { "pathname": "/react-tablekit/column-sizing/" },
-          { "pathname": "/react-tablekit/column-ordering/" },
-          { "pathname": "/react-tablekit/column-visibility/" },
-          { "pathname": "/react-tablekit/column-footers/" },
-          { "pathname": "/react-tablekit/row-pinning/" },
-          { "pathname": "/react-tablekit/row-numbers/" },
-          { "pathname": "/react-tablekit/row-appearance/" },
-          { "pathname": "/react-tablekit/sticky-header-and-footer/" },
-          { "pathname": "/react-tablekit/density/" },
-          { "pathname": "/react-tablekit/virtualization/" },
-          { "pathname": "/react-tablekit/responsive/" }
+          {
+            "pathname": "/react-tablekit/column-pinning/"
+          },
+          {
+            "pathname": "/react-tablekit/column-sizing/"
+          },
+          {
+            "pathname": "/react-tablekit/column-ordering/"
+          },
+          {
+            "pathname": "/react-tablekit/column-visibility/"
+          },
+          {
+            "pathname": "/react-tablekit/column-footers/"
+          },
+          {
+            "pathname": "/react-tablekit/row-pinning/"
+          },
+          {
+            "pathname": "/react-tablekit/row-numbers/"
+          },
+          {
+            "pathname": "/react-tablekit/row-appearance/"
+          },
+          {
+            "pathname": "/react-tablekit/sticky-header-and-footer/"
+          },
+          {
+            "pathname": "/react-tablekit/surface/",
+            "plan": "free"
+          },
+          {
+            "pathname": "/react-tablekit/density/"
+          },
+          {
+            "pathname": "/react-tablekit/virtualization/"
+          },
+          {
+            "pathname": "/react-tablekit/responsive/"
+          }
         ]
       },
       {
         "pathname": "/react-tablekit/interaction-group",
         "subheader": "Interaction",
         "children": [
-          { "pathname": "/react-tablekit/toolbar/" },
-          { "pathname": "/react-tablekit/loading-and-empty-states/" },
-          { "pathname": "/react-tablekit/keyboard-navigation/" }
+          {
+            "pathname": "/react-tablekit/toolbar/"
+          },
+          {
+            "pathname": "/react-tablekit/loading-and-empty-states/"
+          },
+          {
+            "pathname": "/react-tablekit/keyboard-navigation/"
+          }
         ]
       },
       {
         "pathname": "/react-tablekit/automation-group",
         "subheader": "Automation",
         "children": [
-          { "pathname": "/react-tablekit/export/" },
-          { "pathname": "/react-tablekit/persistence/" }
+          {
+            "pathname": "/react-tablekit/export/"
+          },
+          {
+            "pathname": "/react-tablekit/persistence/"
+          }
         ]
       },
       {
         "pathname": "/react-tablekit/developer-tools-group",
         "subheader": "Developer tools",
         "children": [
-          { "pathname": "/react-tablekit/headless/" },
-          { "pathname": "/react-tablekit/localization/" }
+          {
+            "pathname": "/react-tablekit/headless/"
+          },
+          {
+            "pathname": "/react-tablekit/localization/"
+          }
         ]
       }
     ]
@@ -92,13 +172,27 @@
     "subheader": "Demos",
     "icon": "play",
     "children": [
-      { "pathname": "/react-tablekit/demos/" },
-      { "pathname": "/react-tablekit/demos/account-list/" },
-      { "pathname": "/react-tablekit/demos/asset-list/" },
-      { "pathname": "/react-tablekit/demos/reading-history/" },
-      { "pathname": "/react-tablekit/demos/asset-picker/" },
-      { "pathname": "/react-tablekit/demos/playground/" },
-      { "pathname": "/react-tablekit/demos/theme-editor/" }
+      {
+        "pathname": "/react-tablekit/demos/"
+      },
+      {
+        "pathname": "/react-tablekit/demos/account-list/"
+      },
+      {
+        "pathname": "/react-tablekit/demos/asset-list/"
+      },
+      {
+        "pathname": "/react-tablekit/demos/reading-history/"
+      },
+      {
+        "pathname": "/react-tablekit/demos/asset-picker/"
+      },
+      {
+        "pathname": "/react-tablekit/demos/playground/"
+      },
+      {
+        "pathname": "/react-tablekit/demos/theme-editor/"
+      }
     ]
   },
   {
@@ -106,18 +200,42 @@
     "subheader": "Reference",
     "icon": "code",
     "children": [
-      { "pathname": "/react-tablekit/api/" },
-      { "pathname": "/react-tablekit/api/data-table-props/" },
-      { "pathname": "/react-tablekit/api/column-def/" },
-      { "pathname": "/react-tablekit/api/table-instance/" },
-      { "pathname": "/react-tablekit/api/table-state/" },
-      { "pathname": "/react-tablekit/api/hooks/" },
-      { "pathname": "/react-tablekit/api/utilities/" },
-      { "pathname": "/react-tablekit/api/slots/" },
-      { "pathname": "/react-tablekit/api/handlers/" },
-      { "pathname": "/react-tablekit/api/theme-tokens/" },
-      { "pathname": "/react-tablekit/api/localization-keys/" },
-      { "pathname": "/react-tablekit/api/icons/" }
+      {
+        "pathname": "/react-tablekit/api/"
+      },
+      {
+        "pathname": "/react-tablekit/api/data-table-props/"
+      },
+      {
+        "pathname": "/react-tablekit/api/column-def/"
+      },
+      {
+        "pathname": "/react-tablekit/api/table-instance/"
+      },
+      {
+        "pathname": "/react-tablekit/api/table-state/"
+      },
+      {
+        "pathname": "/react-tablekit/api/hooks/"
+      },
+      {
+        "pathname": "/react-tablekit/api/utilities/"
+      },
+      {
+        "pathname": "/react-tablekit/api/slots/"
+      },
+      {
+        "pathname": "/react-tablekit/api/handlers/"
+      },
+      {
+        "pathname": "/react-tablekit/api/theme-tokens/"
+      },
+      {
+        "pathname": "/react-tablekit/api/localization-keys/"
+      },
+      {
+        "pathname": "/react-tablekit/api/icons/"
+      }
     ]
   },
   {
@@ -125,15 +243,33 @@
     "subheader": "Customization",
     "icon": "palette",
     "children": [
-      { "pathname": "/react-tablekit/customization/" },
-      { "pathname": "/react-tablekit/customization/theming/" },
-      { "pathname": "/react-tablekit/customization/tokens/" },
-      { "pathname": "/react-tablekit/customization/structure/" },
-      { "pathname": "/react-tablekit/customization/slots/" },
-      { "pathname": "/react-tablekit/customization/rows-and-cells/" },
-      { "pathname": "/react-tablekit/customization/cell-building-blocks/" },
-      { "pathname": "/react-tablekit/customization/handlers/" },
-      { "pathname": "/react-tablekit/customization/recipes/" }
+      {
+        "pathname": "/react-tablekit/customization/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/theming/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/tokens/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/structure/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/slots/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/rows-and-cells/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/cell-building-blocks/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/handlers/"
+      },
+      {
+        "pathname": "/react-tablekit/customization/recipes/"
+      }
     ]
   },
   {
@@ -141,13 +277,27 @@
     "subheader": "Guides",
     "icon": "book",
     "children": [
-      { "pathname": "/react-tablekit/guides/" },
-      { "pathname": "/react-tablekit/guides/server-data/" },
-      { "pathname": "/react-tablekit/guides/best-practices/" },
-      { "pathname": "/react-tablekit/guides/performance/" },
-      { "pathname": "/react-tablekit/guides/testing/" },
-      { "pathname": "/react-tablekit/guides/accessibility/" },
-      { "pathname": "/react-tablekit/guides/security/" }
+      {
+        "pathname": "/react-tablekit/guides/"
+      },
+      {
+        "pathname": "/react-tablekit/guides/server-data/"
+      },
+      {
+        "pathname": "/react-tablekit/guides/best-practices/"
+      },
+      {
+        "pathname": "/react-tablekit/guides/performance/"
+      },
+      {
+        "pathname": "/react-tablekit/guides/testing/"
+      },
+      {
+        "pathname": "/react-tablekit/guides/accessibility/"
+      },
+      {
+        "pathname": "/react-tablekit/guides/security/"
+      }
     ]
   },
   {
@@ -155,28 +305,50 @@
     "subheader": "Integrations",
     "icon": "plug",
     "children": [
-      { "pathname": "/react-tablekit/integrations/" },
-      { "pathname": "/react-tablekit/integrations/react-query/" },
-      { "pathname": "/react-tablekit/integrations/react-router/" },
-      { "pathname": "/react-tablekit/integrations/next-js/" },
-      { "pathname": "/react-tablekit/integrations/tailwind/" },
-      { "pathname": "/react-tablekit/integrations/i18next/" }
+      {
+        "pathname": "/react-tablekit/integrations/"
+      },
+      {
+        "pathname": "/react-tablekit/integrations/react-query/"
+      },
+      {
+        "pathname": "/react-tablekit/integrations/react-router/"
+      },
+      {
+        "pathname": "/react-tablekit/integrations/next-js/"
+      },
+      {
+        "pathname": "/react-tablekit/integrations/tailwind/"
+      },
+      {
+        "pathname": "/react-tablekit/integrations/i18next/"
+      }
     ]
   },
   {
     "pathname": "/react-tablekit/migration-group",
     "subheader": "Migration",
     "icon": "arrow-up",
-    "children": [{ "pathname": "/react-tablekit/migration/" }]
+    "children": [
+      {
+        "pathname": "/react-tablekit/migration/"
+      }
+    ]
   },
   {
     "pathname": "/react-tablekit/discover-more-group",
     "subheader": "Discover more",
     "icon": "compass",
     "children": [
-      { "pathname": "/react-tablekit/discover-more/" },
-      { "pathname": "/react-tablekit/discover-more/roadmap/" },
-      { "pathname": "/react-tablekit/discover-more/changelog/" }
+      {
+        "pathname": "/react-tablekit/discover-more/"
+      },
+      {
+        "pathname": "/react-tablekit/discover-more/roadmap/"
+      },
+      {
+        "pathname": "/react-tablekit/discover-more/changelog/"
+      }
     ]
   }
 ]

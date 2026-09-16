@@ -136,6 +136,29 @@
       border-end-start-radius: 0;
       border-end-end-radius: 0;
     }
+
+    /*
+     * A plain surface removes the panel: no border, no fill, no shadow. The table stands on
+     * whatever the page provides, and the pagination becomes a block beneath it rather than the
+     * bottom of a card — so the two no longer share an edge and each keeps its own corners.
+     */
+    &[data-surface='plain'] .tk-container,
+    &[data-surface='plain'] .tk-pagination {
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    &[data-surface='plain'] .tk-container[data-has-footer] {
+      border-end-start-radius: var(--tk-radius);
+      border-end-end-radius: var(--tk-radius);
+    }
+    &[data-surface='plain'] .tk-pagination {
+      padding-inline: 0;
+    }
+    &[data-surface='plain'] .tk-pagination[data-position='bottom'] {
+      margin-block-start: 8px;
+    }
+
     & .tk-table {
       min-width: var(--tk-table-min-width);
       font-variant-numeric: var(--tk-font-variant-numeric);

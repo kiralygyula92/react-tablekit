@@ -583,4 +583,42 @@ describe('customization (06)', () => {
     await waitFor(() => expect(rowIds(container)).toContain('r2'));
     expect(screen.getByRole('table', { name: 'Composed' })).toBeInTheDocument();
   });
+
+  describe('surface', () => {
+    const base = {
+      data: numbered(5),
+      columns: personColumns,
+      getRowId: (r: Person) => r.id,
+      'aria-label': 'People',
+    };
+
+    it('is a card by default, and a card is rounded', () => {
+      const { container } = render(<DataTable<Person> {...base} />);
+      const root = container.querySelector('.tk-root')!;
+      expect(root).toHaveAttribute('data-surface', 'card');
+      expect(root).toHaveAttribute('data-rounded', 'true');
+      expect(root).not.toHaveStyle({ '--tk-radius': '0px' });
+    });
+
+    it('a plain surface is square unless asked, because nothing would show the curve', () => {
+      const { container, rerender } = render(<DataTable<Person> {...base} surface="plain" />);
+      const root = () => container.querySelector('.tk-root')!;
+      expect(root()).toHaveAttribute('data-surface', 'plain');
+      expect(root()).toHaveAttribute('data-rounded', 'false');
+      // The radius is a token, so squaring the corners is one variable rather than a rule each.
+      expect(root().getAttribute('style')).toContain('--tk-radius: 0px');
+
+      rerender(<DataTable<Person> {...base} surface="plain" rounded />);
+      expect(root()).toHaveAttribute('data-rounded', 'true');
+      expect(root().getAttribute('style')).not.toContain('--tk-radius: 0px');
+    });
+
+    it('a card can be squared', () => {
+      const { container } = render(<DataTable<Person> {...base} rounded={false} />);
+      const root = container.querySelector('.tk-root')!;
+      expect(root).toHaveAttribute('data-surface', 'card');
+      expect(root).toHaveAttribute('data-rounded', 'false');
+      expect(root.getAttribute('style')).toContain('--tk-radius: 0px');
+    });
+  });
 });

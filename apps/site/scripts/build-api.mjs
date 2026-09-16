@@ -483,7 +483,10 @@ function groupOf(name) {
     [/export|csv|clipboard/i, 'Export'],
     [/keyboard|hotkey|aria|announce|caption/i, 'Keyboard and accessibility'],
     [/toolbar|density/i, 'Toolbar'],
-    [/theme|color|unstyled|bordered|striped|hover|^dir$|noWrap|rowNumber/i, 'Appearance'],
+    [
+      /theme|color|unstyled|bordered|striped|hover|^dir$|noWrap|rowNumber|surface|rounded/i,
+      'Appearance',
+    ],
   ];
   return rules.find(([pattern]) => pattern.test(name))?.[1] ?? 'Other';
 }
