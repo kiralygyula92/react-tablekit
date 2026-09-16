@@ -22,10 +22,29 @@ feature, replaceable slots, handler middleware and CSS-variable theming. Zero ru
 
 ```sh
 pnpm install
-pnpm dev          # site at http://localhost:5173 (runs against the library source)
-pnpm test         # unit + component tests (Vitest)
-pnpm e2e          # Playwright (needs `pnpm --filter site exec playwright install chromium` once)
-pnpm verify          # every gate: lint, typecheck, test, build, size, package checks, e2e
+pnpm dev     # the site at http://localhost:5173, against the library source
+```
+
+`pnpm dev` generates what it needs first — the API reference from the library's TSDoc, the
+content index, the machine surface and the redirect table — so a fresh checkout needs no setup
+step. Editing a page under `apps/site/content/` hot-reloads; adding, renaming or deleting one
+changes the route table, so restart the server.
+
+```sh
+pnpm test                       # unit and component tests (Vitest)
+pnpm e2e                        # end-to-end (Playwright, Chromium)
+pnpm --filter site e2e:visual   # the locked visual baselines
+pnpm verify                     # every gate, in the order CI runs them
+```
+
+Playwright needs its browser once: `pnpm --filter site exec playwright install chromium`.
+
+To look at exactly what deploys — prerendered HTML, the Markdown twins, `llms.txt` — build and
+serve it:
+
+```sh
+pnpm --filter site build
+pnpm --filter site preview      # http://localhost:4183
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.

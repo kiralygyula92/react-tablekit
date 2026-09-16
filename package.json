@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "pnpm -r --filter react-tablekit build && pnpm docs:json && pnpm --filter site build",
-    "dev": "pnpm --filter site dev",
+    "dev": "pnpm docs:json && pnpm --filter site dev",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
