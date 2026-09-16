@@ -125,30 +125,32 @@ code {
 
 /* The version reads as a chip beside the product name: a small, quiet pill rather than a form
    control, because it is a label that happens to be switchable. */
+.site-version-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
 .site-version-select select {
   appearance: none;
-  padding: 4px 28px 4px 12px;
+  height: 32px;
+  padding: 0 32px 0 14px;
   font: inherit;
-  font-size: 0.8125rem;
-  color: var(--site-text-muted);
+  font-size: 0.875rem;
+  color: var(--site-text);
   background: var(--site-bg-muted);
-  background-image:
-    linear-gradient(45deg, transparent 50%, currentcolor 50%),
-    linear-gradient(135deg, currentcolor 50%, transparent 50%);
-  background-position:
-    right 14px center,
-    right 9px center;
-  background-size:
-    5px 5px,
-    5px 5px;
-  background-repeat: no-repeat;
   border: 1px solid var(--site-border);
   border-radius: 999px;
   cursor: pointer;
 }
 .site-version-select select:hover {
-  color: var(--site-text);
   border-color: var(--site-border-strong);
+}
+.site-version-select__chevron {
+  position: absolute;
+  inset-inline-end: 11px;
+  display: inline-flex;
+  color: var(--site-text-muted);
+  pointer-events: none;
 }
 
 .site-nav,
@@ -178,7 +180,9 @@ code {
   font-family: var(--site-mono);
 }
 
-.theme-toggle {
+/* The two icon controls at the end of the header: source, and appearance. */
+.theme-toggle,
+.icon-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -191,7 +195,8 @@ code {
   border-radius: 8px;
   cursor: pointer;
 }
-.theme-toggle:hover {
+.theme-toggle:hover,
+.icon-link:hover {
   color: var(--site-text);
   background: var(--site-bg-muted);
   border-color: var(--site-border);

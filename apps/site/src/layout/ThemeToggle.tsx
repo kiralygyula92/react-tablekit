@@ -22,8 +22,9 @@ function MoonIcon() {
 /**
  * Light or dark, as one button.
  *
- * The icon shows the theme it switches *to*, and the accessible name says so out loud — an icon
- * button whose meaning depends on which state you are already in is otherwise a guess.
+ * The icon is the theme you are in — a moon in the dark, a sun in the light — so the header can
+ * be read at a glance without working out which direction the button points. The accessible name
+ * still says what pressing it *does*, because that is the thing a button has to announce.
  */
 export function ThemeToggle() {
   const { theme, toggle } = useSiteTheme();
@@ -37,7 +38,7 @@ export function ThemeToggle() {
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
     >
-      {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+      {theme === 'dark' ? <MoonIcon /> : <SunIcon />}
     </button>
   );
 }

@@ -615,18 +615,6 @@
   color: var(--site-text-muted);
 }
 
-/* ── Header extras ───────────────────────────────────────────────────────── */
-
-.site-version-select select {
-  padding: 3px 8px;
-  border: 1px solid var(--site-border);
-  border-radius: 6px;
-  background: var(--site-surface);
-  color: var(--site-text);
-  font: inherit;
-  font-size: 0.8125rem;
-}
-
 /* ── Narrow screens ──────────────────────────────────────────────────────── */
 
 @media (max-width: 1200px) {
