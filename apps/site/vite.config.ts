@@ -48,8 +48,20 @@ export const contentPlugins = (): PluginOption[] => [
   react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
 ];
 
+// The origin the canonical URLs, the OG images and the machine surface are built from. On
+// Vercel the production domain is already in the build environment, so a deployment nobody
+// configured still emits its own URLs rather than someone else's.
+const siteOrigin =
+  process.env.VITE_SITE_ORIGIN ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : undefined);
+
 export default defineConfig({
   base: process.env.SITE_BASE ?? '/',
+  ...(siteOrigin
+    ? { define: { 'import.meta.env.VITE_SITE_ORIGIN': JSON.stringify(siteOrigin) } }
+    : {}),
   plugins: contentPlugins(),
   resolve: { alias: libraryAliases },
   server: { port: 5173 },

@@ -45,7 +45,6 @@ export function SiteHeader({ surface }: { surface: 'marketing' | 'docs' }) {
         </nav>
       ) : (
         <nav aria-label="Documentation sections" className="site-nav">
-          <span className="site-plugin-name">{pluginConfig.name}</span>
           <label className="site-version-select">
             <span className="site-visually-hidden">Version</span>
             <select

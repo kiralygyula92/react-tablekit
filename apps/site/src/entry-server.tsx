@@ -2,6 +2,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 import { preloadPage } from './content/pages';
 import { SiteRoutes } from './routes';
+import { DemoThemeProvider } from './theme/DemoTheme';
 import { SiteThemeProvider } from './theme/SiteTheme';
 
 /**
@@ -16,9 +17,11 @@ export async function render(pathname: string): Promise<string> {
   await preloadPage(pathname);
   return renderToString(
     <SiteThemeProvider>
-      <StaticRouter location={pathname}>
-        <SiteRoutes />
-      </StaticRouter>
+      <DemoThemeProvider>
+        <StaticRouter location={pathname}>
+          <SiteRoutes />
+        </StaticRouter>
+      </DemoThemeProvider>
     </SiteThemeProvider>,
   );
 }

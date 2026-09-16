@@ -5,6 +5,7 @@ import 'react-tablekit/styles.css';
 import { App } from './App';
 import { preloadPage } from './content/pages';
 import './styles/site.css';
+import './styles/layout.css';
 
 const container = document.getElementById('root');
 if (!container) throw new Error('#root not found');

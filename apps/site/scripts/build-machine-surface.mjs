@@ -19,10 +19,17 @@ const indexFile = path.join(siteRoot, 'src', 'generated', 'content', 'index.json
 const configFile = path.join(contentRoot, 'react-tablekit', 'plugin.config.json');
 const navFile = path.join(contentRoot, 'react-tablekit', 'nav.json');
 
-const ORIGIN = (process.env.VITE_SITE_ORIGIN ?? 'https://react-tablekit.vercel.app').replace(
-  /\/$/,
-  '',
-);
+/**
+ * The origin every absolute URL is built from. `VITE_SITE_ORIGIN` is the setting; on Vercel the
+ * production domain is already in the build environment, so a deployment nobody configured still
+ * emits its own URLs rather than someone else's.
+ */
+const ORIGIN = (
+  process.env.VITE_SITE_ORIGIN ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : 'https://react-tablekit.vercel.app')
+).replace(/\/$/, '');
 
 const pages = JSON.parse(readFileSync(indexFile, 'utf8'));
 const config = JSON.parse(readFileSync(configFile, 'utf8'));
