@@ -1,4 +1,5 @@
 import { createColumnHelper, DataTable, TruncatedText } from 'react-tablekit';
+import { UsedBy } from './UsedBy';
 
 /** One member of a documented symbol, as produced by `scripts/build-api.mjs`. */
 export interface ApiMember {
@@ -70,6 +71,7 @@ export function ApiSymbolSection({ symbol }: { symbol: ApiSymbol }) {
         {symbol.name} <span className="site-muted">{symbol.kind}</span>
       </h2>
       {symbol.description && <p>{symbol.description}</p>}
+      <UsedBy symbol={symbol.name} />
       {symbol.example && (
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- a scrollable region must be focusable (axe)
         <pre className="site-code" tabIndex={0}>

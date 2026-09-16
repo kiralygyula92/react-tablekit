@@ -6,6 +6,9 @@ packages:
 allowBuilds:
   esbuild: true
   msw: true
+  # sharp is a transitive dependency of @vercel/og. Only its Node runtime uses the native
+  # binary; the /api/og function runs on the edge, which uses the WASM rasterizer instead.
+  sharp: false
 
 minimumReleaseAgeExclude:
   - fast-check@4.10.0

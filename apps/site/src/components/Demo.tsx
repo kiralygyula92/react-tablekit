@@ -7,6 +7,7 @@ import {
   type ComponentType,
   type LazyExoticComponent,
 } from 'react';
+import { ClientOnly } from './ClientOnly';
 
 interface DemoModule {
   default: ComponentType;
@@ -144,13 +145,15 @@ export function Demo({ id, label }: { id: string; label?: string }) {
   return (
     <section className="demo" aria-label={label ?? 'Example'}>
       <div className="demo__stage">
-        <Suspense fallback={<p className="site-muted">Loading example…</p>}>
-          {/* `nonce` is the reset: a new key throws the old tree away and starts over. */}
-          {/* eslint-disable-next-line react-hooks/static-components --
-              a lookup, not a creation: every lazy component is built once at module scope, so
-              its identity is stable and its state survives re-renders. */}
-          <Component key={nonce} />
-        </Suspense>
+        <ClientOnly placeholder={<p className="site-muted">Loading example…</p>}>
+          <Suspense fallback={<p className="site-muted">Loading example…</p>}>
+            {/* `nonce` is the reset: a new key throws the old tree away and starts over. */}
+            {/* eslint-disable-next-line react-hooks/static-components --
+                a lookup, not a creation: every lazy component is built once at module scope, so
+                its identity is stable and its state survives re-renders. */}
+            <Component key={nonce} />
+          </Suspense>
+        </ClientOnly>
       </div>
       <Toolbar source={source} onReset={reset} />
     </section>

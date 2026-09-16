@@ -1,5 +1,6 @@
 import { createColumnHelper, DataTable } from 'react-tablekit';
 import { slotMeta } from 'react-tablekit/meta';
+import { UsedBy } from './UsedBy';
 
 type Slot = (typeof slotMeta)[number];
 const col = createColumnHelper<Slot>();
@@ -16,6 +17,7 @@ const columns = [
 export function ApiSlotsPage() {
   return (
     <>
+      <UsedBy symbol="TableSlots" />
       <DataTable<Slot>
         aria-label="Slots"
         data={slotMeta}

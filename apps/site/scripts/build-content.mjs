@@ -19,6 +19,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = path.join(here, '..');
 const contentRoot = path.join(siteRoot, 'content');
 const outDir = path.join(siteRoot, 'src', 'generated', 'content');
+const symbolsFile = path.join(siteRoot, 'src', 'generated', 'api', 'symbols.json');
 
 /** Every file under `content/` matching the extension, as a content-relative POSIX path. */
 function walk(dir, ext, out = []) {
@@ -65,6 +66,15 @@ const demoFiles = new Set(walk(contentRoot, '.tsx').map((f) => f.replace(/\.tsx$
 const pages = [];
 const seenRoutes = new Map();
 
+/**
+ * Which reference page documents which symbol, written by `build-api.mjs` from the same table
+ * the reference pages are rendered from. A `symbols` entry that is not in here names something
+ * the package does not export (PPDS check 11).
+ */
+const symbolPages = existsSync(symbolsFile) ? JSON.parse(readFileSync(symbolsFile, 'utf8')) : {};
+/** symbol → the pages that cite it. The inversion of `symbols` frontmatter (PPDS check 12). */
+const usedBy = {};
+
 for (const file of walk(contentRoot, '.mdx').sort()) {
   const raw = readFileSync(path.join(contentRoot, file), 'utf8');
   const match = /^---\n([\s\S]*?)\n---\n?/.exec(raw);
@@ -99,6 +109,17 @@ for (const file of walk(contentRoot, '.mdx').sort()) {
       errors.push(`${file}: <Demo id="${id}"> has no file at content/${id}.tsx`);
   }
 
+  // A reference page documents its symbols; it does not "use" them, so it is not a source of
+  // `usedBy`. Every other page's citations become the reverse links on the reference pages.
+  const cited = Array.isArray(frontmatter?.symbols) ? frontmatter.symbols : [];
+  for (const symbol of cited) {
+    if (!symbolPages[symbol]) {
+      errors.push(`${file}: symbols lists \`${symbol}\`, which no reference page documents`);
+      continue;
+    }
+    (usedBy[symbol] ??= []).push(pathname);
+  }
+
   pages.push({ pathname, file, frontmatter, headings: headingsOf(body), demos });
 }
 
@@ -111,7 +132,15 @@ if (errors.length > 0) {
 pages.sort((a, b) => a.pathname.localeCompare(b.pathname));
 if (!existsSync(outDir)) mkdirSync(outDir, { recursive: true });
 writeFileSync(path.join(outDir, 'index.json'), `${JSON.stringify(pages, null, 2)}\n`);
+
+for (const list of Object.values(usedBy)) list.sort();
+writeFileSync(
+  path.join(outDir, 'used-by.json'),
+  `${JSON.stringify(Object.fromEntries(Object.entries(usedBy).sort()), null, 2)}\n`,
+);
+
 console.log(
   `[build-content] ${pages.length} pages, ${demoFiles.size} demos, ` +
-    `${pages.reduce((n, p) => n + p.headings.length, 0)} headings`,
+    `${pages.reduce((n, p) => n + p.headings.length, 0)} headings, ` +
+    `${Object.keys(usedBy).length} cross-referenced symbols`,
 );

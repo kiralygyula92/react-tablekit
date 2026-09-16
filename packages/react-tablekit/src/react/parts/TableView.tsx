@@ -172,7 +172,7 @@ export function Container({
   useTableVersion(table);
   const view = useView();
   const layout = useLayout();
-  const [scroll, setScroll] = useState({ left: false, right: false });
+  const [scroll, setScroll] = useState({ left: false, right: false, overflows: false });
   const hasFooter = hasFooterProp ?? layout.footerCount > 0;
   // Below the mobile breakpoint the rows can render as cards instead of a table (05 §13).
   const cards = useCardsLayout();
@@ -183,8 +183,16 @@ export function Container({
     const update = () => {
       const left = el.scrollLeft > 0;
       const right = Math.ceil(el.scrollLeft + el.clientWidth) < el.scrollWidth - 1;
+      // Whether there is anything to scroll at all, in either axis. A region that scrolls has to
+      // be reachable by keyboard, and one that does not must not become an extra tab stop.
+      const overflows =
+        el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1;
       el.style.setProperty('--tk-container-width', `${el.clientWidth}px`);
-      setScroll((s) => (s.left === left && s.right === right ? s : { left, right }));
+      setScroll((s) =>
+        s.left === left && s.right === right && s.overflows === overflows
+          ? s
+          : { left, right, overflows },
+      );
     };
     update();
     el.addEventListener('scroll', update, { passive: true });
@@ -209,6 +217,10 @@ export function Container({
     'data-scrolled-left': scroll.left || undefined,
     'data-scrolled-right': scroll.right || undefined,
     'data-scrollable': props.maxHeight !== undefined || undefined,
+    // A scrollable region must be operable by keyboard (WCAG 2.1.1; axe
+    // `scrollable-region-focusable`). The table's own controls are not enough: a table with no
+    // focusable cell content still has rows a keyboard user has to be able to scroll to.
+    tabIndex: scroll.overflows ? 0 : undefined,
     hasFooter,
     scrolledLeft: scroll.left,
     scrolledRight: scroll.right,

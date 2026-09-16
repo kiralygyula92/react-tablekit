@@ -1,4 +1,9 @@
-import { expect, expectNoA11yViolations, test } from './fixtures';
+import {
+  CLASSIC_HEADER_CONTRAST_EXCEPTION,
+  expect,
+  expectNoA11yViolations,
+  test,
+} from './fixtures';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,7 +38,13 @@ for (const page_ of pages) {
         ? page.getByRole('heading', { level: 1, name: page_.frontmatter.title })
         : page.getByRole('heading', { level: 1 }),
     ).toBeVisible();
-    await expectNoA11yViolations(page);
+    // The showcase pages default to the `classic` preset, whose header contrast is a documented
+    // exception (see CLASSIC_HEADER_CONTRAST_EXCEPTION). Every other rule still runs.
+    await expectNoA11yViolations(page, {
+      contrastExceptions: page_.pathname.startsWith('/react-tablekit/demos/')
+        ? [CLASSIC_HEADER_CONTRAST_EXCEPTION]
+        : [],
+    });
   });
 }
 

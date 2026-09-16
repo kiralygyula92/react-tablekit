@@ -37,7 +37,9 @@ export default defineConfig({
     { name: 'visual', use: { ...devices['Desktop Chrome'] }, testMatch: /visual\.spec\.ts/ },
   ],
   webServer: {
-    command: `pnpm exec vite build && pnpm exec vite preview --port ${PORT} --strictPort`,
+    // The suite runs against the deployed artefact, prerendered HTML included — not against a
+    // build that skips the step the site actually ships with.
+    command: `pnpm exec vite build && pnpm run prerender && pnpm exec vite preview --port ${PORT} --strictPort`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !isCI,
     timeout: 180_000,

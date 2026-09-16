@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 
 /** Site-wide appearance. `classic` also switches demo tables to the classic preset. */
 export type SiteTheme = 'light' | 'dark' | 'classic';
@@ -14,22 +21,44 @@ interface SiteThemeValue {
 
 const SiteThemeContext = createContext<SiteThemeValue | null>(null);
 
-function readStored(): SiteTheme {
+/*
+ * The theme is not React state: it is an attribute on `<html>`, applied by the inline script in
+ * `index.html` before first paint so the colours never flash. React reads it rather than owning
+ * it, which is what `useSyncExternalStore` is for — and it is what lets the prerendered HTML and
+ * the hydrating browser agree, because the server snapshot is the default and React knows to use
+ * it while hydrating.
+ */
+
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
+  // Another tab changing the theme is a change to the same external state.
+  window.addEventListener('storage', listener);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener('storage', listener);
+  };
+}
+
+function getSnapshot(): SiteTheme {
   const fromDom = document.documentElement.dataset.siteTheme;
   return SITE_THEMES.includes(fromDom as SiteTheme) ? (fromDom as SiteTheme) : 'light';
 }
 
+const getServerSnapshot = (): SiteTheme => 'light';
+
 export function SiteThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<SiteTheme>(readStored);
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const setTheme = useCallback((next: SiteTheme) => {
-    setThemeState(next);
     document.documentElement.dataset.siteTheme = next;
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {
-      // ignore
+      // A browser with storage blocked still gets the theme for this page.
     }
+    for (const listener of listeners) listener();
   }, []);
 
   const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);

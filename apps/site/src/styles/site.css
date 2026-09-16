@@ -1152,3 +1152,12 @@ code {
     flex-basis: 100%;
   }
 }
+
+/* The reverse link from a reference symbol back to the pages that use it. */
+.api-used-by {
+  margin: -0.25rem 0 1rem;
+  font-size: 0.875rem;
+}
+.api-used-by a {
+  margin-inline-end: 0;
+}

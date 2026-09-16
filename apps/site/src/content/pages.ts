@@ -24,5 +24,24 @@ const componentByPath = new Map<string, LazyExoticComponent<ComponentType>>(
   }),
 );
 
-/** The lazily-loaded body of a page, or `undefined` if the index names a file that is gone. */
-export const componentFor = (pathname: string) => componentByPath.get(pathname);
+/**
+ * Bodies that have already been fetched, held as plain components rather than lazy ones.
+ *
+ * `React.lazy` always suspends the first time it renders, even for a module already in memory —
+ * which would mean prerendering a "Loading…" instead of the prose, and throwing the prerendered
+ * prose away again on hydration. Preloading into this map lets the first render be synchronous
+ * on both sides; every later navigation goes back through the lazy component.
+ */
+const preloaded = new Map<string, ComponentType>();
+
+/** The body of a page, or `undefined` if the index names a file that is gone. */
+export const componentFor = (pathname: string): ComponentType | undefined =>
+  preloaded.get(pathname) ?? componentByPath.get(pathname);
+
+/** Fetches one page's chunk so that rendering it does not suspend. */
+export async function preloadPage(pathname: string): Promise<void> {
+  const page = pageByPath.get(pathname);
+  const load = page && loaders[`../../content/${page.file}`];
+  if (!load || preloaded.has(pathname)) return;
+  preloaded.set(pathname, (await load()).default);
+}

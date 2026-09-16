@@ -1,5 +1,6 @@
 import { createColumnHelper, DataTable } from 'react-tablekit';
 import { localeMeta } from 'react-tablekit/meta';
+import { UsedBy } from './UsedBy';
 
 type Entry = (typeof localeMeta)[number];
 const col = createColumnHelper<Entry>();
@@ -13,6 +14,7 @@ const columns = [
 export function ApiLocalizationPage() {
   return (
     <>
+      <UsedBy symbol="TableLocalization" />
       <DataTable<Entry>
         aria-label="Localization keys"
         data={localeMeta}

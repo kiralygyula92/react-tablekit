@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm run build:data && tsc -p tsconfig.json && vite build",
+    "build": "pnpm run build:data && tsc -p tsconfig.json && vite build && pnpm run prerender",
     "build:api": "node scripts/build-api.mjs",
     "preview": "vite preview --port 4183 --strictPort",
     "typecheck": "tsc -p tsconfig.json",
@@ -14,7 +14,11 @@
     "lighthouse": "lighthouse http://localhost:4183/ --only-categories=performance --preset=desktop --chrome-flags=\"--headless=new\" --quiet --output=json --output-path=stdout",
     "e2e:visual": "playwright test --project=visual",
     "build:content": "node scripts/build-content.mjs",
-    "build:data": "node scripts/build-api.mjs && node scripts/build-content.mjs"
+    "build:data": "node scripts/build-api.mjs && node scripts/build-content.mjs && node scripts/build-machine-surface.mjs && node scripts/build-redirects.mjs",
+    "build:machine": "node scripts/build-machine-surface.mjs",
+    "prerender": "vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "build:redirects": "node scripts/build-redirects.mjs",
+    "conformance": "node scripts/conformance.mjs"
   },
   "dependencies": {
     "@fontsource-variable/open-sans": "^5.3.0",

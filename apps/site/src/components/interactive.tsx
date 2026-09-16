@@ -1,4 +1,5 @@
 import { lazy, Suspense, type ComponentType } from 'react';
+import { ClientOnly } from './ClientOnly';
 
 /**
  * The interactive surfaces, loaded on demand so a prose page never pays for the playground.
@@ -8,9 +9,11 @@ const load = (factory: () => Promise<{ default: ComponentType }>) => {
   const Loaded = lazy(factory);
   return function Interactive() {
     return (
-      <Suspense fallback={<p className="site-muted">Loading…</p>}>
-        <Loaded />
-      </Suspense>
+      <ClientOnly placeholder={<p className="site-muted">Loading…</p>}>
+        <Suspense fallback={<p className="site-muted">Loading…</p>}>
+          <Loaded />
+        </Suspense>
+      </ClientOnly>
     );
   };
 };

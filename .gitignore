@@ -22,3 +22,11 @@ apps/site/playwright/.cache/
 .env
 .env.*
 !.env.example
+
+# Generated machine surface (apps/site/scripts/build-machine-surface.mjs)
+apps/site/public/react-tablekit/
+apps/site/public/index.md
+apps/site/public/llms.txt
+apps/site/public/sitemap.xml
+apps/site/public/robots.txt
+apps/site/public/changelog.xml

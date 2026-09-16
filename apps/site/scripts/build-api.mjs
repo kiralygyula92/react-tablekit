@@ -23,11 +23,37 @@ const KIND = {
 };
 
 /** The pages we generate, and which exported symbols belong to each. */
+/**
+ * Symbols documented by a page that is rendered from runtime metadata rather than from TypeDoc.
+ * They still have to resolve, because a capability page may cite them in its `symbols`
+ * frontmatter (conformance check 11).
+ */
+const METADATA_SYMBOLS = {
+  TableSlots: 'slots',
+  SlotName: 'slots',
+  SlotPropsMap: 'slots',
+  TableHandlers: 'handlers',
+  TableTheme: 'theme-tokens',
+  TableThemeTokens: 'theme-tokens',
+  TokenPath: 'theme-tokens',
+  TableLocalization: 'localization-keys',
+  TableFormatters: 'localization-keys',
+  TableIcons: 'icons',
+};
+
+/** A page id under /api/ → its URL. */
+const routeOf = (page) =>
+  `/react-tablekit/api/${
+    { 'data-table': 'data-table-props', instance: 'table-instance', state: 'table-state' }[page] ??
+    page
+  }/`;
+
 const PAGES = [
   { page: 'data-table', symbols: ['DataTableProps', 'DataTableViewProps', 'DataTableHandle'] },
   {
     page: 'column-def',
     symbols: [
+      'ColumnDef',
       'ColumnDefBase',
       'AccessorKeyColumnDef',
       'AccessorFnColumnDef',
@@ -36,7 +62,18 @@ const PAGES = [
     ],
   },
   { page: 'instance', symbols: ['TableInstance', 'Row', 'Column', 'Cell', 'Header'] },
-  { page: 'state', symbols: ['TableState', 'TableQuery', 'TableOptions'] },
+  {
+    page: 'state',
+    symbols: [
+      'TableState',
+      'TableQuery',
+      'TableOptions',
+      'SelectionQuery',
+      'DataSource',
+      'DataSourceResult',
+      'DataSourceState',
+    ],
+  },
   {
     page: 'hooks',
     symbols: [
@@ -48,6 +85,8 @@ const PAGES = [
       'useVirtualRows',
       'useSyncState',
       'useRouterSync',
+      'useTableSlots',
+      'useTableContext',
     ],
   },
   {
@@ -60,9 +99,22 @@ const PAGES = [
       'exportToCsv',
       'getPageItems',
       'createTable',
-      'functionalUpdate',
       'createTheme',
       'toCssVars',
+      'functionalUpdate',
+      'sortingFns',
+      'filterFns',
+      'aggregationFns',
+      'flexRender',
+      'ActionButton',
+      'RowActionsMenu',
+      'Tooltip',
+      'Checkbox',
+      'Chip',
+      'ChipList',
+      'TruncatedText',
+      'MultiLineList',
+      'TwoLineText',
     ],
   },
 ];
@@ -304,6 +356,25 @@ for (const { page, symbols } of PAGES) {
   console.log(`[build-api] ${page}.json (${found.length} symbols, ${documented} documented)`);
 }
 console.log(`[build-api] ${total} symbols written to src/generated/api`);
+
+/* ── symbol index ───────────────────────────────────────────────────────────
+   Which reference page documents which symbol. `scripts/build-content.mjs` reads it to resolve
+   every `symbols` entry in a page's frontmatter, and to invert those into each symbol's
+   `usedBy` list. Written from the same PAGES table the pages themselves come from, so the two
+   cannot disagree. */
+const symbolIndex = {};
+for (const { page, symbols } of PAGES) {
+  for (const name of symbols) {
+    if (declarations.has(name)) symbolIndex[name] = routeOf(page);
+  }
+}
+for (const [name, page] of Object.entries(METADATA_SYMBOLS)) symbolIndex[name] = routeOf(page);
+writeFileSync(
+  resolve(OUT_DIR, 'symbols.json'),
+  `${JSON.stringify(symbolIndex, null, 2)}
+`,
+);
+console.log(`[build-api] symbols.json (${Object.keys(symbolIndex).length} symbols)`);
 
 /* ── playground schema ──────────────────────────────────────────────────────
    Every prop of <DataTable> becomes a playground control when its type allows one, so the

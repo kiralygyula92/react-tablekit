@@ -91,14 +91,14 @@ backend endpoint. Past a few tens of thousands of rows, the backend endpoint is 
 
 ## Checklist
 
-- [ ] `getRowId` returns a stable id — selection and expansion depend on it.
-- [ ] Sorting and filtering happen where you think they do.
-- [ ] The response's real page is adopted.
-- [ ] Requests are debounced and deduplicated.
-- [ ] Empty distinguishes "no data" from "no matches".
-- [ ] Errors are visible and the table stays usable.
-- [ ] Facets come from the server if filters have option lists.
-- [ ] Export has a plan for more rows than the browser should hold.
+- `getRowId` returns a stable id — selection and expansion depend on it.
+- Sorting and filtering happen where you think they do.
+- The response's real page is adopted.
+- Requests are debounced and deduplicated.
+- Empty distinguishes "no data" from "no matches".
+- Errors are visible and the table stays usable.
+- Facets come from the server if filters have option lists.
+- Export has a plan for more rows than the browser should hold.
 
 ## Related
 

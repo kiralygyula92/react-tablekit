@@ -108,3 +108,23 @@ test.describe('pagination modes', () => {
     await expect.poll(() => rows.first().getAttribute('data-row-id')).toBe(firstId);
   });
 });
+
+test('an overflowing table container is reachable by keyboard, and a fitting one is not', async ({
+  page,
+}) => {
+  // A region that scrolls must be operable by keyboard (WCAG 2.1.1). The table's own controls are
+  // not enough: a table of plain text still has columns a keyboard user has to scroll to. It is a
+  // layout fact, so it can only be checked in a real browser.
+  await page.setViewportSize({ width: 600, height: 800 });
+  await page.goto(demoUrl('demos/account-list/demo-basics'));
+  const container = page.locator('.tk-container').first();
+  await expect(container.locator('tbody tr[data-row-id]').first()).toBeVisible();
+  await expect(container).toHaveAttribute('tabindex', '0');
+
+  // The same table with room to fit is not an extra tab stop.
+  await page.setViewportSize({ width: 2400, height: 800 });
+  await page.goto(demoUrl('features/density/demo-basics'));
+  const fitting = page.locator('.tk-container').first();
+  await expect(fitting.locator('tbody tr[data-row-id]').first()).toBeVisible();
+  await expect(fitting).not.toHaveAttribute('tabindex', '0');
+});

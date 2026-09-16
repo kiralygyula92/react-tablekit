@@ -1,0 +1,694 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm --filter react-tablekit build && pnpm docs:json && pnpm --filter site build",
+  "outputDirectory": "apps/site/dist",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": null,
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/docs/getting-started",
+      "destination": "/react-tablekit/getting-started/installation/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/versioning",
+      "destination": "/react-tablekit/getting-started/versions/",
+      "permanent": true
+    },
+    {
+      "source": "/changelog",
+      "destination": "/react-tablekit/discover-more/changelog/",
+      "permanent": true
+    },
+    {
+      "source": "/examples",
+      "destination": "/react-tablekit/all-features/",
+      "permanent": true
+    },
+    {
+      "source": "/playground",
+      "destination": "/react-tablekit/demos/playground/",
+      "permanent": true
+    },
+    {
+      "source": "/theme-editor",
+      "destination": "/react-tablekit/demos/theme-editor/",
+      "permanent": true
+    },
+    {
+      "source": "/api",
+      "destination": "/react-tablekit/api/",
+      "permanent": true
+    },
+    {
+      "source": "/api/data-table",
+      "destination": "/react-tablekit/api/data-table-props/",
+      "permanent": true
+    },
+    {
+      "source": "/api/column-def",
+      "destination": "/react-tablekit/api/column-def/",
+      "permanent": true
+    },
+    {
+      "source": "/api/instance",
+      "destination": "/react-tablekit/api/table-instance/",
+      "permanent": true
+    },
+    {
+      "source": "/api/state",
+      "destination": "/react-tablekit/api/table-state/",
+      "permanent": true
+    },
+    {
+      "source": "/api/hooks",
+      "destination": "/react-tablekit/api/hooks/",
+      "permanent": true
+    },
+    {
+      "source": "/api/utilities",
+      "destination": "/react-tablekit/api/utilities/",
+      "permanent": true
+    },
+    {
+      "source": "/api/slots",
+      "destination": "/react-tablekit/api/slots/",
+      "permanent": true
+    },
+    {
+      "source": "/api/handlers",
+      "destination": "/react-tablekit/api/handlers/",
+      "permanent": true
+    },
+    {
+      "source": "/api/theme-tokens",
+      "destination": "/react-tablekit/api/theme-tokens/",
+      "permanent": true
+    },
+    {
+      "source": "/api/localization",
+      "destination": "/react-tablekit/api/localization-keys/",
+      "permanent": true
+    },
+    {
+      "source": "/api/icons",
+      "destination": "/react-tablekit/api/icons/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/client-vs-server",
+      "destination": "/react-tablekit/client-and-server/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/server-data",
+      "destination": "/react-tablekit/guides/server-data/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/columns",
+      "destination": "/react-tablekit/columns/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/theming",
+      "destination": "/react-tablekit/customization/theming/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/accessibility",
+      "destination": "/react-tablekit/guides/accessibility/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/sorting",
+      "destination": "/react-tablekit/sorting/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/filtering",
+      "destination": "/react-tablekit/column-filters/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/search",
+      "destination": "/react-tablekit/global-search/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/pagination",
+      "destination": "/react-tablekit/pagination/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/selection",
+      "destination": "/react-tablekit/row-selection/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/expansion",
+      "destination": "/react-tablekit/expansion/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/grouping",
+      "destination": "/react-tablekit/grouping/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/pinning",
+      "destination": "/react-tablekit/column-pinning/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/sizing",
+      "destination": "/react-tablekit/column-sizing/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/ordering-and-visibility",
+      "destination": "/react-tablekit/column-ordering/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/virtualization",
+      "destination": "/react-tablekit/virtualization/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/keyboard",
+      "destination": "/react-tablekit/keyboard-navigation/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/export",
+      "destination": "/react-tablekit/export/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/persistence",
+      "destination": "/react-tablekit/persistence/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/responsive",
+      "destination": "/react-tablekit/responsive/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/customization",
+      "destination": "/react-tablekit/customization/",
+      "permanent": true
+    },
+    {
+      "source": "/docs/guides/localization",
+      "destination": "/react-tablekit/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/showcase-account-list",
+      "destination": "/react-tablekit/demos/account-list/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/showcase-asset-list",
+      "destination": "/react-tablekit/demos/asset-list/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/showcase-readings",
+      "destination": "/react-tablekit/demos/reading-history/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/showcase-asset-picker",
+      "destination": "/react-tablekit/demos/asset-picker/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/row-selection",
+      "destination": "/react-tablekit/row-selection/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/detail-panels",
+      "destination": "/react-tablekit/expansion/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/tree-data",
+      "destination": "/react-tablekit/tree-data/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/tree-lazy-server",
+      "destination": "/react-tablekit/tree-data/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/row-overrides",
+      "destination": "/react-tablekit/customization/rows-and-cells/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/handlers-middleware",
+      "destination": "/react-tablekit/customization/handlers/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/column-features",
+      "destination": "/react-tablekit/column-visibility/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/sticky-header-footer",
+      "destination": "/react-tablekit/sticky-header-and-footer/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/virtualization-100k",
+      "destination": "/react-tablekit/virtualization/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/infinite-scroll",
+      "destination": "/react-tablekit/pagination/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/cursor-pagination",
+      "destination": "/react-tablekit/pagination/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/grouping-aggregation",
+      "destination": "/react-tablekit/grouping/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/export",
+      "destination": "/react-tablekit/export/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/url-sync",
+      "destination": "/react-tablekit/persistence/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/keyboard-navigation",
+      "destination": "/react-tablekit/keyboard-navigation/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/responsive-cards",
+      "destination": "/react-tablekit/responsive/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/states",
+      "destination": "/react-tablekit/loading-and-empty-states/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/basic",
+      "destination": "/react-tablekit/getting-started/quickstart/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/pagination-variants",
+      "destination": "/react-tablekit/pagination/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/global-search",
+      "destination": "/react-tablekit/global-search/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/filters-panel",
+      "destination": "/react-tablekit/column-filters/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/filters-row",
+      "destination": "/react-tablekit/column-filters/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/filters-popover-and-column-menu",
+      "destination": "/react-tablekit/column-filters/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/filters-server",
+      "destination": "/react-tablekit/faceting/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/server-sorting",
+      "destination": "/react-tablekit/sorting/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/hybrid-mode",
+      "destination": "/react-tablekit/client-and-server/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/localization",
+      "destination": "/react-tablekit/localization/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/client-vs-server",
+      "destination": "/react-tablekit/client-and-server/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/column-types",
+      "destination": "/react-tablekit/columns/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/client-sorting",
+      "destination": "/react-tablekit/sorting/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/column-pinning",
+      "destination": "/react-tablekit/column-pinning/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/column-sizing",
+      "destination": "/react-tablekit/column-sizing/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/column-ordering-visibility",
+      "destination": "/react-tablekit/column-ordering/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/cell-building-blocks",
+      "destination": "/react-tablekit/customization/cell-building-blocks/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/slots-custom-components",
+      "destination": "/react-tablekit/customization/slots/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/slots-design-system",
+      "destination": "/react-tablekit/customization/structure/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/theming-presets",
+      "destination": "/react-tablekit/customization/theming/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/theming-custom",
+      "destination": "/react-tablekit/customization/theming/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/density",
+      "destination": "/react-tablekit/density/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/composable-layout",
+      "destination": "/react-tablekit/toolbar/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/headless",
+      "destination": "/react-tablekit/headless/",
+      "permanent": true
+    },
+    {
+      "source": "/examples/react-query-recipe",
+      "destination": "/react-tablekit/integrations/react-query/",
+      "permanent": true
+    },
+    {
+      "source": "/embed/showcase-account-list",
+      "destination": "/embed/react-tablekit/demos/account-list/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/showcase-asset-list",
+      "destination": "/embed/react-tablekit/demos/asset-list/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/showcase-readings",
+      "destination": "/embed/react-tablekit/demos/reading-history/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/showcase-asset-picker",
+      "destination": "/embed/react-tablekit/demos/asset-picker/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/row-selection",
+      "destination": "/embed/react-tablekit/features/row-selection/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/detail-panels",
+      "destination": "/embed/react-tablekit/features/expansion/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/tree-data",
+      "destination": "/embed/react-tablekit/features/tree-data/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/tree-lazy-server",
+      "destination": "/embed/react-tablekit/features/tree-data/demo-lazy-children",
+      "permanent": true
+    },
+    {
+      "source": "/embed/row-overrides",
+      "destination": "/embed/react-tablekit/customization/rows-and-cells/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/handlers-middleware",
+      "destination": "/embed/react-tablekit/customization/handlers/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/column-features",
+      "destination": "/embed/react-tablekit/features/column-visibility/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/sticky-header-footer",
+      "destination": "/embed/react-tablekit/features/sticky-header-and-footer/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/virtualization-100k",
+      "destination": "/embed/react-tablekit/features/virtualization/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/infinite-scroll",
+      "destination": "/embed/react-tablekit/features/pagination/demo-infinite",
+      "permanent": true
+    },
+    {
+      "source": "/embed/cursor-pagination",
+      "destination": "/embed/react-tablekit/features/pagination/demo-cursor",
+      "permanent": true
+    },
+    {
+      "source": "/embed/grouping-aggregation",
+      "destination": "/embed/react-tablekit/features/grouping/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/export",
+      "destination": "/embed/react-tablekit/features/export/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/url-sync",
+      "destination": "/embed/react-tablekit/features/persistence/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/keyboard-navigation",
+      "destination": "/embed/react-tablekit/features/keyboard-navigation/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/responsive-cards",
+      "destination": "/embed/react-tablekit/features/responsive/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/states",
+      "destination": "/embed/react-tablekit/features/loading-and-empty-states/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/basic",
+      "destination": "/embed/react-tablekit/features/columns/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/pagination-variants",
+      "destination": "/embed/react-tablekit/features/pagination/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/global-search",
+      "destination": "/embed/react-tablekit/features/global-search/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/filters-panel",
+      "destination": "/embed/react-tablekit/features/column-filters/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/filters-row",
+      "destination": "/embed/react-tablekit/features/column-filters/demo-row-mode",
+      "permanent": true
+    },
+    {
+      "source": "/embed/filters-popover-and-column-menu",
+      "destination": "/embed/react-tablekit/features/column-filters/demo-popover-mode",
+      "permanent": true
+    },
+    {
+      "source": "/embed/filters-server",
+      "destination": "/embed/react-tablekit/features/faceting/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/server-sorting",
+      "destination": "/embed/react-tablekit/features/sorting/demo-server",
+      "permanent": true
+    },
+    {
+      "source": "/embed/hybrid-mode",
+      "destination": "/embed/react-tablekit/features/client-and-server/demo-hybrid",
+      "permanent": true
+    },
+    {
+      "source": "/embed/localization",
+      "destination": "/embed/react-tablekit/features/localization/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/client-vs-server",
+      "destination": "/embed/react-tablekit/features/client-and-server/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/column-types",
+      "destination": "/embed/react-tablekit/features/columns/demo-types",
+      "permanent": true
+    },
+    {
+      "source": "/embed/client-sorting",
+      "destination": "/embed/react-tablekit/features/sorting/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/column-pinning",
+      "destination": "/embed/react-tablekit/features/column-pinning/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/column-sizing",
+      "destination": "/embed/react-tablekit/features/column-sizing/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/column-ordering-visibility",
+      "destination": "/embed/react-tablekit/features/column-ordering/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/cell-building-blocks",
+      "destination": "/embed/react-tablekit/customization/cell-building-blocks/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/slots-custom-components",
+      "destination": "/embed/react-tablekit/customization/slots/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/slots-design-system",
+      "destination": "/embed/react-tablekit/customization/structure/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/theming-presets",
+      "destination": "/embed/react-tablekit/customization/theming/demo-presets",
+      "permanent": true
+    },
+    {
+      "source": "/embed/theming-custom",
+      "destination": "/embed/react-tablekit/customization/theming/demo-custom",
+      "permanent": true
+    },
+    {
+      "source": "/embed/density",
+      "destination": "/embed/react-tablekit/features/density/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/composable-layout",
+      "destination": "/embed/react-tablekit/features/toolbar/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/headless",
+      "destination": "/embed/react-tablekit/features/headless/demo-basics",
+      "permanent": true
+    },
+    {
+      "source": "/embed/react-query-recipe",
+      "destination": "/embed/react-tablekit/integrations/react-query/demo-basics",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "cache-control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "x-content-type-options",
+          "value": "nosniff"
+        },
+        {
+          "key": "referrer-policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ]
+}

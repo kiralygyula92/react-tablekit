@@ -1,5 +1,6 @@
 import { createColumnHelper, DataTable } from 'react-tablekit';
 import { tokenMeta } from 'react-tablekit/meta';
+import { UsedBy } from './UsedBy';
 
 type Token = (typeof tokenMeta)[number];
 const col = createColumnHelper<Token>();
@@ -34,6 +35,7 @@ const columns = [
 export function ApiTokensPage() {
   return (
     <>
+      <UsedBy symbol="TableTheme" />
       <DataTable<Token>
         aria-label="Theme tokens"
         data={tokenMeta}

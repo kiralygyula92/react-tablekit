@@ -1,5 +1,6 @@
 import { createColumnHelper, DataTable } from 'react-tablekit';
 import { handlerMeta } from 'react-tablekit/meta';
+import { UsedBy } from './UsedBy';
 
 /** Context and default behaviour per handler (06 §5); the names come from the package. */
 const DETAILS: Record<string, { context: string; behaviour: string }> = {
@@ -74,6 +75,7 @@ const columns = [
 export function ApiHandlersPage() {
   return (
     <>
+      <UsedBy symbol="TableHandlers" />
       <pre className="site-code">
         <code>{`<DataTable
   handlers={{

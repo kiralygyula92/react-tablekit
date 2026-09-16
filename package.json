@@ -22,20 +22,26 @@
     "check:package": "pnpm --filter react-tablekit check:package",
     "docs:check": "pnpm --filter react-tablekit docs:check",
     "docs:json": "pnpm --filter react-tablekit docs:json",
-    "verify": "pnpm --filter site build:data && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm e2e",
+    "verify": "pnpm --filter site build:data && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm conformance && pnpm e2e",
     "changeset": "changeset",
     "version-packages": "changeset version && node scripts/sync-version.mjs && pnpm install --lockfile-only",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "conformance": "pnpm --filter site conformance"
   },
   "devDependencies": {
     "@changesets/cli": "^3.0.2",
     "@eslint/js": "^9.39.0",
+    "@types/react": "^19.3.0",
     "eslint": "^9.39.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^16.4.0",
     "prettier": "^3.9.6",
+    "react": "^19.3.0",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.70.0"
+  },
+  "dependencies": {
+    "@vercel/og": "^0.11.1"
   }
 }
