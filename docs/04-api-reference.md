@@ -284,6 +284,23 @@ type ColumnDef<TData, TValue = unknown> =
   | GroupColumnDef<TData>;                // { id?: string; header; columns: ColumnDef[] }
 ```
 
+`TValue` is inferred by `createColumnHelper`, and `cell`/`format` receive it narrowed. That makes
+`ColumnDef<TData>` — which defaults `TValue` to `unknown` — the wrong type to annotate a mixed
+array with: a helper-built column is not assignable to it. Annotate with `AnyColumnDef<TData>`,
+which is what `columns` accepts:
+
+```ts
+import type { AnyColumnDef } from 'react-tablekit';
+
+export const columns: AnyColumnDef<Person>[] = [
+  col.accessor('name', { header: 'Name' }),
+  col.accessor('score', { header: 'Score', format: (v) => v.toFixed(1) }), // v is number
+];
+```
+
+Letting the array infer (no annotation) works too; the annotation only matters when the columns
+live in their own module and the type has to be written down.
+
 Common fields:
 
 | Field | Type | Default | Notes |
@@ -506,7 +523,7 @@ These cover the cell layouts tables need repeatedly, so examples stay short:
 
 ## 10. Type exports (non-exhaustive)
 
-`DataTableProps, DataTableHandle, TableOptions, TableInstance, TableState, TableQuery, QueryChange, ColumnDef, Column, Header, HeaderGroup, Row, Cell, CellContext, HeaderContext, RowRenderContext, SortingState, ColumnFiltersState, PaginationState, RowSelectionState, ExpandedState, GroupingState, ColumnPinningState, VisibilityState, ColumnSizingState, Density, Updater, DataSource, DataSourceResult, FacetResult, FilterOption, FilterOperator, FilterVariant, SortingFn, FilterFn, AggregationFn, TableSlots, TableSlotProps, SlotName, TableHandlers, HandlerContext, TableIcons, TableLocalization, TableFormatters, TableTheme, ResolvedTableTheme, Breakpoint, ResponsiveValue, PageItem, PaginationVariant, ColumnMeta, TableMeta`.
+`DataTableProps, DataTableHandle, TableOptions, TableInstance, TableState, TableQuery, QueryChange, ColumnDef, AnyColumnDef, Column, Header, HeaderGroup, Row, Cell, CellContext, HeaderContext, RowRenderContext, SortingState, ColumnFiltersState, PaginationState, RowSelectionState, ExpandedState, GroupingState, ColumnPinningState, VisibilityState, ColumnSizingState, Density, Updater, DataSource, DataSourceResult, FacetResult, FilterOption, FilterOperator, FilterVariant, SortingFn, FilterFn, AggregationFn, TableSlots, TableSlotProps, SlotName, TableHandlers, HandlerContext, TableIcons, TableLocalization, TableFormatters, TableTheme, ResolvedTableTheme, Breakpoint, ResponsiveValue, PageItem, PaginationVariant, ColumnMeta, TableMeta`.
 
 `ColumnMeta` and `TableMeta` are empty interfaces intended for **module augmentation**:
 

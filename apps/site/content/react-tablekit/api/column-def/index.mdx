@@ -12,6 +12,24 @@ A column definition is one object. The variants differ only in where the value c
 accessor key, an accessor function, nothing at all (a display column), or nested `columns` (a
 group column).
 
+## Writing the type down
+
+`TValue` is inferred by `createColumnHelper`, so `cell` and `format` see the narrowed value. That
+is also why `ColumnDef<TData>` is the wrong annotation for an array of them — it defaults `TValue`
+to `unknown`, and a helper-built column will not assign to it. Use `AnyColumnDef<TData>`, which is
+what the `columns` prop takes:
+
+```ts
+import type { AnyColumnDef } from 'react-tablekit';
+
+export const columns: AnyColumnDef<Person>[] = [
+  col.accessor('name', { header: 'Name' }),
+  col.accessor('score', { header: 'Score', format: (v) => v.toFixed(1) }),
+];
+```
+
+If the array stays in the same module as the table, let it infer and skip the annotation.
+
 ## Reference
 
 <ApiReference id="column-def" />

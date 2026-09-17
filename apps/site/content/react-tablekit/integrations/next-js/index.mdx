@@ -43,10 +43,14 @@ Import it once, in the root layout:
 
 ```tsx
 import 'react-tablekit/styles.css';
-import 'react-tablekit/presets/light.css';
 ```
 
-Both are plain CSS, so they work with the App Router's own CSS handling without a transform.
+That is plain CSS, so it works with the App Router's own CSS handling without a transform. It
+carries the default look; a preset is a second import on top of it, and only when you want one:
+
+```tsx
+import 'react-tablekit/presets/classic.css';
+```
 
 ## Rendering without a jump
 
