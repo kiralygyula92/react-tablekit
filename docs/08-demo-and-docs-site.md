@@ -169,3 +169,30 @@ interface Reading {
 - The site is itself accessible (axe clean) and responsive down to 375px, and it supports dark mode.
 - Lighthouse performance ≥ 90 on the landing page. Examples are code-split per route.
 - Every example has an e2e smoke test (it renders, has no console errors, and passes axe).
+
+## 9. Analytics (Vercel Insights)
+
+Two products, both injected from `src/insights.ts`:
+
+- **Web Analytics** (`@vercel/analytics`) — page views, referrers, countries, top pages.
+- **Speed Insights** (`@vercel/speed-insights`) — Core Web Vitals measured on real visits, which
+  is the number Lighthouse in §8 only predicts.
+
+Neither is a hosted third-party script: both are served by the platform from `/_vercel/…` on the
+site's own origin, so there is no extra DNS lookup, no cross-origin request and no cookie. They
+add nothing to the library — this is the documentation site only.
+
+**Both must be switched on in the Vercel project** (Analytics tab → enable Web Analytics, enable
+Speed Insights). They are per-project toggles; until they are on, the platform does not serve the
+scripts and the requests 404.
+
+`vite.config.ts` compiles `import.meta.env.VITE_VERCEL_INSIGHTS` to a literal from `VERCEL`, which
+is set in every Vercel build environment and nowhere else. A build made anywhere else therefore
+eliminates the branch in `main.tsx` and drops both packages from the bundle. That is deliberate
+rather than tidy-minded: those scripts only exist on a Vercel deployment, so injecting them under
+`vite preview` would 404, and §8's rule that a page logs nothing to the console fails every e2e
+test on it.
+
+Both patch the history API themselves, so client-side navigations are counted without the router
+having to report them. Every URL the site serves is one of a fixed set, so the path is already the
+route and neither call needs a `route` prop.

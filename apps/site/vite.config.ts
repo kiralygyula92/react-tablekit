@@ -57,11 +57,18 @@ const siteOrigin =
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : undefined);
 
+// Build-time constants. Vercel Insights is a literal here rather than a runtime check so that a
+// build made anywhere else eliminates the branch in `main.tsx` and drops both packages entirely:
+// their scripts are served from `/_vercel` and exist on no other host. `VERCEL` is set in every
+// Vercel build environment.
+const define: Record<string, string> = {
+  'import.meta.env.VITE_VERCEL_INSIGHTS': JSON.stringify(process.env.VERCEL === '1'),
+  ...(siteOrigin ? { 'import.meta.env.VITE_SITE_ORIGIN': JSON.stringify(siteOrigin) } : {}),
+};
+
 export default defineConfig({
   base: process.env.SITE_BASE ?? '/',
-  ...(siteOrigin
-    ? { define: { 'import.meta.env.VITE_SITE_ORIGIN': JSON.stringify(siteOrigin) } }
-    : {}),
+  define,
   plugins: contentPlugins(),
   resolve: { alias: libraryAliases },
   server: { port: 5173 },

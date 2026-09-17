@@ -27,3 +27,12 @@ if (prerenderedRoute && prerenderedRoute === window.location.pathname) {
   container.replaceChildren();
   createRoot(container).render(app);
 }
+
+// Traffic and field Core Web Vitals, on the deployments that serve them (see `insights.ts`). The
+// flag is a build-time literal, so anywhere else this whole branch — and both packages with it —
+// is gone from the bundle rather than merely unused.
+if (import.meta.env.VITE_VERCEL_INSIGHTS as boolean) {
+  void import('./insights').then(({ startInsights }) => {
+    startInsights();
+  });
+}
