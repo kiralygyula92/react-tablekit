@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -58,13 +59,25 @@ export function useTableVersion(table: TableInstance<unknown>): number {
 export function useAnnouncer() {
   const [message, setMessage] = useState('');
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const frame = useRef<number | undefined>(undefined);
   const announce = useCallback((next: string) => {
     clearTimeout(timer.current);
+    if (frame.current !== undefined) cancelAnimationFrame(frame.current);
     timer.current = setTimeout(() => {
       // Clear first so repeating the same message is announced again.
       setMessage('');
-      requestAnimationFrame(() => setMessage(next));
+      frame.current = requestAnimationFrame(() => setMessage(next));
     }, 150);
   }, []);
+  // A table can unmount inside the debounce window: a filter that closes the drawer it lives in,
+  // a route change on the keystroke after the last one. Both handles have to go with it, or the
+  // callback wakes up against a component that is no longer there.
+  useEffect(
+    () => () => {
+      clearTimeout(timer.current);
+      if (frame.current !== undefined) cancelAnimationFrame(frame.current);
+    },
+    [],
+  );
   return { message, announce };
 }
