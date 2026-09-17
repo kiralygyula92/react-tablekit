@@ -1,9 +1,9 @@
 /*
- * The documentation and marketing layouts.
+ * The documentation layout.
  *
  * `site.css` carries the tokens, the shared chrome and the interactive surfaces that predate the
- * restructure; everything here belongs to the page shapes the plugin docs standard describes —
- * the three-column docs page, the marketing landing, and the blocks a page is built from.
+ * restructure; everything here belongs to the page shape the plugin docs standard describes —
+ * the three-column docs page and the blocks a page is built from.
  */
 
 /* ── Documentation shell ─────────────────────────────────────────────────── */
@@ -454,115 +454,6 @@
   font-size: 0.875rem;
 }
 
-/* ── Marketing surface ───────────────────────────────────────────────────── */
-
-.site--marketing {
-  --site-section-gap: 88px;
-}
-
-.marketing-main {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 24px 96px;
-}
-.marketing-main:focus {
-  outline: none;
-}
-.marketing-main > section {
-  margin-top: var(--site-section-gap);
-}
-.marketing-main h2 {
-  margin: 0 0 8px;
-  font-size: 1.875rem;
-  letter-spacing: -0.02em;
-  scroll-margin-top: 72px;
-}
-.marketing-main h3 {
-  margin: 32px 0 6px;
-  font-size: 1.0625rem;
-}
-.marketing-main p {
-  max-width: 68ch;
-  line-height: 1.7;
-}
-
-.hero {
-  padding: 72px 0 8px;
-  text-align: center;
-}
-.hero h1 {
-  margin: 8px auto 16px;
-  max-width: 16ch;
-  font-size: clamp(2.5rem, 6vw, 3.75rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-}
-/* Direct children only: a paragraph inside a call to action is the link's own text, and must
-   keep the link's colour rather than the muted one. */
-.hero > p {
-  margin-inline: auto;
-  max-width: 60ch;
-  font-size: 1.125rem;
-  color: var(--site-text-muted);
-}
-
-.eyebrow {
-  margin: 0;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--site-accent);
-}
-
-.hero__actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
-}
-
-.cta {
-  display: inline-block;
-  padding: 10px 22px;
-  border: 1px solid var(--site-border);
-  border-radius: 8px;
-  background: var(--site-surface);
-  color: var(--site-text);
-  font-weight: 600;
-  text-decoration: none;
-}
-.cta:hover {
-  border-color: var(--site-accent);
-  color: var(--site-accent);
-}
-.cta--primary {
-  border-color: var(--site-accent);
-  background: var(--site-accent);
-  color: var(--site-accent-contrast);
-}
-.cta--primary:hover {
-  color: var(--site-accent-contrast);
-  filter: brightness(1.08);
-}
-/* MDX wraps a link's text in a paragraph when it sits on its own line. */
-.cta > p {
-  margin: 0;
-  color: inherit;
-  font-size: inherit;
-}
-
-.section-lead {
-  margin: 0 0 24px;
-  max-width: 68ch;
-  font-size: 1.0625rem;
-  color: var(--site-text-muted);
-}
-.section-lead > p {
-  margin: 0;
-}
-
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 
 .site-footer {
@@ -671,15 +562,6 @@
   .demo__stage {
     min-height: 320px;
     padding: 12px;
-  }
-  .marketing-main {
-    padding: 0 16px 64px;
-  }
-  .site--marketing {
-    --site-section-gap: 56px;
-  }
-  .hero {
-    padding: 40px 0 0;
   }
 }
 

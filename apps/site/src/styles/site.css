@@ -240,22 +240,13 @@ code {
   outline: none;
 }
 
+/*
+ * Nothing in the page has a width of its own: prose, demos, tables and code all fill the middle
+ * column, and the column is what decides how wide they are. An inner cap on the running text
+ * read as a second, narrower container inside the one the layout already draws.
+ */
 .site-prose {
   max-width: none;
-}
-/*
- * A line of prose stays readable at about 78 characters however wide the window is. Demos,
- * tables and code blocks are deliberately not capped: width is what they are for.
- */
-.site-prose > p,
-.site-prose > ul,
-.site-prose > ol,
-.site-prose > blockquote,
-.site-prose > h2,
-.site-prose > h3,
-.site-prose > h4,
-.page-header .site-lead {
-  max-width: 78ch;
 }
 .site-lead {
   font-size: 1.1rem;
