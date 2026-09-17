@@ -104,7 +104,7 @@ only pay for the ones you import.
 ## Documentation
 
 Guides, an example gallery, a playground, a theme editor and the full API reference:
-<https://kiralygyula92.github.io/react-tablekit/>
+<https://react-tablekit.vercel.app/react-tablekit/>
 
 ## License
 

@@ -84,7 +84,7 @@
     "url": "git+https://github.com/kiralygyula92/react-tablekit.git",
     "directory": "packages/react-tablekit"
   },
-  "homepage": "https://kiralygyula92.github.io/react-tablekit/",
+  "homepage": "https://react-tablekit.vercel.app/react-tablekit/",
   "bugs": "https://github.com/kiralygyula92/react-tablekit/issues",
   "scripts": {
     "build": "node scripts/clean.mjs && tsup && node scripts/build-css.mjs",
