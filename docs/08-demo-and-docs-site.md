@@ -186,6 +186,22 @@ add nothing to the library — this is the documentation site only.
 Speed Insights). They are per-project toggles; until they are on, the platform does not serve the
 scripts and the requests 404.
 
+**Enabling one takes effect on the next deployment, not on the current one.** The `/_vercel/…`
+routes are written into a deployment's routing table when it is built, from the project settings
+as they stood then, so switching a product on afterwards leaves the running deployment without
+its route. Redeploy after enabling. The symptom is specific enough to recognise: the script
+returns 404 with `content-type: text/html` — it fell through to `404.html` — and carries the
+`x-content-type-options` header from this site's own `vercel.json`, which means the request was
+served by the static config rather than intercepted by the platform. A working one is
+`application/javascript` and carries none of this site's headers:
+
+```sh
+curl -sI https://react-tablekit.vercel.app/_vercel/insights/script.js | head -1
+```
+
+A content blocker will also hide the script from the browser while leaving that check green, so
+verify with one before concluding anything from an empty dashboard.
+
 `vite.config.ts` compiles `import.meta.env.VITE_VERCEL_INSIGHTS` to a literal from `VERCEL`, which
 is set in every Vercel build environment and nowhere else. A build made anywhere else therefore
 eliminates the branch in `main.tsx` and drops both packages from the bundle. That is deliberate
