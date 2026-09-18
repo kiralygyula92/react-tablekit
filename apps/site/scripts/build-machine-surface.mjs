@@ -1,5 +1,5 @@
 /**
- * The machine-readable surface of the site (PPDS §7.7): `llms.txt`, `llms-full.md` (also served as
+ * The machine-readable surface of the site: `llms.txt`, `llms-full.md` (also served as
  * `llms-full.txt`), a Markdown twin of every page, `sitemap.xml`, `robots.txt` and an RSS feed for
  * the changelog.
  *
@@ -433,7 +433,7 @@ writeFileSync(path.join(publicRoot, 'llms-full.txt'), full);
 
 /* ── llms.txt ──────────────────────────────────────────────────────────────
    One line per page, grouped by the sidebar's own sections so the order an agent reads matches
-   the order a person would. The description is the page's single description (P10). */
+   the order a person would. The description is the page's single description. */
 
 const entry = (pathname) =>
   `- [${titleOf(pathname)}](${ORIGIN}${pathname}index.md): ${describe(pathname)}`;
@@ -488,9 +488,16 @@ const changelog = readFileSync(
   path.join(siteRoot, '..', '..', 'packages', 'react-tablekit', 'CHANGELOG.md'),
   'utf8',
 );
-const releases = [...changelog.matchAll(/^## (\d+\.\d+\.\d+)\n([\s\S]*?)(?=\n## |\s*$)/gm)].map(
-  ([, version, body]) => ({ version, body: body.trim() }),
-);
+// Split on the version headings rather than match up to "the end": in multiline mode `$` is the
+// end of any line, so the blank line under each heading used to end every release body at once.
+const releases = changelog
+  .split(/^## /m)
+  .slice(1)
+  .map((section) => {
+    const [heading = '', ...body] = section.split('\n');
+    return { version: heading.trim(), body: body.join('\n').trim() };
+  })
+  .filter((release) => /^\d+\.\d+\.\d+$/.test(release.version));
 
 const escapeXml = (s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
