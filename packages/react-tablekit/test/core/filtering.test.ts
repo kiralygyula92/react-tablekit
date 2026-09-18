@@ -271,6 +271,29 @@ describe('tree filtering', () => {
     leaf.setGlobalFilter('beta');
     expect(ids(leaf.getFilteredRowModel().flatRows)).toEqual(['root', 'child-b']);
   });
+
+  it('does not restore rejected children when only their parent matches', () => {
+    const table = makeTable({
+      data: tree,
+      getSubRows: (p) => p.children,
+      filterFromLeafRows: true,
+    });
+    table.setGlobalFilter('root');
+    expect(ids(table.getFilteredRowModel().flatRows)).toEqual(['root']);
+  });
+
+  it('preserves children below the configured leaf-filter depth', () => {
+    const table = makeTable({
+      data: tree,
+      getSubRows: (p) => p.children,
+      filterFromLeafRows: true,
+      maxLeafRowFilterDepth: 0,
+    });
+    table.setGlobalFilter('root');
+    expect(ids(table.getFilteredRowModel().flatRows)).toEqual(['root', 'child-a', 'child-b']);
+    table.setGlobalFilter('beta');
+    expect(table.getFilteredRowModel().flatRows).toEqual([]);
+  });
 });
 
 describe('filterFns / fuzzy', () => {

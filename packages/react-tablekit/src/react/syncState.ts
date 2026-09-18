@@ -124,9 +124,11 @@ export function decodeState(search: string, prefix = 'tk'): Partial<TableState> 
   const page = get('page');
   const size = get('size');
   if (page !== null || size !== null) {
+    const pageNumber = Number(page);
+    const pageSize = Number(size);
     state.pagination = {
-      pageIndex: page === null ? 0 : Math.max(0, Number(page) - 1),
-      pageSize: size === null ? 10 : Number(size),
+      pageIndex: Number.isSafeInteger(pageNumber) && pageNumber > 0 ? pageNumber - 1 : 0,
+      pageSize: Number.isSafeInteger(pageSize) && pageSize > 0 ? pageSize : 10,
     };
   }
   const sort = get('sort');
@@ -175,9 +177,10 @@ interface StoredPayload {
 }
 
 function readStorage(options: NonNullable<SyncStateOptions['storage']>): Partial<TableState> {
-  const store = options.storage ?? (typeof localStorage === 'undefined' ? undefined : localStorage);
-  if (!store) return {};
   try {
+    const store =
+      options.storage ?? (typeof localStorage === 'undefined' ? undefined : localStorage);
+    if (!store) return {};
     const raw = store.getItem(options.key);
     if (raw === null) return {};
     const payload = JSON.parse(raw) as StoredPayload;
@@ -196,9 +199,10 @@ function writeStorage(
   options: NonNullable<SyncStateOptions['storage']>,
   state: Partial<TableState>,
 ): void {
-  const store = options.storage ?? (typeof localStorage === 'undefined' ? undefined : localStorage);
-  if (!store) return;
   try {
+    const store =
+      options.storage ?? (typeof localStorage === 'undefined' ? undefined : localStorage);
+    if (!store) return;
     const payload: StoredPayload = { version: options.version ?? 0, state };
     store.setItem(options.key, JSON.stringify(payload));
   } catch {
@@ -223,6 +227,33 @@ const DEFAULT_STORAGE_KEYS: (keyof TableState)[] = [
   'columnPinning',
   'density',
 ];
+
+/** Replaces only the URL parameters owned by the selected slices of this table. */
+function mergeUrlState(
+  search: string,
+  state: TableState,
+  keys: (keyof TableState)[],
+  prefix = 'tk',
+): URLSearchParams {
+  const params = new URLSearchParams(search);
+  for (const key of keys) {
+    if (key === 'columnFilters') {
+      for (const name of [...params.keys()]) {
+        if (name.startsWith(`${prefix}.f.`)) params.delete(name);
+      }
+    } else {
+      const names =
+        key === 'pagination'
+          ? ['page', 'size']
+          : key === 'columnPinning'
+            ? ['pinL', 'pinR']
+            : [SHORT_KEYS[key] ?? key];
+      for (const name of names) params.delete(`${prefix}.${name}`);
+    }
+  }
+  for (const [name, value] of encodeState(state, keys, prefix)) params.set(name, value);
+  return params;
+}
 
 /** A router adapter for `useRouterSync`. */
 export interface RouterSyncAdapter {
@@ -280,11 +311,20 @@ export function useSyncState<TData>(
       const { url, storage } = optionsRef.current ?? {};
       if (storage) writeStorage(storage, pick(state, storage.keys ?? DEFAULT_STORAGE_KEYS));
       if (url) {
-        const params = encodeState(state, url.keys ?? DEFAULT_URL_KEYS, url.prefix);
-        const search = params.toString();
         const currentRouter = routerRef.current;
+        const currentSearch = currentRouter
+          ? currentRouter.getSearch()
+          : typeof window === 'undefined'
+            ? ''
+            : window.location.search;
+        const search = mergeUrlState(
+          currentSearch,
+          state,
+          url.keys ?? DEFAULT_URL_KEYS,
+          url.prefix,
+        ).toString();
         if (currentRouter) {
-          if (currentRouter.getSearch().replace(/^\?/, '') !== search) {
+          if (currentSearch.replace(/^\?/, '') !== search) {
             currentRouter.setSearch(search ? `?${search}` : '', url.mode ?? 'replace');
           }
         } else if (typeof window !== 'undefined') {
@@ -292,8 +332,9 @@ export function useSyncState<TData>(
           if (
             next !== `${window.location.pathname}${window.location.search}${window.location.hash}`
           ) {
-            if ((url.mode ?? 'replace') === 'push') window.history.pushState(null, '', next);
-            else window.history.replaceState(null, '', next);
+            if ((url.mode ?? 'replace') === 'push')
+              window.history.pushState(window.history.state, '', next);
+            else window.history.replaceState(window.history.state, '', next);
           }
         }
       }

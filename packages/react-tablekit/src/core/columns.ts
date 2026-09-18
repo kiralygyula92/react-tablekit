@@ -243,7 +243,12 @@ export function createColumn<TData>(
       if (column.columns.length) {
         return column.getLeafColumns().reduce((sum, c) => sum + c.getSize(), 0);
       }
-      const size = state().columnSizing[id] ?? def.size ?? parsePx(def.width) ?? DEFAULT_SIZE;
+      const sizing = state().columnSizing;
+      const size =
+        (Object.hasOwn(sizing, id) ? sizing[id] : undefined) ??
+        def.size ??
+        parsePx(def.width) ??
+        DEFAULT_SIZE;
       const min = def.minSize ?? parsePx(def.minWidth) ?? DEFAULT_MIN_SIZE;
       const max = def.maxSize ?? parsePx(def.maxWidth) ?? Number.POSITIVE_INFINITY;
       return Math.min(Math.max(size, min), max);

@@ -2,6 +2,12 @@ packages:
   - packages/*
   - apps/*
 
+# Patched transitive versions while upstream ranges still select vulnerable releases.
+overrides:
+  'esbuild@>=0.27.3 <0.28.1': 0.28.2
+  'remark-mdx-frontmatter>toml': 4.2.0
+  '@vercel/og>sharp': 0.35.4
+
 # Dependencies whose install scripts are allowed to run.
 allowBuilds:
   esbuild: true

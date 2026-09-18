@@ -120,6 +120,12 @@ export function writeSetupParams(values: PlaygroundValues, params: URLSearchPara
   for (const [key, value] of Object.entries(changedValues(values))) params.set(key, String(value));
 }
 
+/** Keeps numeric setup values inside the same bounds for controls and shared URLs. */
+export function normalizeSetupNumber(control: Control, value: number): number {
+  if (!Number.isFinite(value)) return Number(control.default);
+  return Math.min(control.max ?? Infinity, Math.max(control.min ?? -Infinity, value));
+}
+
 /** Reads setup values back from URL search params, falling back to the defaults. */
 export function readSetupParams(params: URLSearchParams): PlaygroundValues {
   const values = defaultValues();
@@ -127,8 +133,7 @@ export function readSetupParams(params: URLSearchParams): PlaygroundValues {
     const raw = params.get(control.id);
     if (raw === null) continue;
     if (control.kind === 'number') {
-      const n = Number(raw);
-      if (Number.isFinite(n)) values[control.id] = n;
+      values[control.id] = normalizeSetupNumber(control, Number(raw));
     } else if (control.kind === 'boolean') {
       values[control.id] = raw === 'true';
     } else if (control.options?.map(String).includes(raw)) {

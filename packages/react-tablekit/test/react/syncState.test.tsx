@@ -1,18 +1,29 @@
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
-import { DataTable, decodeState, encodeState } from '../../src';
-import type { TableInstance, TableState } from '../../src/core';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { DataTable, decodeState, encodeState, useRouterSync } from '../../src';
+import { createTable, type TableInstance, type TableState } from '../../src/core';
 import { numbered, people, personColumns, renderTable, type Person } from './helpers';
 
 const search = () => window.location.search;
 
 afterEach(() => {
+  vi.restoreAllMocks();
   window.history.replaceState(null, '', '/');
   localStorage.clear();
 });
 
 describe('URL state encoding', () => {
+  it.each(['NaN', 'Infinity', '-1', '0', '2.5', ''])(
+    'ignores invalid pagination values from shared URLs: %s',
+    (value) => {
+      expect(decodeState(`?tk.page=${value}&tk.size=${value}`).pagination).toEqual({
+        pageIndex: 0,
+        pageSize: 10,
+      });
+    },
+  );
+
   it('uses the compact, documented spelling', () => {
     const state: Partial<TableState> = {
       pagination: { pageIndex: 1, pageSize: 25 },
@@ -66,6 +77,65 @@ describe('URL state encoding', () => {
 });
 
 describe('syncState', () => {
+  it('preserves application query parameters, other tables, hashes and history state', () => {
+    const historyState = { key: 'route-key', idx: 3, usr: { selectedTab: 'people' } };
+    window.history.replaceState(historyState, '', '/?view=all&tag=a&tag=b&other.q=keep#results');
+    let table!: TableInstance<Person>;
+    renderTable({
+      toolbar: false,
+      syncState: { url: {} },
+      tableRef: (instance) => {
+        table = instance;
+      },
+    });
+    act(() => table.setGlobalFilter('Ada'));
+    const params = new URLSearchParams(search());
+    expect(params.get('view')).toBe('all');
+    expect(params.getAll('tag')).toEqual(['a', 'b']);
+    expect(params.get('other.q')).toBe('keep');
+    expect(params.get('tk.q')).toBe('Ada');
+    expect(window.location.hash).toBe('#results');
+    expect(window.history.state).toEqual(historyState);
+
+    act(() => table.setGlobalFilter(''));
+    expect(new URLSearchParams(search()).has('tk.q')).toBe(false);
+    expect(new URLSearchParams(search()).get('view')).toBe('all');
+  });
+
+  it('merges router updates with only the configured state slices', () => {
+    let currentSearch = '?view=all&custom.q=old&custom.page=3&other.q=keep';
+    const table = createTable({ data: people, columns: personColumns });
+    renderHook(() =>
+      useRouterSync(
+        table,
+        {
+          getSearch: () => currentSearch,
+          setSearch: (next) => {
+            currentSearch = next;
+          },
+        },
+        { url: { prefix: 'custom', keys: ['globalFilter'] } },
+      ),
+    );
+    act(() => table.setGlobalFilter('new'));
+    expect(new URLSearchParams(currentSearch).get('view')).toBe('all');
+    expect(new URLSearchParams(currentSearch).get('custom.page')).toBe('3');
+    expect(new URLSearchParams(currentSearch).get('other.q')).toBe('keep');
+    expect(new URLSearchParams(currentSearch).get('custom.q')).toBe('new');
+    act(() => table.setGlobalFilter(''));
+    expect(new URLSearchParams(currentSearch).has('custom.q')).toBe(false);
+  });
+
+  it('continues rendering and synchronizing the URL when the storage getter is denied', () => {
+    vi.spyOn(window, 'localStorage', 'get').mockImplementation(() => {
+      throw new DOMException('Storage is disabled', 'SecurityError');
+    });
+    expect(() =>
+      renderTable({ toolbar: false, syncState: { url: {}, storage: { key: 'people' } } }),
+    ).not.toThrow();
+    expect(new URLSearchParams(search()).get('tk.size')).toBe('10');
+  });
+
   it('writes the URL as the state changes', async () => {
     const user = userEvent.setup();
     renderTable({

@@ -1,3 +1,4 @@
+import { getEventListeners } from 'node:events';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   createTable,
@@ -295,6 +296,33 @@ describe('dataSource: refresh, polling, optimistic updates', () => {
 });
 
 describe('dataSource: load-more accumulation', () => {
+  it('appends pages when row IDs use the default index', async () => {
+    const { source, calls } = controllableSource();
+    const table = createTable({ columns: personColumns, dataSource: source, appendPages: true });
+    const unmount = table._mount();
+    calls[0]!.resolve(page(0));
+    await flush();
+    table.nextPage();
+    calls[1]!.resolve(page(1));
+    await flush();
+    expect(table.getRowModel().rows.map((r) => r.original.id)).toEqual(
+      numbered(20).map((r) => r.id),
+    );
+    unmount();
+  });
+
+  it('deduplicates repeated IDs within an appended page', async () => {
+    const { table, calls, unmount } = setup({ appendPages: true });
+    calls[0]!.resolve(page(0));
+    await flush();
+    table.nextPage();
+    const next = numbered(11)[10]!;
+    calls[1]!.resolve({ rows: [next, next], rowCount: 95 });
+    await flush();
+    expect(table.getRowModel().rows.map((r) => r.id)).toEqual(numbered(11).map((r) => r.id));
+    unmount();
+  });
+
   it('appends the next page and starts over when the query changes', async () => {
     // The React layer merges its view props into the options, which is how the engine infers
     // accumulation from the pagination variant.
@@ -400,6 +428,60 @@ describe('dataSource: cursor pagination', () => {
 });
 
 describe('dataSource: lazy children', () => {
+  it('discards children returned for a previous query', async () => {
+    let resolveChildren!: (rows: Person[]) => void;
+    let childSignal!: AbortSignal;
+    const { table, calls, unmount } = setup(
+      { getRowCanExpand: () => true },
+      {
+        fetchChildren: (_row, _query, { signal }) => {
+          childSignal = signal;
+          return new Promise((resolve) => {
+            resolveChildren = resolve;
+          });
+        },
+      },
+    );
+    calls[0]!.resolve(page(0));
+    await flush();
+    table.getRow('r0')!.toggleExpanded(true);
+    table.setSorting([{ id: 'name', desc: true }]);
+    calls.at(-1)!.resolve(page(0));
+    await flush();
+    resolveChildren([{ ...numbered(1)[0]!, id: 'stale-child' }]);
+    await flush();
+    expect(table.getRow('stale-child', true)).toBeUndefined();
+    expect(childSignal.aborted).toBe(true);
+    expect(table.getRowChildrenStatus('r0').loading).toBe(false);
+    unmount();
+  });
+
+  it('allows an interrupted child request to restart after remount', async () => {
+    const childRequests: { signal: AbortSignal; resolve: (rows: Person[]) => void }[] = [];
+    const { table, calls, unmount } = setup(
+      { getRowCanExpand: () => true },
+      {
+        fetchChildren: (_row, _query, { signal }) =>
+          new Promise((resolve) => {
+            childRequests.push({ signal, resolve });
+          }),
+      },
+    );
+    calls[0]!.resolve(page(0));
+    await flush();
+    table.getRow('r0')!.toggleExpanded(true);
+    unmount();
+    const unmountAgain = table._mount();
+    calls.at(-1)!.resolve(page(0));
+    await flush();
+    table.getRow('r0')!.toggleExpanded(true);
+    expect(childRequests).toHaveLength(2);
+    childRequests[1]!.resolve([{ ...numbered(1)[0]!, id: 'loaded-child' }]);
+    await flush();
+    expect(table.getRow('loaded-child', true)).toBeDefined();
+    unmountAgain();
+  });
+
   it('fetches once per row per query and refetches after the query changes', async () => {
     const fetchChildren = vi.fn((row: { id: string }) =>
       Promise.resolve([
@@ -455,6 +537,113 @@ describe('selection across server pages', () => {
 });
 
 describe('dataSource: facets and chunked export', () => {
+  it('releases the export cancellation listener after each chunk', async () => {
+    const source: DataSource<Person> = {
+      fetch: (query) => Promise.resolve(page(query.pagination.pageIndex, 10, 25)),
+    };
+    const table = createTable({ columns: personColumns, dataSource: source, exportChunkSize: 10 });
+    const ac = new AbortController();
+    await table.exportCsv({ scope: 'all', signal: ac.signal });
+    expect(getEventListeners(ac.signal, 'abort')).toHaveLength(0);
+  });
+
+  it('rejects an export cancelled during its final chunk even if the source ignores abort', async () => {
+    const { source, calls } = controllableSource();
+    const table = createTable({ columns: personColumns, dataSource: source });
+    const ac = new AbortController();
+    const pending = table.exportCsv({ scope: 'all', signal: ac.signal });
+    ac.abort();
+    calls[0]!.resolve(page(0, 10, 5));
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+    expect(getEventListeners(ac.signal, 'abort')).toHaveLength(0);
+  });
+
+  it('does not publish a stale facet response after the query changes', async () => {
+    interface Facet {
+      type: 'values';
+      values: { value: string; count: number }[];
+    }
+    const requests: { signal: AbortSignal; resolve: (result: Facet) => void }[] = [];
+    const { table, calls, unmount } = setup(
+      {},
+      {
+        fetchFacets: (_column, _query, { signal }) =>
+          new Promise((resolve) => {
+            requests.push({ signal, resolve });
+          }),
+      },
+    );
+    calls[0]!.resolve(page(0));
+    await flush();
+    const city = table.getColumn('city')!;
+    const stale = city.loadFacets();
+    table.setSorting([{ id: 'name', desc: true }]);
+    const fresh = city.loadFacets();
+    requests[1]!.resolve({ type: 'values', values: [{ value: 'Current', count: 1 }] });
+    await fresh;
+    requests[0]!.resolve({ type: 'values', values: [{ value: 'Stale', count: 1 }] });
+    await stale;
+    expect(city.getServerFacets()).toEqual({
+      type: 'values',
+      values: [{ value: 'Current', count: 1 }],
+    });
+    expect(requests[0]!.signal.aborted).toBe(true);
+    unmount();
+  });
+
+  it('reloads facets when returning to an earlier query', async () => {
+    const { table, unmount } = setup(
+      {},
+      {
+        fetchFacets: (_column, query) =>
+          Promise.resolve({
+            type: 'values',
+            values: [{ value: query.sorting.length ? 'Sorted' : 'Initial', count: 1 }],
+          }),
+      },
+    );
+    const city = table.getColumn('city')!;
+    await city.loadFacets();
+    table.setSorting([{ id: 'name', desc: true }]);
+    await city.loadFacets();
+    table.setSorting([]);
+    await city.loadFacets();
+    expect(city.getServerFacets()).toEqual({
+      type: 'values',
+      values: [{ value: 'Initial', count: 1 }],
+    });
+    unmount();
+  });
+
+  it('aborts facet requests on unmount and permits reloading on remount', async () => {
+    const requests: {
+      signal: AbortSignal;
+      resolve: (result: { type: 'values'; values: [] }) => void;
+    }[] = [];
+    const { table, unmount } = setup(
+      {},
+      {
+        fetchFacets: (_column, _query, { signal }) =>
+          new Promise((resolve) => {
+            requests.push({ signal, resolve });
+          }),
+      },
+    );
+    const city = table.getColumn('city')!;
+    const pending = city.loadFacets();
+    unmount();
+    requests[0]!.resolve({ type: 'values', values: [] });
+    await pending;
+    expect(requests[0]!.signal.aborted).toBe(true);
+    expect(city.getServerFacets()).toBeUndefined();
+    const unmountAgain = table._mount();
+    const retry = city.loadFacets();
+    expect(requests).toHaveLength(2);
+    requests[1]!.resolve({ type: 'values', values: [] });
+    await retry;
+    unmountAgain();
+  });
+
   it('loadFacets fetches once per query and exposes the result', async () => {
     const fetchFacets = vi.fn(() =>
       Promise.resolve({ type: 'values' as const, values: [{ value: 'A', count: 3 }] }),
@@ -534,6 +723,54 @@ describe('dataSource: facets and chunked export', () => {
 });
 
 describe('createLocalDataSource', () => {
+  it('rejects an already aborted request even when latency is enabled', async () => {
+    vi.useFakeTimers();
+    try {
+      const local = createLocalDataSource(numbered(5), { columns: personColumns, latencyMs: 100 });
+      const ac = new AbortController();
+      ac.abort();
+      const pending = local.fetch(
+        {
+          pagination: { pageIndex: 0, pageSize: 10 },
+          sorting: [],
+          globalFilter: '',
+          columnFilters: [],
+          grouping: [],
+        },
+        { signal: ac.signal, reason: 'refresh' },
+      );
+      await Promise.all([
+        expect(pending).rejects.toMatchObject({ name: 'AbortError' }),
+        vi.runAllTimersAsync(),
+      ]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('releases the latency cancellation listener after resolving', async () => {
+    vi.useFakeTimers();
+    try {
+      const local = createLocalDataSource(numbered(5), { columns: personColumns, latencyMs: 100 });
+      const ac = new AbortController();
+      const pending = local.fetch(
+        {
+          pagination: { pageIndex: 0, pageSize: 10 },
+          sorting: [],
+          globalFilter: '',
+          columnFilters: [],
+          grouping: [],
+        },
+        { signal: ac.signal, reason: 'refresh' },
+      );
+      await vi.runAllTimersAsync();
+      expect((await pending).rows).toHaveLength(5);
+      expect(getEventListeners(ac.signal, 'abort')).toHaveLength(0);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it('produces the same rows as client mode for the same query', async () => {
     const data = numbered(57);
     const client = createTable({

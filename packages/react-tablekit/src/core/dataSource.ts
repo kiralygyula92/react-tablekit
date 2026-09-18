@@ -48,7 +48,7 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
   let nextCursor: string | null | undefined;
   let prevCursor: string | null | undefined;
   const facets = new Map<string, FacetResult>();
-  const facetRequests = new Map<string, Promise<void>>();
+  const facetRequests = new Map<string, { promise: Promise<void>; controller: AbortController }>();
   let status: DataStatus = {
     loading: false,
     fetching: false,
@@ -157,8 +157,16 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
       query.pagination.pageIndex > previous.pagination.pageIndex &&
       sameExceptPage(previous, query);
     if (appending) {
-      const seen = new Set(rows.map((r, i) => opts().getRowId?.(r, i) ?? String(i)));
-      const added = result.rows.filter((r, i) => !seen.has(opts().getRowId?.(r, i) ?? String(i)));
+      const getRowId = opts().getRowId;
+      const seen = new Set(rows.map((r, i) => getRowId?.(r, i) ?? String(i)));
+      const added = getRowId
+        ? result.rows.filter((r, i) => {
+            const id = getRowId(r, rows.length + i);
+            if (seen.has(id)) return false;
+            seen.add(id);
+            return true;
+          })
+        : result.rows;
       rows = [...rows, ...added];
     } else {
       rows = result.rows;
@@ -224,6 +232,12 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
         controller?.abort();
         inflight = undefined;
         for (const c of childControllers.values()) c.abort();
+        childControllers.clear();
+        for (const [id, entry] of children) {
+          if (entry.status === 'loading') children.delete(id);
+        }
+        for (const request of facetRequests.values()) request.controller.abort();
+        facetRequests.clear();
         if (interval) clearInterval(interval);
         removeFocus?.();
         // A remount (StrictMode) must refetch: forget that a request was made.
@@ -235,8 +249,17 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
     onQueryChange(query: TableQuery, reason: QueryChangeReason) {
       // Lazy children are cached per query: drop them when the result set changes.
       if (reason !== 'pagination') {
-        for (const [id, entry] of children)
-          if (entry.queryKey !== queryKey(query)) children.delete(id);
+        const key = queryKey(query);
+        for (const [id, entry] of children) {
+          if (entry.queryKey !== key) {
+            childControllers.get(id)?.abort();
+            childControllers.delete(id);
+            children.delete(id);
+          }
+        }
+        for (const request of facetRequests.values()) request.controller.abort();
+        facetRequests.clear();
+        facets.clear();
       }
       void run(query, reason);
     },
@@ -294,6 +317,8 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
       } catch (error) {
         if (ac.signal.aborted || isAbortError(error)) return;
         children.set(row.id, { status: 'error', rows: [], error, queryKey: key });
+      } finally {
+        if (childControllers.get(row.id) === ac) childControllers.delete(row.id);
       }
       host.notify();
     },
@@ -306,19 +331,21 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
       const query = host.getQuery();
       const key = `${columnId}|${queryKey(query)}`;
       const pending = facetRequests.get(key);
-      if (pending) return pending;
+      if (pending) return pending.promise;
       const ac = new AbortController();
       const promise = ds
         .fetchFacets(columnId, query, { signal: ac.signal })
         .then((result) => {
+          if (ac.signal.aborted) return;
           facets.set(columnId, result);
           host.notify();
         })
         .catch((error: unknown) => {
+          if (ac.signal.aborted) return;
           facetRequests.delete(key);
           if (!isAbortError(error)) opts().onError?.(error, query);
         });
-      facetRequests.set(key, promise);
+      facetRequests.set(key, { promise, controller: ac });
       return promise;
     },
 
@@ -337,15 +364,14 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
       let cursor: string | null | undefined = null;
       for (;;) {
         if (signal?.aborted) throw new DOMException('Export cancelled', 'AbortError');
-        const ac = new AbortController();
-        signal?.addEventListener('abort', () => ac.abort(), { once: true });
         const result: DataSourceResult<TData> = await ds.fetch(
           {
             ...base,
             pagination: { pageIndex, pageSize: chunkSize, ...(cursor !== null ? { cursor } : {}) },
           },
-          { signal: ac.signal, reason: 'refresh' },
+          { signal: signal ?? new AbortController().signal, reason: 'refresh' },
         );
+        if (signal?.aborted) throw new DOMException('Export cancelled', 'AbortError');
         all.push(...result.rows);
         const total =
           result.rowCount !== undefined && result.rowCount >= 0

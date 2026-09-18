@@ -74,8 +74,17 @@ const slots: Partial<TableSlots<DemoPerson>> = {
   ),
 
   /** A minimal pager; the slot hands over every command it needs. */
-  Pagination: ({ pageIndex, pageCount, canPrev, canNext, prev, next, ...rest }) => (
-    <nav {...rest} className="demo-pager">
+  Pagination: ({
+    pageIndex,
+    pageCount,
+    canPrev,
+    canNext,
+    prev,
+    next,
+    style,
+    'aria-label': label,
+  }) => (
+    <nav style={style} aria-label={label} className="demo-pager">
       <button type="button" onClick={prev} disabled={!canPrev}>
         ← Previous
       </button>

@@ -1147,7 +1147,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
       table._selectionAnchor = row.id;
       setSlice('rowSelection', (old) => {
         const multi = resolveFlag(table.options.enableMultiRowSelection, row, true);
-        const sel: RowSelectionState = multi ? { ...old } : {};
+        const sel = Object.assign(Object.create(null) as RowSelectionState, multi ? old : {});
         mutateSelection(sel, row, next, opts?.selectChildren ?? true);
         return sel;
       });
@@ -1172,7 +1172,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
     }
     const next = value ?? !table.getIsAllRowsSelected();
     setSlice('rowSelection', (old) => {
-      const sel = { ...old };
+      const sel = Object.assign(Object.create(null) as RowSelectionState, old);
       delete sel.__all;
       for (const r of selectableFiltered()) {
         if (next) sel[r.id] = true;
@@ -1184,7 +1184,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
   table.toggleAllPageRowsSelected = (value) => {
     const next = value ?? !table.getIsAllPageRowsSelected();
     setSlice('rowSelection', (old) => {
-      const sel = { ...old };
+      const sel = Object.assign(Object.create(null) as RowSelectionState, old);
       for (const r of selectablePage()) mutateSelection(sel, r, next, false);
       return sel;
     });
@@ -1255,7 +1255,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
     if (a === -1 || b === -1) return;
     const [start, end] = a < b ? [a, b] : [b, a];
     setSlice('rowSelection', (old) => {
-      const sel = { ...old };
+      const sel = Object.assign(Object.create(null) as RowSelectionState, old);
       for (const r of rows.slice(start, end + 1)) mutateSelection(sel, r, value, false);
       return sel;
     });
@@ -1330,7 +1330,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
     const expanded = table.getState().expanded;
     if (expanded === true) return true;
     const rows = table.getPrePaginationRowModel().flatRows.filter((r) => r.getCanExpand());
-    return rows.length > 0 && rows.every((r) => expanded[r.id]);
+    return rows.length > 0 && rows.every((r) => expanded[r.id] === true);
   };
   table.getIsSomeRowsExpanded = () => {
     const expanded = table.getState().expanded;

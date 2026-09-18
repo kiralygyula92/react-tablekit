@@ -3,6 +3,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useRef,
   useState,
   type ComponentType,
   type LazyExoticComponent,
@@ -52,12 +53,27 @@ function useDemoSource(id: string): string {
 function Toolbar({ source, onReset }: { source: string; onReset: () => void }) {
   const [showSource, setShowSource] = useState(false);
   const [copied, setCopied] = useState(false);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const mounted = useRef(false);
 
-  const copy = useCallback(() => {
-    void navigator.clipboard.writeText(source).then(() => {
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      clearTimeout(copyTimer.current);
+    };
+  }, []);
+
+  const copy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(source);
+      if (!mounted.current) return;
+      clearTimeout(copyTimer.current);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
+      copyTimer.current = setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard access can be blocked; the source remains available through Show source.
+    }
   }, [source]);
 
   // StackBlitz accepts a project as a form POST, so a live sandbox needs no SDK.
@@ -98,7 +114,7 @@ function Toolbar({ source, onReset }: { source: string; onReset: () => void }) {
     <>
       <div className="demo__toolbar">
         {/* The source arrives in its own chunk, so these wait for it; Reset never does. */}
-        <button type="button" onClick={copy} disabled={!source}>
+        <button type="button" onClick={() => void copy()} disabled={!source}>
           {copied ? 'Copied' : 'Copy'}
         </button>
         <button

@@ -33,6 +33,7 @@ import {
 import {
   changedValues,
   defaultValues,
+  normalizeSetupNumber,
   readSetupParams,
   SCHEMA,
   writeSetupParams,
@@ -237,7 +238,10 @@ export function PlaygroundPage() {
                       max={control.max}
                       step={control.step ?? 1}
                       onChange={(e) =>
-                        setSetup((prev) => ({ ...prev, [control.id]: Number(e.target.value) }))
+                        setSetup((prev) => ({
+                          ...prev,
+                          [control.id]: normalizeSetupNumber(control, Number(e.target.value)),
+                        }))
                       }
                     />
                   )}
@@ -321,7 +325,7 @@ export function PlaygroundPage() {
       <section className="playground__preview" aria-label="Preview">
         <PreviewBoundary key={previewKey} onReset={() => setProps({})}>
           <DataTable<DemoPerson>
-            key={`${dataset}-${String(setup.source)}-${String(setup.locale)}`}
+            key={`${dataset}-${String(setup.source)}-${String(setup.locale)}-${String(pageSize)}-${density}`}
             aria-label="Playground"
             {...(dataSource ? { dataSource } : { data: rows })}
             columns={peopleColumns}

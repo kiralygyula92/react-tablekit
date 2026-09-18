@@ -29,6 +29,10 @@ export interface RowInternals<TData> extends Row<TData> {
 
 type AnyRow = RowInternals<unknown>;
 
+// Share an empty, immutable prototype: keys such as "__proto__" stay ordinary entries,
+// without allocating six dictionary-mode objects for every row in a large dataset.
+const cachePrototype = Object.freeze(Object.create(null) as object);
+
 /** Builds the per-table prototype shared by every row (keeps rows small for 100k datasets). */
 export function createRowPrototype<TData>(table: TableInstance<TData>): object {
   const proto = {
@@ -182,13 +186,13 @@ export function createRow<TData>(
   row.parentId = parentId;
   row.groupingColumnId = undefined;
   row.groupingValue = undefined;
-  row._groupingValuesCache = {};
+  row._groupingValuesCache = Object.create(cachePrototype) as Record<string, unknown>;
   row._table = table;
-  row._valuesCache = {};
-  row._uniqueValuesCache = {};
-  row._searchCache = {};
-  row._foldedSearchCache = {};
-  row._sortCache = {};
+  row._valuesCache = Object.create(cachePrototype) as Record<string, unknown>;
+  row._uniqueValuesCache = Object.create(cachePrototype) as Record<string, unknown[]>;
+  row._searchCache = Object.create(cachePrototype) as Record<string, string>;
+  row._foldedSearchCache = Object.create(cachePrototype) as Record<string, string>;
+  row._sortCache = Object.create(cachePrototype) as Record<string, unknown>;
   for (const feature of table._features) feature.createRow?.(row, table);
   return row;
 }

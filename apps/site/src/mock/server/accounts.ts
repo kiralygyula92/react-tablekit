@@ -11,11 +11,20 @@ export const MAX_PAGE_SIZE = 100;
 export function normalizeListingCriteria(
   input: Partial<ListingCriteria> | undefined,
 ): ListingCriteria {
+  const requestedPageSize = input?.pageSize ?? DEFAULT_PAGE_SIZE;
+  const requestedPageNumber = input?.pageNumber ?? 0;
   const pageSize = Math.min(
     MAX_PAGE_SIZE,
-    Math.max(1, Math.trunc(input?.pageSize ?? DEFAULT_PAGE_SIZE) || DEFAULT_PAGE_SIZE),
+    Math.max(
+      1,
+      Number.isFinite(requestedPageSize)
+        ? Math.trunc(requestedPageSize) || DEFAULT_PAGE_SIZE
+        : DEFAULT_PAGE_SIZE,
+    ),
   );
-  const pageNumber = Math.max(0, Math.trunc(input?.pageNumber ?? 0) || 0);
+  const pageNumber = Number.isFinite(requestedPageNumber)
+    ? Math.max(0, Math.trunc(requestedPageNumber))
+    : 0;
   const normalized: ListingCriteria = { pageNumber, pageSize };
   if (input?.sortColumn) {
     normalized.sortColumn = input.sortColumn;
@@ -68,7 +77,10 @@ export function searchAccounts(
           return words.every((w) => text.includes(w));
         });
 
-  const accessor = criteria.sortColumn ? sortAccessors[criteria.sortColumn] : undefined;
+  const accessor =
+    criteria.sortColumn && Object.hasOwn(sortAccessors, criteria.sortColumn)
+      ? sortAccessors[criteria.sortColumn]
+      : undefined;
   if (accessor) {
     const dir = criteria.ascending === false ? -1 : 1;
     // Array.prototype.sort is stable, so ties keep their original order.

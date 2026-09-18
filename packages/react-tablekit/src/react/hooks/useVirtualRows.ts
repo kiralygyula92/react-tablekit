@@ -70,7 +70,7 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
   const [scroll, setScroll] = useState({ top: 0, height: 0 });
   const [measured, setMeasured] = useState<Record<number, number>>({});
   const pendingRef = useRef<Record<number, number>>({});
-  const frameRef = useRef<number | null>(null);
+  const cancelFrameRef = useRef<(() => void) | null>(null);
 
   // Offsets are recomputed whenever a measurement or the count changes.
   const { offsets, totalSize } = useMemo(() => {
@@ -82,12 +82,15 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
   }, [count, measured, estimate]);
 
   const detachRef = useRef<(() => void) | null>(null);
+  const scrollElementRef = useRef<HTMLElement | null>(null);
 
   /** Starts following the scroll element; a no-op while it is missing or already followed. */
   const attach = useCallback(() => {
-    if (detachRef.current) return;
     const element = getScrollElement();
+    if (element === scrollElementRef.current) return;
+    detachRef.current?.();
     if (!element) return;
+    scrollElementRef.current = element;
     const update = () => {
       setScroll((prev) =>
         prev.top === element.scrollTop && prev.height === element.clientHeight
@@ -104,6 +107,7 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
       element.removeEventListener('scroll', update);
       observer?.disconnect();
       detachRef.current = null;
+      scrollElementRef.current = null;
     };
   }, [getScrollElement]);
 
@@ -157,7 +161,7 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
 
   // Measurements are batched into one state update per frame, so a scroll never thrashes React.
   const flush = useCallback(() => {
-    frameRef.current = null;
+    cancelFrameRef.current = null;
     const pending = pendingRef.current;
     pendingRef.current = {};
     setMeasured((prev) => {
@@ -174,28 +178,79 @@ export function useVirtualRows(options: UseVirtualRowsOptions): VirtualRowsResul
     });
   }, []);
 
-  const measureElement = useCallback(
-    (element: HTMLElement | null) => {
-      if (!dynamic || !element) return;
+  const scheduleFlush = useCallback(() => {
+    if (cancelFrameRef.current) return;
+    if (typeof requestAnimationFrame === 'undefined') {
+      const timer = setTimeout(flush, 0);
+      cancelFrameRef.current = () => clearTimeout(timer);
+    } else {
+      const frame = requestAnimationFrame(flush);
+      cancelFrameRef.current = () => cancelAnimationFrame(frame);
+    }
+  }, [flush]);
+
+  const measure = useCallback(
+    (element: HTMLElement) => {
       const index = Number(element.dataset.index);
       if (Number.isNaN(index)) return;
       pendingRef.current[index] = element.getBoundingClientRect().height;
-      frameRef.current ??=
-        typeof requestAnimationFrame === 'undefined'
-          ? (setTimeout(flush, 0) as unknown as number)
-          : requestAnimationFrame(flush);
+      scheduleFlush();
     },
-    [dynamic, flush],
+    [scheduleFlush],
   );
 
-  useEffect(
-    () => () => {
-      if (frameRef.current !== null && typeof cancelAnimationFrame !== 'undefined') {
-        cancelAnimationFrame(frameRef.current);
+  const measuredElementsRef = useRef(new Set<HTMLElement>());
+  const rowObserverRef = useRef<ResizeObserver | null>(null);
+  const getRowObserver = useCallback(() => {
+    if (!dynamic || typeof ResizeObserver === 'undefined') return null;
+    rowObserverRef.current ??= new ResizeObserver((entries) => {
+      for (const entry of entries) measure(entry.target as HTMLElement);
+    });
+    return rowObserverRef.current;
+  }, [dynamic, measure]);
+
+  const measureElement = useCallback(
+    (element: HTMLElement | null) => {
+      if (!dynamic || !element) return;
+      if (!measuredElementsRef.current.has(element)) {
+        measuredElementsRef.current.add(element);
+        getRowObserver()?.observe(element);
       }
+      measure(element);
     },
-    [],
+    [dynamic, getRowObserver, measure],
   );
+
+  useIsomorphicLayoutEffect(() => {
+    if (measuredElementsRef.current.size > 0) {
+      const observer = getRowObserver();
+      for (const element of measuredElementsRef.current) observer?.observe(element);
+    }
+    return () => {
+      rowObserverRef.current?.disconnect();
+      rowObserverRef.current = null;
+    };
+  }, [getRowObserver]);
+
+  useEffect(() => {
+    // A shared callback ref receives null without identifying the removed row. Prune after
+    // commit, when detached nodes are no longer connected, so scrolling cannot retain them.
+    for (const element of measuredElementsRef.current) {
+      if (!dynamic || !element.isConnected) {
+        rowObserverRef.current?.unobserve(element);
+        measuredElementsRef.current.delete(element);
+      }
+    }
+  });
+
+  useEffect(() => {
+    // StrictMode replays effects without discarding the pending measurements.
+    if (Object.keys(pendingRef.current).length > 0) scheduleFlush();
+    return () => {
+      cancelFrameRef.current?.();
+      cancelFrameRef.current = null;
+    };
+  }, [scheduleFlush]);
 
   const scrollToIndex = useCallback(
     (index: number, opts?: { align?: 'start' | 'center' | 'end' }) => {

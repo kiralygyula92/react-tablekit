@@ -41,10 +41,18 @@ const listeners = new Set<() => void>();
 function subscribe(listener: () => void): () => void {
   listeners.add(listener);
   // Another tab changing the theme is a change to the same external state.
-  window.addEventListener('storage', listener);
+  const onStorage = (event: StorageEvent) => {
+    if (event.storageArea !== window.localStorage) return;
+    if (event.key !== STORAGE_KEY && event.key !== null) return;
+    const next = event.newValue;
+    if (next !== null && next !== 'light' && next !== 'dark') return;
+    document.documentElement.dataset.siteTheme = next ?? 'light';
+    listener();
+  };
+  window.addEventListener('storage', onStorage);
   return () => {
     listeners.delete(listener);
-    window.removeEventListener('storage', listener);
+    window.removeEventListener('storage', onStorage);
   };
 }
 

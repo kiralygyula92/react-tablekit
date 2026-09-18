@@ -23,6 +23,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter site build:data
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm typecheck
@@ -56,6 +57,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter site build:data
       - name: Install Playwright browsers
         run: pnpm --filter site exec playwright install --with-deps ${{ env.E2E_ALL_BROWSERS == '1' && 'chromium firefox webkit' || 'chromium' }}
       - run: pnpm e2e

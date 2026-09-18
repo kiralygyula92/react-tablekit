@@ -31,6 +31,13 @@ describe('normalizeListingCriteria', () => {
     });
   });
 
+  it('falls back for infinities as well as NaN', () => {
+    expect(normalizeListingCriteria({ pageSize: Infinity, pageNumber: Infinity })).toEqual({
+      pageNumber: 0,
+      pageSize: DEFAULT_PAGE_SIZE,
+    });
+  });
+
   it('only echoes a sort direction when a sort column was asked for', () => {
     expect(normalizeListingCriteria({ pageNumber: 0, pageSize: 10 }).ascending).toBeUndefined();
     expect(
@@ -89,6 +96,14 @@ describe('searchAccounts', () => {
     const page = searchAccounts(accounts, {
       listingCriteria: { pageNumber: 0, pageSize: 10, sortColumn: 'nope' },
     });
+    expect(page.items).toHaveLength(10);
+  });
+
+  it('ignores inherited object properties supplied as sort columns', () => {
+    const page = searchAccounts(accounts, {
+      listingCriteria: { pageNumber: 0, pageSize: 10, sortColumn: '__proto__' },
+    });
+    expect(page.items[0]?.identifiers.id).toBe('a_0001');
     expect(page.items).toHaveLength(10);
   });
 });

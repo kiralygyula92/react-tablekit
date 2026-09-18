@@ -14,7 +14,7 @@ import { fold } from './utils';
 /** Collects flatRows / rowsById for a tree of rows. */
 export function toRowModel<TData>(rows: Row<TData>[]): RowModel<TData> {
   const flatRows: Row<TData>[] = [];
-  const rowsById: Record<string, Row<TData>> = {};
+  const rowsById = Object.create(null) as Record<string, Row<TData>>;
   const walk = (list: Row<TData>[]) => {
     for (const row of list) {
       flatRows.push(row);
@@ -40,7 +40,7 @@ export function buildCoreRowModel<TData>(
 ): RowModel<TData> {
   const { getRowId, getSubRows } = table.options;
   const flatRows: Row<TData>[] = [];
-  const rowsById: Record<string, Row<TData>> = {};
+  const rowsById = Object.create(null) as Record<string, Row<TData>>;
   const build = (items: TData[], depth: number, parent?: Row<TData>): Row<TData>[] =>
     items.map((original, index) => {
       const id = getRowId
@@ -135,7 +135,7 @@ export function filterRowModel<TData>(
         row.subRows.length && depth < maxDepth ? filterFromLeaf(row.subRows, depth + 1) : [];
       const self = passes(row);
       if (self || children.length) {
-        result.push(cloneWithSubRows(row, children.length ? children : self ? row.subRows : []));
+        result.push(cloneWithSubRows(row, depth < maxDepth ? children : row.subRows));
       }
     }
     return result;
@@ -371,7 +371,7 @@ export function paginateRowModel<TData>(
     ? expandRowModel({ rows: page, flatRows: page, rowsById: {} }).rows
     : page;
   // Only rendered rows are indexed: `getRow(id)` without `searchAll` finds rows on this page.
-  const rowsById: Record<string, Row<TData>> = {};
+  const rowsById = Object.create(null) as Record<string, Row<TData>>;
   for (const row of rows) rowsById[row.id] = row;
   return { rows, flatRows: rows, rowsById };
 }
