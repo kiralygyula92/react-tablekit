@@ -1,8 +1,11 @@
 name: Release
 
+# Publishing is a decision, not a side effect of a push: run this from the Actions tab
+# ("Release" → "Run workflow", on main) when a version is ready. With changesets pending it opens
+# the "Version Packages" pull request; with none, it publishes every package whose version is not
+# on npm yet. The documentation site deploys separately, on Vercel, on every push to main.
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency: release-${{ github.ref }}
 
@@ -10,11 +13,12 @@ permissions:
   contents: write
   pull-requests: write
   id-token: write # npm provenance
-  pages: write
 
 jobs:
   release:
     name: Version PR / publish
+    # Only from main: a run started on another branch would publish that branch.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,7 +29,7 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
       - run: pnpm install --frozen-lockfile
-      - name: Create the "Version Packages" PR, or publish when it is merged
+      - name: Create the "Version Packages" PR, or publish when there is nothing left to version
         uses: changesets/action@v1
         with:
           version: pnpm version-packages
@@ -35,26 +39,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
-
-  deploy-site:
-    name: Deploy docs site (GitHub Pages)
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-        env:
-          SITE_BASE: /${{ github.event.repository.name }}/
-      # SPA fallback for GitHub Pages deep links.
-      - run: cp apps/site/dist/index.html apps/site/dist/404.html
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: apps/site/dist
-      - uses: actions/deploy-pages@v4

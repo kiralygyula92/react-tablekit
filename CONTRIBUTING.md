@@ -34,3 +34,12 @@ against files a clean checkout does not have.
 - **No `any` in `src/**`** without an `eslint-disable-next-line` and a reason.
 - **Changesets.** Every PR touching the library adds one (`pnpm changeset`).
 - **Commits** follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
+
+## Releasing
+
+Publishing to npm is manual. When a version is ready, run **Actions → Release → Run workflow** on
+`main`. With changesets pending it opens the "Version Packages" pull request; merge that, then run
+the workflow again to publish. With none pending, it publishes straight away, with npm provenance
+and a GitHub release. It needs the `NPM_TOKEN` repository secret.
+
+The documentation site is separate: Vercel deploys it on every push to `main`.
