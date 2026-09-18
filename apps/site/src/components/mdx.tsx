@@ -7,8 +7,16 @@ import { FeaturesIndex } from './FeaturesIndex';
 import { ApiReference, Playground, ThemeEditor } from './interactive';
 
 /** Internal links go through the router; external ones open normally. */
+/**
+ * A site path with a file extension (`/llms-full.md`, `/react-tablekit/sorting/index.md`) is a
+ * static file, not a route. It has to be a full document request: through the router it would
+ * render the not-found page instead of the file.
+ */
+const isRoute = (href: string) =>
+  href.startsWith('/') && !/\.[a-z0-9]+$/i.test(href.split(/[?#]/)[0] ?? '');
+
 function Anchor({ href = '', children, ...rest }: ComponentPropsWithoutRef<'a'>) {
-  if (href.startsWith('/')) {
+  if (isRoute(href)) {
     return (
       <Link to={href} {...rest}>
         {children}

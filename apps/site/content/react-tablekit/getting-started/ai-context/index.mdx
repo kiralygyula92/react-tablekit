@@ -1,0 +1,83 @@
+---
+title: 'AI context'
+description: 'The whole documentation as one Markdown file, with the source of every example, for coding agents.'
+archetype: getting-started
+plan: free
+---
+
+A coding agent writes better table code from this documentation than from what it remembers about
+data tables in general. So the site also publishes itself as Markdown: one file with every page and
+every example, an index of the pages, and each page on its own.
+
+## Prerequisites
+
+- A coding agent that can read files in your repository or fetch a URL: Claude Code, Cursor,
+  GitHub Copilot, Codex or similar.
+- `react-tablekit` installed, or about to be. See [Installation](/react-tablekit/getting-started/installation/).
+
+## Installation
+
+Save the full file next to your code, where the agent can read it:
+
+```sh
+curl -o docs/react-tablekit.md https://react-tablekit.vercel.app/llms-full.md
+```
+
+Then tell the agent it is there. One line in the instructions file your tool reads at the start of
+every session is enough: `CLAUDE.md`, `AGENTS.md`, a rule in `.cursor/rules/`, or
+`.github/copilot-instructions.md`.
+
+```md
+For anything involving data tables, read docs/react-tablekit.md first, and prefer it to what you remember.
+```
+
+The file describes one version of the package. When you upgrade, download it again.
+
+## What is in the file
+
+Every page of this documentation in reading order: the getting-started pages, every feature page,
+the demos, the guides and the whole API reference. Where the site shows a running example, the file
+has its source; where the site shows a reference table, the file has the table. The examples import
+a few site modules — sample data, shared columns and the mocked API they fetch from — and those are
+included once at the end, so every example is complete.
+
+Each page starts with its title and its URL, so an agent can say which page an answer came from.
+The file is generated from the same Markdown as the site, in the same build, so it cannot say
+anything the site does not.
+
+## Which file to use
+
+| File                            | What it holds                                          | Use it when                               |
+| ------------------------------- | ------------------------------------------------------ | ----------------------------------------- |
+| [llms-full.md](/llms-full.md)   | Every page and the source of every example             | the agent should know the whole library   |
+| [llms-full.txt](/llms-full.txt) | The same file, under the name tools look for           | a tool asks for a documentation URL       |
+| [llms.txt](/llms.txt)           | An index: one line per page, each linking its Markdown | the agent should fetch only what it needs |
+| A page's URL + `index.md`       | That one page, with its examples                       | you are working on a single feature       |
+
+The full file is large, but it fits whole in the context window of a current frontier model. If
+your tool's window is smaller, give it `llms.txt` and let it fetch the pages it needs. Any page
+works on its own the same way: [the sorting page](/react-tablekit/sorting/index.md) is
+`/react-tablekit/sorting/` with `index.md` added.
+
+## Minimal working example
+
+With the file in `docs/`, a request like this has everything it needs to be answered from the
+documentation rather than from guesswork:
+
+```text
+Using docs/react-tablekit.md, add an orders table to OrdersPage. Load it from GET /api/orders with
+server-side paging and sorting, filter by status (open, paid, refunded), and let the user export
+the current page as CSV.
+```
+
+## Verify
+
+Ask the agent something only the documentation answers: for example, which CSS variable sets the
+background of striped rows. An agent reading the file answers `--tk-row-striped-bg` and can name
+the page it came from, Theme tokens. One that is not reading it guesses.
+
+## Next steps
+
+- [Installation](/react-tablekit/getting-started/installation/) — the package, its peers and the stylesheet.
+- [Quickstart](/react-tablekit/getting-started/quickstart/) — a complete first table.
+- [API reference](/react-tablekit/api/) — generated from the TypeScript declarations.

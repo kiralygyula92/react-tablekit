@@ -215,3 +215,23 @@ which is most of what the props being toggled actually do.
 **Consequence.** 151 prop controls would push the table off the screen, so the prop list scrolls
 inside its own panel with the filter pinned to the top of it, and the six setup groups lay out
 across the width instead of down a column.
+
+---
+
+## D-14 — An AI context page, and the whole documentation as one file.
+
+**Decision.** Getting started carries an **AI context** page, after Quickstart, and the build
+publishes `llms-full.md` (also as `llms-full.txt`): every page in reading order, each live example
+written out as its source, each reference page as its tables, and the site modules the examples
+import appended once. The Markdown twins get the same treatment, one page at a time.
+
+**Why.** Owner instruction. P9's twin and `llms.txt` let an agent fetch pages, but a page whose
+examples are `<Demo>` tags and whose reference is a client-rendered table gave it a link where the
+code should be. The standard already lists `llms.txt` under Getting started; this page is that
+entry, with the instructions for using it.
+
+**Consequence.** `build-machine-surface.mjs` reads the reference data from the same sources as the
+pages — the TypeDoc JSON, and `react-tablekit/meta` loaded through Vite with the site's aliases —
+so the file cannot disagree with the site. A component with no Markdown form, or a fixture import
+that does not resolve, fails the build rather than leaving a hole. The handlers table moved out of
+its React page into `handlerDetails.ts` so that both can read it.

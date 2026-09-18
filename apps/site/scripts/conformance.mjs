@@ -346,7 +346,9 @@ check(23, 'Migration', 'No internal link 404s', () => {
     const body = bodyOf(page);
     for (const [, href] of body.matchAll(/\]\((\/[^)#]*)(?:#[^)]*)?\)/g)) {
       if (href.startsWith('/embed/')) continue;
-      if (!known.has(href)) failures.push(`${page.pathname} → ${href}`);
+      // A link to a file the build ships (`/llms-full.md`, a page's `index.md`) does not 404.
+      if (!known.has(href) && !existsSync(path.join(dist, href)))
+        failures.push(`${page.pathname} → ${href}`);
     }
   }
   return failures;

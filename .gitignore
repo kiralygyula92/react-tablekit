@@ -27,6 +27,8 @@ apps/site/playwright/.cache/
 apps/site/public/react-tablekit/
 apps/site/public/index.md
 apps/site/public/llms.txt
+apps/site/public/llms-full.md
+apps/site/public/llms-full.txt
 apps/site/public/sitemap.xml
 apps/site/public/robots.txt
 apps/site/public/changelog.xml
