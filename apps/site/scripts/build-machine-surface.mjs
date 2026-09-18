@@ -58,14 +58,34 @@ const flatten = (nodes, out = []) => {
 /* ── Reference data ────────────────────────────────────────────────────────
    The reference pages render their tables in the browser: six from the TypeDoc output, five from
    the package's runtime metadata. The Markdown has to carry the same rows, so it reads the same
-   sources. The TypeScript ones are loaded through Vite with the site's own config, which resolves
-   `react-tablekit/meta` to the library source exactly as the pages do. */
+   sources, and the TypeScript ones are loaded through Vite's module runner.
 
-const load = async (id) => (await runnerImport(id, { root: siteRoot, logLevel: 'error' })).module;
-const meta = await load('react-tablekit/meta');
-const { handlerRows, HANDLERS_EXAMPLE } = await load(
-  path.join(srcRoot, 'interactive', 'api', 'handlerDetails.ts'),
+   The runner does not read `vite.config.ts`, and it treats a bare import as an installed package.
+   Left to itself it resolves `react-tablekit/meta` to the package's build output — which a
+   deployment never has, because the site builds against the library source. So it is given the
+   site's own aliases, exported by the config, and the load is checked to have come from source:
+   a stale `dist/` on a developer's machine would otherwise let it pass there and fail in CI. */
+
+const { module: viteConfig } = await runnerImport(path.join(siteRoot, 'vite.config.ts'), {
+  root: siteRoot,
+  logLevel: 'error',
+});
+const runnerOptions = {
+  root: siteRoot,
+  logLevel: 'error',
+  resolve: { alias: viteConfig.libraryAliases },
+};
+
+const { module: meta, dependencies: metaSources } = await runnerImport(
+  'react-tablekit/meta',
+  runnerOptions,
 );
+if (!metaSources.some((file) => file.replace(/\\/g, '/').includes('/react-tablekit/src/'))) {
+  throw new Error('[machine-surface] react-tablekit/meta did not load from the library source');
+}
+const { handlerRows, HANDLERS_EXAMPLE } = (
+  await runnerImport(path.join(srcRoot, 'interactive', 'api', 'handlerDetails.ts'), runnerOptions)
+).module;
 
 /* ── Markdown primitives ─────────────────────────────────────────────────── */
 
