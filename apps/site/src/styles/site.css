@@ -180,9 +180,11 @@ code {
   font-family: var(--site-mono);
 }
 
-/* The two icon controls at the end of the header: source, and appearance. */
+/* The icon controls in the header: source and appearance at the end, and on a narrow screen the
+   menu button at the start. */
 .theme-toggle,
-.icon-link {
+.icon-link,
+.site-menu-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -196,10 +198,21 @@ code {
   cursor: pointer;
 }
 .theme-toggle:hover,
-.icon-link:hover {
+.icon-link:hover,
+.site-menu-button:hover {
   color: var(--site-text);
   background: var(--site-bg-muted);
   border-color: var(--site-border);
+}
+
+/* The menu button exists only where there is a drawer for it to open. */
+.site-menu-button {
+  display: none;
+  flex: none;
+  color: var(--site-text);
+}
+.site-menu-button[aria-expanded='true'] {
+  background: var(--site-bg-muted);
 }
 
 .site-body {
@@ -315,14 +328,6 @@ code {
 @media (max-width: 720px) {
   .site-body--with-sidebar {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .site-sidebar {
-    border-right: none;
-    border-bottom: 1px solid var(--site-border);
-    padding: 12px 20px;
-  }
-  .site-topbar__end {
-    margin-left: 0;
   }
   .site-main {
     padding-inline: 12px;
@@ -631,10 +636,70 @@ code {
   color: var(--site-text);
   border-color: var(--site-border-strong);
 }
+.palette-trigger svg {
+  flex: none;
+}
+
+/*
+ * The narrow header: one row, never two. Menu button, product and version at the start; search,
+ * source and appearance as icons at the end. The search field shrinks to its icon — the palette
+ * it opens is the same either way — and the product name gives way before anything wraps.
+ */
 @media (max-width: 860px) {
-  .palette-trigger {
-    min-width: 0;
+  .site-topbar {
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 8px 12px;
   }
+  .site-menu-button {
+    display: inline-flex;
+    margin-inline-end: 2px;
+  }
+  .site-logo {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 1rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .site-version-select {
+    flex: none;
+  }
+  .site-version-select select {
+    height: 30px;
+    padding: 0 28px 0 12px;
+  }
+  .site-version-select__chevron {
+    inset-inline-end: 9px;
+  }
+  .site-topbar__end {
+    flex: none;
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+  .palette-trigger {
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    min-width: 0;
+    padding: 0;
+  }
+  .palette-trigger__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .palette-trigger .palette__kbd {
+    display: none;
+  }
+}
+
+/* With the drawer open the page underneath stays where it was instead of scrolling behind it. */
+:root:has(.site[data-nav-open]) {
+  overflow: hidden;
 }
 
 .palette__kbd {

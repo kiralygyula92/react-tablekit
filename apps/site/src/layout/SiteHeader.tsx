@@ -1,8 +1,32 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useHotkey } from '../search/useHotkey';
 import { pluginConfig } from '../nav/nav';
+import { useNavDrawer } from './navDrawer';
 import { ThemeToggle } from './ThemeToggle';
+
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <path
+        d="M4 7h16M4 12h16M4 17h16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+      <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
+      <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 // The palette carries the whole search index, including the generated API reference, so it is
 // not part of the app shell: it arrives when a reader first reaches for it. Hovering the trigger
@@ -51,8 +75,40 @@ export function SiteHeader() {
   };
   useHotkey(openSearch);
 
+  // On a narrow screen the sidebar is a drawer behind this button. Escape closes it and puts focus
+  // back where the reader opened it from, rather than dropping it on the page behind.
+  const drawer = useNavDrawer();
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const drawerOpen = drawer?.open ?? false;
+  const closeDrawer = drawer?.close;
+  useEffect(() => {
+    if (!drawerOpen || !closeDrawer) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      closeDrawer();
+      menuButton.current?.focus();
+    };
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [drawerOpen, closeDrawer]);
+
   return (
     <header className="site-topbar">
+      {drawer && (
+        <button
+          ref={menuButton}
+          type="button"
+          className="site-menu-button"
+          aria-label="Menu"
+          aria-expanded={drawer.open}
+          aria-controls="site-sidebar"
+          onClick={drawer.toggle}
+        >
+          <MenuIcon />
+        </button>
+      )}
       <Link to="/react-tablekit/" className="site-logo">
         {pluginConfig.name}
       </Link>
@@ -87,8 +143,10 @@ export function SiteHeader() {
           onFocus={() => void load()}
           aria-haspopup="dialog"
         >
-          <span aria-hidden="true">⌕</span>
-          Search
+          <SearchIcon />
+          {/* Hidden visually on a narrow screen, where the button is just the icon; it stays the
+              button's name either way. */}
+          <span className="palette-trigger__label">Search</span>
           <kbd className="palette__kbd">Ctrl K</kbd>
         </button>
         <a

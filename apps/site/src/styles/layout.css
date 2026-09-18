@@ -15,12 +15,13 @@
  */
 .docs-body {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) 260px;
+  /* 292px: the sidebar guide line takes 12px, and every label keeps the room it had without it. */
+  grid-template-columns: 292px minmax(0, 1fr) 260px;
   align-items: start;
 }
 
 .docs-body--wide {
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 292px minmax(0, 1fr);
 }
 
 .docs-main {
@@ -77,11 +78,15 @@
   cursor: pointer;
   text-align: start;
 }
-.site-sidebar__section-toggle:hover {
+.site-sidebar__section-toggle:hover,
+.site-sidebar__section-toggle[data-current] {
   background: var(--site-bg-muted);
 }
+/* The pages hang off a guide line under their section's name, so the nesting reads at a glance. */
 .site-sidebar__section > ul {
-  padding: 2px 0 10px;
+  margin: 4px 0 10px 12px;
+  padding: 0 0 0 10px;
+  border-left: 1px solid var(--site-border);
 }
 
 .site-sidebar__group {
@@ -89,7 +94,7 @@
 }
 .site-sidebar__subheader {
   margin: 0 0 4px;
-  padding: 0 10px 0 22px;
+  padding: 0 10px;
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -101,7 +106,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 10px 5px 22px;
+  padding: 5px 10px;
   border-radius: 8px;
   color: var(--site-text-muted);
   line-height: 1.4;
@@ -510,7 +515,7 @@
 
 @media (max-width: 1200px) {
   .docs-body {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 252px minmax(0, 1fr);
   }
   .site-toc {
     display: none;
@@ -523,25 +528,23 @@
     gap: 0;
     padding: 0 16px;
   }
-  /* The sidebar becomes a scrolling strip above the page rather than a hidden drawer: every
-     page stays reachable without a menu that has to be opened first. */
+  /* The sidebar becomes a drawer behind the header's menu button: out of the way while reading,
+     and the whole navigation, looking exactly as it does on a wide screen, when asked for. It
+     covers everything below the header, which stays in place so the button can close it again. */
   .site-sidebar {
-    position: static;
-    max-height: 176px;
-    border-right: 0;
-    border-bottom: 1px solid var(--site-border);
-    padding: 12px 0;
-    font-size: 0.875rem;
-    /* A scroll strip rather than a drawer: every page stays one scroll away, with no menu to
-       open first, and the shadow at the edge says there is more of it. */
-    -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent);
-    mask-image: linear-gradient(to bottom, #000 82%, transparent);
+    display: none;
   }
-  .site-sidebar__group {
-    margin-bottom: 12px;
-  }
-  .site-sidebar__link {
-    padding: 3px 8px;
+  .site-sidebar[data-open] {
+    display: block;
+    position: fixed;
+    inset: var(--site-header-h) 0 0;
+    z-index: 40;
+    max-height: none;
+    padding: 16px 16px 48px;
+    background: var(--site-bg);
+    border: 0;
+    /* Reaching the end of the list must not start scrolling the page underneath. */
+    overscroll-behavior: contain;
   }
   .docs-main {
     padding: 24px 0 48px;

@@ -1,11 +1,18 @@
 import { MDXProvider } from '@mdx-js/react';
-import { Suspense } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router';
 import { Badge } from '../components/Badge';
 import { mdxComponents } from '../components/mdx';
 import { componentFor, pageByPath } from '../content/pages';
 import { PageMeta } from '../head/PageMeta';
 import { orderedPages, pluginConfig, titleFor } from '../nav/nav';
+import {
+  NARROW_SCREEN,
+  NavDrawerContext,
+  useMediaQuery,
+  useNavDrawer,
+  type NavDrawer,
+} from './navDrawer';
 import { Breadcrumbs, Sidebar } from './Sidebar';
 import { TableOfContents } from './TableOfContents';
 import { SiteFooter } from './SiteFooter';
@@ -51,6 +58,7 @@ export function DocsPage({ pathname }: { pathname: string }) {
   const page = pageByPath.get(pathname);
   const Component = componentFor(pathname);
   const location = useLocation();
+  const drawer = useNavDrawer();
   if (!page || !Component) return null;
 
   const { frontmatter: fm, headings: toc } = page;
@@ -62,7 +70,14 @@ export function DocsPage({ pathname }: { pathname: string }) {
       <div className={fm.wide ? 'docs-body docs-body--wide' : 'docs-body'}>
         <Sidebar pathname={pathname} />
 
-        <main id="main" className="docs-main" tabIndex={-1} key={location.pathname}>
+        {/* Under the open drawer the page is covered, so it leaves the tab order too. */}
+        <main
+          id="main"
+          className="docs-main"
+          tabIndex={-1}
+          key={location.pathname}
+          inert={drawer?.open}
+        >
           <article className="site-prose">
             <header className="page-header">
               <Breadcrumbs pathname={pathname} title={fm.title} />
@@ -116,14 +131,37 @@ export function DocsPage({ pathname }: { pathname: string }) {
 
 /** The chrome every documentation page shares; the page itself renders into the outlet. */
 export function DocsLayout() {
+  const { pathname } = useLocation();
+  const narrow = useMediaQuery(NARROW_SCREEN);
+
+  // The drawer is opened *at* a page. Following a link anywhere changes the path and so closes
+  // it, with no effect to keep in step; and widening the window past the breakpoint closes it
+  // too, because a wide screen shows the sidebar as a rail and has no drawer to be open.
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  const open = narrow && openAt === pathname;
+  const drawer = useMemo<NavDrawer>(
+    () => ({
+      open,
+      toggle: () => {
+        setOpenAt((at) => (at === pathname ? null : pathname));
+      },
+      close: () => {
+        setOpenAt(null);
+      },
+    }),
+    [open, pathname],
+  );
+
   return (
-    <div className="site">
-      <a className="site-skip-link" href="#main">
-        Skip to content
-      </a>
-      <SiteHeader />
-      <Outlet />
-      <SiteFooter />
-    </div>
+    <NavDrawerContext.Provider value={drawer}>
+      <div className="site" data-nav-open={open || undefined}>
+        <a className="site-skip-link" href="#main">
+          Skip to content
+        </a>
+        <SiteHeader />
+        <Outlet />
+        <SiteFooter />
+      </div>
+    </NavDrawerContext.Provider>
   );
 }

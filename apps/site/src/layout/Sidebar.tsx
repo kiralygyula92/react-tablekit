@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router';
 import { Badge } from '../components/Badge';
 import { isGroup, nav, pluginConfig, titleFor, type NavNode } from '../nav/nav';
+import { useNavDrawer } from './navDrawer';
 
 /** The section a path belongs to, so the reader always opens inside the part they are reading. */
 function sectionOf(pathname: string): string | undefined {
@@ -12,6 +13,7 @@ function sectionOf(pathname: string): string | undefined {
 
 /** One page, or a nested group rendered as a labelled block of pages. */
 function SidebarNode({ node }: { node: NavNode }) {
+  const drawer = useNavDrawer();
   if (isGroup(node)) {
     return (
       <li className="site-sidebar__group">
@@ -26,7 +28,8 @@ function SidebarNode({ node }: { node: NavNode }) {
   }
   return (
     <li>
-      <NavLink to={node.pathname} end className="site-sidebar__link">
+      {/* A new page closes the drawer on its own; this closes it for the page already open. */}
+      <NavLink to={node.pathname} end className="site-sidebar__link" onClick={drawer?.close}>
         {titleFor(node.pathname)}
         <Badge node={node} />
       </NavLink>
@@ -52,6 +55,7 @@ function SidebarNode({ node }: { node: NavNode }) {
  * thing to be doing, and an accordion would fight them.
  */
 export function Sidebar({ pathname }: { pathname: string }) {
+  const drawer = useNavDrawer();
   const current = sectionOf(pathname);
   const [open, setOpen] = useState<readonly string[]>(() => (current ? [current] : []));
 
@@ -67,7 +71,13 @@ export function Sidebar({ pathname }: { pathname: string }) {
   }, [current]);
 
   return (
-    <nav aria-label="Documentation" className="site-sidebar">
+    // On a narrow screen this is the drawer the header's menu button opens (`layout.css`).
+    <nav
+      id="site-sidebar"
+      aria-label="Documentation"
+      className="site-sidebar"
+      data-open={drawer?.open || undefined}
+    >
       <ul className="site-sidebar__sections">
         {nav.map((section) => {
           const id = section.pathname;

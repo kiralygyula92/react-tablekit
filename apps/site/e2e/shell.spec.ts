@@ -186,3 +186,43 @@ test('is usable at 375px width', async ({ page }) => {
   );
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test('on a narrow screen the header is one row and the sidebar is a drawer', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/react-tablekit/getting-started/quickstart/');
+  const menu = page.getByRole('button', { name: 'Menu' });
+  const sidebar = page.getByRole('navigation', { name: 'Documentation' });
+
+  // One row: the header is exactly its own height, and the sidebar is out of the way.
+  const header = await page.locator('.site-topbar').boundingBox();
+  expect(header?.height).toBe(56);
+  await expect(sidebar).toBeHidden();
+  await expect(menu).toHaveAttribute('aria-expanded', 'false');
+
+  // The menu opens it, and the page behind leaves the tab order.
+  await menu.click();
+  await expect(sidebar).toBeVisible();
+  await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#main')).toHaveJSProperty('inert', true);
+
+  // Escape closes it and hands focus back to the menu button.
+  await page.keyboard.press('Escape');
+  await expect(sidebar).toBeHidden();
+  await expect(menu).toBeFocused();
+
+  // Following a link closes it as well.
+  await menu.click();
+  await sidebar.getByRole('link', { name: 'Installation' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Installation' })).toBeVisible();
+  await expect(sidebar).toBeHidden();
+  await expect(page.locator('#main')).toHaveJSProperty('inert', false);
+});
+
+test('on a wide screen there is no menu button and the sidebar is always there', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/react-tablekit/getting-started/quickstart/');
+  await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden();
+  await expect(page.getByRole('navigation', { name: 'Documentation' })).toBeVisible();
+});

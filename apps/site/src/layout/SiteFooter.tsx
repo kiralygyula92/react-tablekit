@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { pluginConfig } from '../nav/nav';
+import { useNavDrawer } from './navDrawer';
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -37,8 +38,9 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
 
 /** The footer every page shares. */
 export function SiteFooter() {
+  const drawer = useNavDrawer();
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" inert={drawer?.open}>
       <div className="site-footer__columns">
         {COLUMNS.map((column) => (
           <nav key={column.title} aria-label={column.title}>
