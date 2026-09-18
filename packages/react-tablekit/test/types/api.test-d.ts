@@ -33,7 +33,7 @@ describe('DeepKeys / DeepValue', () => {
   });
 });
 
-describe('createColumnHelper infers TValue (09 §1)', () => {
+describe('createColumnHelper infers TValue', () => {
   const col = createColumnHelper<Customer>();
 
   test('from accessorKey', () => {

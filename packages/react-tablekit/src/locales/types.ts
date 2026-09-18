@@ -6,7 +6,7 @@ import type { FilterOperator } from '../core/types';
  */
 export type LocalizedString = string | ((vars: Record<string, string | number>) => string);
 
-/** Every user-visible string (06 §8). No hard-coded English anywhere else (fixes B9). */
+/** Every user-visible string. No hard-coded English anywhere else. */
 export interface TableLocalization {
   // toolbar & search
   search: LocalizedString;
@@ -130,7 +130,7 @@ export interface TableLocalization {
   announceSelection: LocalizedString;
 }
 
-/** Number / date / range formatters (06 §8). Defaults use `Intl` with the table's `locale`. */
+/** Number / date / range formatters. Defaults use `Intl` with the table's `locale`. */
 export interface TableFormatters {
   /** Formats a numeric cell value. */
   number: (value: number, locale: string) => string;

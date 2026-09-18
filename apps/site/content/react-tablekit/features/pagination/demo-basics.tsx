@@ -12,7 +12,7 @@ const render = (items: PageItem[]) =>
     .map((i) => (i.type === 'page' ? (i.selected ? `[${i.index + 1}]` : String(i.index + 1)) : '…'))
     .join(' ');
 
-/** Algorithm visualizer: classic (boundary + window rule) vs stable (constant width, B17). */
+/** Algorithm visualizer: classic (boundary + window rule) vs stable (constant width). */
 function Visualizer() {
   const [pageCount, setPageCount] = useState(24);
   const [pageIndex, setPageIndex] = useState(0);
@@ -65,7 +65,7 @@ function Visualizer() {
   );
 }
 
-/** Every pagination variant side by side, plus the page-size selector and row range (05 §4). */
+/** Every pagination variant side by side, plus the page-size selector and row range. */
 export default function PaginationVariantsExample() {
   return (
     <div className="example-stack">

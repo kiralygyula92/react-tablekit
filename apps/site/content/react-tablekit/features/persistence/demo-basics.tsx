@@ -6,7 +6,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(120);
 
 /**
- * URL and storage persistence (03 §7). The page, sort, search and filters live in the URL in a
+ * URL and storage persistence. The page, sort, search and filters live in the URL in a
  * compact, stable format (`?tk.page=2&tk.sort=name.asc&tk.q=ava`), so a link restores the exact
  * view; column layout and density go to `localStorage` instead, because they are personal
  * preferences rather than something you share.

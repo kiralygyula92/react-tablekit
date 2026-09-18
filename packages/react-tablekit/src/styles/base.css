@@ -33,7 +33,7 @@
     width: 100%;
   }
 
-  /* Separate borders so sticky cells keep their borders (07 §6). */
+  /* Separate borders so sticky cells keep their borders. */
   .tk-table {
     border-collapse: separate;
     border-spacing: 0;
@@ -44,7 +44,7 @@
     --tk-row-bg: var(--tk-row-bg-default);
   }
 
-  /* Pinned (frozen) columns: sticky with per-cell offsets, background from the row state (B19). */
+  /* Pinned (frozen) columns: sticky with per-cell offsets, background from the row state. */
   .tk-cell[data-pinned],
   .tk-header-cell[data-pinned],
   .tk-footer-cell[data-pinned] {
@@ -62,7 +62,7 @@
     inset-inline-end: var(--tk-pin-offset, 0px);
   }
 
-  /* Sticky header / footer (fixes B14). Pinned header cells stick on both axes. */
+  /* Sticky header / footer. Pinned header cells stick on both axes. */
   .tk-head[data-sticky] .tk-header-cell,
   .tk-head[data-sticky] .tk-filter-row-cell {
     position: sticky;
@@ -81,7 +81,7 @@
     z-index: var(--tk-z-pinned-header, 3);
   }
 
-  /* Refetch overlay: covers the body only, from the bottom of the header (fixes B6/B11). */
+  /* Refetch overlay: covers the body only, from the bottom of the header. */
   .tk-overlay {
     position: absolute;
     inset: var(--tk-head-height, 0px) 0 0 0;
@@ -110,7 +110,7 @@
     vertical-align: middle;
   }
 
-  /* Detail panels: grid-rows animation; full-width panels stick to the left edge (05 §6.1). */
+  /* Detail panels: grid-rows animation; full-width panels stick to the left edge. */
   .tk-detail-panel {
     display: grid;
     grid-template-rows: 0fr;

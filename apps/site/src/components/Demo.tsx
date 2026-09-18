@@ -13,7 +13,7 @@ interface DemoModule {
   default: ComponentType;
 }
 
-// Demos are colocated with the page that shows them (PPDS §7.2), so a page and its examples move
+// Demos are colocated with the page that shows them, so a page and its examples move
 // together and neither can be orphaned. Neither glob is eager: a demo costs nothing until a
 // reader opens the page that embeds it.
 const demoLoaders = import.meta.glob<DemoModule>('../../content/**/demo-*.tsx');

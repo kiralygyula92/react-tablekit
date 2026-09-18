@@ -3,7 +3,7 @@ import type { TableInstance, TableState } from '../../core/types';
 
 /**
  * Subscribes to a slice of table state; the component re-renders only when the selected value
- * changes (02 §5 fine-grained subscriptions).
+ * changes (fine-grained subscriptions).
  *
  * @example
  * ```ts

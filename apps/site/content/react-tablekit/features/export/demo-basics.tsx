@@ -11,7 +11,7 @@ const source = createLocalDataSource(serverPeople, {
 });
 
 /**
- * CSV export (05 §20): the toolbar menu exports the current page, every matching row, or just the
+ * CSV export: the toolbar menu exports the current page, every matching row, or just the
  * selected ones, and can copy to the clipboard instead. Quoting follows RFC 4180 and the file
  * carries a UTF-8 BOM, so Excel opens accented text correctly.
  *

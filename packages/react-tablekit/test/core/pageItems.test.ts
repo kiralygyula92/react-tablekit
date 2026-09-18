@@ -5,7 +5,7 @@ import { getPageItems, type PageItem } from '../../src/core';
 const render = (items: PageItem[]) =>
   items.map((i) => (i.type === 'page' ? String(i.index) : '…')).join(' ');
 
-describe('getPageItems: classic (05 §4.4)', () => {
+describe('getPageItems: classic', () => {
   const expected: [number, string][] = [
     [0, '0 1 2 3 … 8 9'],
     [1, '0 1 2 3 … 8 9'],
@@ -23,7 +23,7 @@ describe('getPageItems: classic (05 §4.4)', () => {
     expect(render(getPageItems({ pageIndex: c, pageCount: 10 }))).toBe(out);
   });
 
-  it('B1 regression: never inserts an ellipsis between adjacent pages or hides one page', () => {
+  it('never inserts an ellipsis between adjacent pages or hides one page', () => {
     for (let n = 1; n <= 40; n++) {
       for (let c = 0; c < n; c++) {
         const items = getPageItems({ pageIndex: c, pageCount: n });
@@ -77,7 +77,7 @@ describe('getPageItems: classic (05 §4.4)', () => {
   });
 });
 
-describe('getPageItems: stable (fixes B17)', () => {
+describe('getPageItems: stable', () => {
   it('renders a constant number of slots for n=50 across every page', () => {
     const counts = new Set<number>();
     for (let c = 0; c < 50; c++) {

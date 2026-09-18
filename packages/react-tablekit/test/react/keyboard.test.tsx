@@ -14,7 +14,7 @@ function focused(): string {
 const setup = (props = {}) =>
   renderTable({ toolbar: false, enableKeyboardNavigation: true, ...props });
 
-describe('keyboard grid navigation (05 §15)', () => {
+describe('keyboard grid navigation', () => {
   it('enters with Tab, moves with the arrows and leaves again (roving tabindex)', async () => {
     const user = userEvent.setup();
     const { container } = setup();

@@ -11,7 +11,7 @@ import { resolveTheme } from '../view';
 import { useViewportBreakpoint, usePrefersDark } from './useBreakpoint';
 
 /**
- * Creates a table instance and subscribes the component to it (02 §5). Accepts every
+ * Creates a table instance and subscribes the component to it. Accepts every
  * `<DataTable>` prop; view props are kept on `table.options` for `DataTable.Root`.
  *
  * @example
@@ -57,7 +57,7 @@ export function useDataTable<TData>(props: DataTableProps<TData>): TableInstance
   table.setOptions(options);
   useSyncExternalStore(table.subscribe, table._getVersion, table._getVersion);
   useEffect(() => table._mount(), [table]);
-  // URL / storage persistence (03 §7); a no-op unless `syncState` is set.
+  // URL / storage persistence; a no-op unless `syncState` is set.
   useSyncState(table, merged.syncState);
   const { tableRef } = props;
   useEffect(() => {

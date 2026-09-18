@@ -3,8 +3,8 @@ import { pageByPath } from '../../content/pages';
 import usedByData from '../../generated/content/used-by.json';
 
 /**
- * Which pages cite each symbol, inverted at build time from their `symbols` frontmatter (PPDS
- * check 12). It is the only reverse link on the site that nobody has to remember to write.
+ * Which pages cite each symbol, inverted at build time from their `symbols` frontmatter. It is
+ * the only reverse link on the site that nobody has to remember to write.
  */
 const usedBy = usedByData as Record<string, string[] | undefined>;
 

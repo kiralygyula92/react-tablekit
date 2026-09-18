@@ -56,7 +56,7 @@ export function selectRow(
   });
 }
 
-/** Row checkbox, or a radio in single-selection mode (05 §5). */
+/** Row checkbox, or a radio in single-selection mode. */
 export function SelectCell({ row, table }: { row: Row<unknown>; table: AnyTable }) {
   const view = useView();
   if (row.getIsGrouped() && !row.getCanSelect()) return null;
@@ -77,7 +77,7 @@ export function SelectCell({ row, table }: { row: Row<unknown>; table: AnyTable 
   );
 }
 
-/** Header "Expand all" toggle (05 §6.3). */
+/** Header "Expand all" toggle. */
 export function ExpandAllHeader({ table }: { table: AnyTable }) {
   const { slots, t, icons } = useView();
   const opts = viewOptions(table);
@@ -134,7 +134,7 @@ export function RowNumberHeader() {
   return <>{t('rowNumber')}</>;
 }
 
-/** `#` column: absolute across pages or relative to the page (05 §23). */
+/** `#` column: absolute across pages or relative to the page. */
 export function RowNumberCell({ row, table }: { row: Row<unknown>; table: AnyTable }) {
   const view = useView();
   const index = table.getRowModel().rows.indexOf(row);

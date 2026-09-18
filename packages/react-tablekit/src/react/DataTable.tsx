@@ -24,7 +24,7 @@ const cssEscape = (value: string) =>
     ? CSS.escape(value)
     : value.replace(/["\\]/g, '\\$&');
 
-/** The default arrangement of parts (02 §6). */
+/** The default arrangement of parts. */
 function DefaultLayout({ handleRef }: { handleRef: Ref<DataTableHandle<unknown>> | undefined }) {
   const table = useTableContext();
   const view = useView();
@@ -144,7 +144,7 @@ DataTableBase.displayName = 'DataTable';
 export type DataTableComponent = (<TData>(
   props: DataTableProps<TData> & { ref?: Ref<DataTableHandle<TData>> },
 ) => ReactElement | null) & {
-  /** Provides context for composable parts (06 §9). */
+  /** Provides context for composable parts. */
   Root: typeof Root;
   Toolbar: typeof Toolbar;
   Search: typeof Search;
@@ -163,7 +163,7 @@ export type DataTableComponent = (<TData>(
 };
 
 /**
- * The all-in-one data table (04 §2). Compose your own layout with the attached parts:
+ * The all-in-one data table. Compose your own layout with the attached parts:
  * `DataTable.Root`, `.Toolbar`, `.Search`, `.FiltersButton`, `.FilterPanel`,
  * `.ActiveFilterChips`, `.ColumnsButton`, `.DensityButton`, `.ExportButton`, `.SelectionBar`,
  * `.ErrorBanner`, `.Container`, `.Table`, `.LoadingOverlay`, `.Pagination`.

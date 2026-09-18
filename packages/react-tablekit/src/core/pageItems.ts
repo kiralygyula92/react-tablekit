@@ -4,7 +4,7 @@ const range = (start: number, end: number): number[] =>
   end < start ? [] : Array.from({ length: end - start + 1 }, (_, i) => start + i);
 
 /**
- * The classic rule (05 §4.4): boundary pages, two extra pages near the
+ * The classic rule: boundary pages, two extra pages near the
  * edges, siblings in the middle; an ellipsis only replaces two or more hidden pages.
  */
 function classicItems(c: number, n: number, s: number, b: number): PageItem[] {
@@ -29,7 +29,7 @@ function classicItems(c: number, n: number, s: number, b: number): PageItem[] {
 }
 
 /**
- * MUI-style algorithm (fixes B17): renders a constant `2b + 2s + 3` slots once `n` is large
+ * MUI-style algorithm: renders a constant `2b + 2s + 3` slots once `n` is large
  * enough, so the bar never changes width. Re-implemented 0-based.
  */
 function stableItems(c: number, n: number, s: number, b: number): PageItem[] {

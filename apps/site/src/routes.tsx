@@ -6,7 +6,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 
 /**
  * The route table, generated from the content tree: a page cannot exist without a route and a
- * route cannot exist without a page (PPDS P2 — navigation is data).
+ * route cannot exist without a page.
  *
  * Declared as elements rather than as a data router so the same tree renders under
  * `BrowserRouter` in the browser and `StaticRouter` during prerendering.

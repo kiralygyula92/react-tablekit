@@ -7,7 +7,7 @@ export interface LoggedRequest {
   query: Pick<TableQuery, 'globalFilter' | 'columnFilters' | 'sorting' | 'pagination'>;
 }
 
-/** Wraps a data source so the demo can show what the "server" was asked for (08 §3). */
+/** Wraps a data source so the demo can show what the "server" was asked for. */
 export function useRequestLog<TData>(source: DataSource<TData>, limit = 8) {
   const [log, setLog] = useState<LoggedRequest[]>([]);
 

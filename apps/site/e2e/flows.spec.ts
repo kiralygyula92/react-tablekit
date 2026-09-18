@@ -1,7 +1,7 @@
 import { expect, test } from './fixtures';
 
 /**
- * The user flows the standard requires to be completable without a dead end (PPDS §9).
+ * The user flows that must be completable without a dead end.
  *
  * Each test walks the path by clicking, not by navigating — a flow that only works when you
  * already know the URL is not a flow. F6 (convert) has no test: there is nothing to buy, which

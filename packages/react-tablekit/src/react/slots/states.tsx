@@ -50,8 +50,8 @@ export function SkeletonRows({ rowCount, columns, className, style }: P<'Skeleto
 }
 
 /**
- * Refetch overlay: covers the body from the bottom of the header (fixes B6/B11) and blocks
- * interaction by default (fixes B7).
+ * Refetch overlay: covers the body from the bottom of the header and blocks
+ * interaction by default.
  */
 export const LoadingOverlay = forwardRef<HTMLDivElement, P<'LoadingOverlay'>>(
   function LoadingOverlay({ table, visible, blocking, className, ...rest }, ref) {

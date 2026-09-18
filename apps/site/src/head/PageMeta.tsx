@@ -4,7 +4,7 @@ const SITE_ORIGIN: string =
   (import.meta.env.VITE_SITE_ORIGIN as string | undefined) ?? 'https://react-tablekit.vercel.app';
 
 /**
- * The whole metadata contract (PPDS §7.6) from one title and one description (P10).
+ * The whole metadata contract from one title and one description.
  *
  * React 19 hoists these tags into `<head>`, so no helmet-style library is needed and every tag
  * is present in the prerendered HTML rather than appearing only after hydration.

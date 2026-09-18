@@ -48,7 +48,7 @@ function toSearchParams(value: unknown): string {
 }
 
 /**
- * A data source for REST endpoints with page/size/sort/search params (03 §5.3).
+ * A data source for REST endpoints with page/size/sort/search params.
  *
  * @example
  * ```ts
@@ -135,7 +135,7 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
 /**
  * An in-memory array that *behaves like a server* (latency, failures, abort). It reuses the
  * engine's own filter/sort functions, so client mode and simulated server mode return identical
- * rows for the same query (03 §5.3).
+ * rows for the same query.
  */
 export function createLocalDataSource<TData>(
   rows: TData[] | (() => TData[]),

@@ -30,7 +30,7 @@ function PageNav({ pathname }: { pathname: string }) {
   );
 }
 
-/** Edit-this-page and per-page feedback (PPDS §7.3). Layout, never content. */
+/** Edit-this-page and per-page feedback. Layout, never content. */
 function FooterActions({ pathname, sourceFile }: { pathname: string; sourceFile: string }) {
   const feedback = `${pluginConfig.links?.issues ?? pluginConfig.repo}/new?title=${encodeURIComponent(
     `Docs feedback: ${pathname}`,

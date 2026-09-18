@@ -7,7 +7,7 @@
  * path in it against — that directory. A root-level config with `outputDirectory:
  * apps/site/dist` was looked for at `apps/site/apps/site/dist`.
  *
- * PPDS P12: a URL is never deleted. Everything the legacy site answered still resolves, by 301
+ * A URL is never deleted. Everything the legacy site answered still resolves, by 301
  * where it moved.
  */
 import { readFileSync, writeFileSync } from 'node:fs';

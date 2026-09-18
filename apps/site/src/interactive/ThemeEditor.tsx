@@ -39,7 +39,7 @@ const GROUPS: { id: string; label: string }[] = [
 
 const isColour = (value: string) => /^#([0-9a-f]{3,8})$/i.test(value.trim());
 
-/* ── contrast (05 §16) ────────────────────────────────────────────────── */
+/* ── contrast ─────────────────────────────────────────────────────────── */
 
 function luminance(hex: string): number | null {
   const raw = hex.trim().replace('#', '');
@@ -76,7 +76,7 @@ const PAIRS: { label: string; fg: TokenPath; bg: TokenPath }[] = [
   { label: 'Tooltip', fg: 'tooltip.color', bg: 'tooltip.bg' },
 ];
 
-/** `/theme-editor`: edit the tokens live, check contrast, and export the result (08 §5). */
+/** `/theme-editor`: edit the tokens live, check contrast, and export the result. */
 export function ThemeEditorPage() {
   const [base, setBase] = useState<PresetName>('light');
   const [overrides, setOverrides] = useState<Overrides>({});

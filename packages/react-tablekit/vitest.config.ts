@@ -30,7 +30,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
-          // The 09 §4 budgets. Single-threaded and serial, so timings are not distorted by
+          // The performance budgets. Single-threaded and serial, so timings are not distorted by
           // workers competing for the CPU.
           name: 'perf',
           environment: 'jsdom',
@@ -46,7 +46,7 @@ export default defineConfig({
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/**/*.d.ts', 'src/meta.ts', 'src/locales/**'],
       reporter: ['text-summary', 'lcov'],
-      // Gates from docs/09 §1: core >= 90% lines / 85% branches, react >= 80%.
+      // Coverage gates: core >= 90% lines / 85% branches, react >= 80%.
       thresholds: {
         'src/core/**': { lines: 90, branches: 85 },
         'src/react/**': { lines: 80, branches: 80 },

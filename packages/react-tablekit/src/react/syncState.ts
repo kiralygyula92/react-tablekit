@@ -3,7 +3,7 @@ import type { ColumnFiltersState, SortingState, TableInstance, TableState } from
 import type { SyncStateOptions } from './types';
 
 /* ────────────────────────────────────────────────────────────────────────────
- * URL format (03 §7): ?tk.page=2&tk.size=25&tk.sort=name.asc&tk.q=smith&tk.f.status=active,pending
+ * URL format: ?tk.page=2&tk.size=25&tk.sort=name.asc&tk.q=smith&tk.f.status=active,pending
  * ──────────────────────────────────────────────────────────────────────────── */
 
 /** State slices that get a compact, stable URL spelling; anything else falls back to JSON. */
@@ -53,7 +53,7 @@ function decodeFilterValue(raw: string): unknown {
   return Number.isNaN(Number(raw)) || raw.trim() === '' ? raw : Number(raw);
 }
 
-/** Writes the selected state slices into search params (03 §7). */
+/** Writes the selected state slices into search params. */
 export function encodeState(
   state: Partial<TableState>,
   keys: (keyof TableState)[],
@@ -224,7 +224,7 @@ const DEFAULT_STORAGE_KEYS: (keyof TableState)[] = [
   'density',
 ];
 
-/** A router adapter for `useRouterSync` (03 §7). */
+/** A router adapter for `useRouterSync`. */
 export interface RouterSyncAdapter {
   /** Returns the router's current search string (with or without the leading `?`). */
   getSearch: () => string;
@@ -233,7 +233,7 @@ export interface RouterSyncAdapter {
 }
 
 /**
- * Persists table state to the URL and/or storage (03 §7). On mount the URL wins over storage,
+ * Persists table state to the URL and/or storage. On mount the URL wins over storage,
  * which wins over `initialState`.
  *
  * `DataTable` calls this for you when `syncState` is set; call it directly only for a table you
@@ -304,7 +304,7 @@ export function useSyncState<TData>(
 }
 
 /**
- * Plugs `syncState.url` into a router instead of the History API (03 §7), for React Router,
+ * Plugs `syncState.url` into a router instead of the History API, for React Router,
  * Next.js and friends.
  *
  * @example

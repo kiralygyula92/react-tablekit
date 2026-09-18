@@ -36,7 +36,7 @@ export function queryKey(query: TableQuery): string {
 }
 
 /**
- * Owns fetching for `dataSource` (03 §5.1): initial load vs refetch, abort of stale requests,
+ * Owns fetching for `dataSource`: initial load vs refetch, abort of stale requests,
  * race guard, in-flight dedupe, server echo, out-of-range correction, polling, errors and
  * optimistic local mutations.
  */
@@ -149,7 +149,7 @@ export function createDataSourceController<TData>(host: DataSourceHost<TData>) {
   const sameExceptPage = (a: TableQuery, b: TableQuery) => queryKey(a) === queryKey(b);
 
   function apply(result: DataSourceResult<TData>, query: TableQuery) {
-    // `loadMore` / `infinite` accumulate pages instead of replacing them (03 §6, 05 §4.1).
+    // `loadMore` / `infinite` accumulate pages instead of replacing them.
     const previous = lastCompleted?.query;
     const appending =
       appendsPages() &&

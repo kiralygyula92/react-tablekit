@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { filterFns, fuzzyScore, type AnyColumnDef } from '../../src/core';
 import { ids, makeTable, type Person } from '../fixtures';
 
-describe('global search (05 §2)', () => {
+describe('global search', () => {
   it('is case- and diacritic-insensitive', () => {
     const table = makeTable();
     table.setGlobalFilter('ALVAREZ');
@@ -60,7 +60,7 @@ describe('global search (05 §2)', () => {
   });
 });
 
-describe('debounce + min length (03 §5.1)', () => {
+describe('debounce + min length', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
@@ -120,7 +120,7 @@ describe('debounce + min length (03 §5.1)', () => {
   });
 });
 
-describe('column filters (05 §3)', () => {
+describe('column filters', () => {
   it('text variant honours operators', () => {
     const table = makeTable();
     const name = table.getColumn('name')!;
@@ -228,7 +228,7 @@ describe('column filters (05 §3)', () => {
   });
 });
 
-describe('faceting (03 §3)', () => {
+describe('faceting', () => {
   it('unique values and min/max respect the other filters but not their own', () => {
     const table = makeTable();
     const city = table.getColumn('city')!;

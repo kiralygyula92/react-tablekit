@@ -2,8 +2,8 @@
 // consumer's production build sees them: `process.env.NODE_ENV` is "production", so dev-only
 // warnings are dropped.
 //
-// The limits are regression guards (measured size + ~2% headroom), not the docs/09 §4 targets;
-// see docs/adr/003-bundle-budgets-and-tree-shaking.md. Raise them only deliberately, with a reason.
+// The limits are regression guards (measured size + ~2% headroom), not targets. Raise them only
+// deliberately, with a reason.
 const production = (config) => ({
   ...config,
   define: { ...config.define, 'process.env.NODE_ENV': '"production"' },

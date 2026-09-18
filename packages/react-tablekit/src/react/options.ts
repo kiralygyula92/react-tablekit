@@ -55,7 +55,7 @@ function combineSlotMaps(
   return out;
 }
 
-/** Composes handler maps: `override` handlers wrap `base` handlers (props wrap provider, 06 §5). */
+/** Composes handler maps: `override` handlers wrap `base` handlers (props wrap provider). */
 function composeHandlers(
   base: Record<string, Handler<unknown> | undefined>,
   override: Record<string, Handler<unknown> | undefined>,
@@ -83,7 +83,7 @@ function composeHandlers(
 }
 
 /**
- * Merges option layers (theme defaults < provider < props, 06 §0): nested display objects merge,
+ * Merges option layers (theme defaults < provider < props): nested display objects merge,
  * handlers compose, classNames/styles/slotProps combine, everything else is replaced.
  */
 export function mergeTableProps<T extends object>(

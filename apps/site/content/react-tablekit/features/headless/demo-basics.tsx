@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(90);
 
 /**
- * No table markup at all (06 §7). `useDataTable` is the whole engine — searching, sorting,
+ * No table markup at all. `useDataTable` is the whole engine — searching, sorting,
  * selection and pagination — and it renders nothing, so the rows can become anything. Here they
  * are a grid of cards.
  *

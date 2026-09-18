@@ -57,7 +57,7 @@ export default tseslint.config(
       '@typescript-eslint/no-dynamic-delete': 'off',
       // Instance and row APIs are closures / prototype methods designed to be called unbound.
       '@typescript-eslint/unbound-method': 'off',
-      // Handlers are `void | Promise<void>` by contract (06 §5).
+      // Handlers are `void | Promise<void>` by contract.
       '@typescript-eslint/no-invalid-void-type': 'off',
       // Public generic signatures are prescribed by the API reference (e.g. `getValue<TValue>`).
       '@typescript-eslint/no-unnecessary-type-parameters': 'off',
@@ -72,7 +72,7 @@ export default tseslint.config(
     },
   },
 
-  // Core must stay framework-agnostic (docs/02 §3).
+  // Core must stay framework-agnostic.
   {
     files: ['packages/react-tablekit/src/core/**/*.ts'],
     rules: {

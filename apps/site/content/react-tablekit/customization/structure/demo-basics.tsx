@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Re-skinning without replacing anything (06 §2). `unstyled` drops the visual layer but keeps
+ * Re-skinning without replacing anything. `unstyled` drops the visual layer but keeps
  * the markup and behaviour, and `classNames` puts your own class on each part — the same shape
  * a utility framework such as Tailwind expects. The keys are the camelCase slot names.
  *

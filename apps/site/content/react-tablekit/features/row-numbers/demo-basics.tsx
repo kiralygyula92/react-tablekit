@@ -6,7 +6,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Row numbers (05 §23). `absolute` counts through the whole result — row 11 is the first row of
+ * Row numbers. `absolute` counts through the whole result — row 11 is the first row of
  * page 2 — while `relative` restarts at 1 on every page. Page forward to see the difference.
  */
 export default function RowNumbersExample() {

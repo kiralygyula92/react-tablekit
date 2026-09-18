@@ -107,7 +107,7 @@ const columns = [
   }),
 ];
 
-/** The cell primitives (06 §5), each solving a layout problem that recurs in every table. */
+/** The cell primitives, each solving a layout problem that recurs in every table. */
 export default function CellBuildingBlocksExample() {
   return (
     <DataTable<DemoPerson>

@@ -8,7 +8,7 @@ const PRESET_NAMES = Object.keys(presets) as (keyof typeof presets)[];
 const SCHEMES = ['light', 'dark', 'auto'] as const;
 
 /**
- * The five built-in presets (07 §4). The preset supplies the token values; `colorScheme`
+ * The five built-in presets. The preset supplies the token values; `colorScheme`
  * decides whether the light or the dark half of it is used — `'auto'` follows the OS.
  */
 export default function ThemingPresetsExample() {

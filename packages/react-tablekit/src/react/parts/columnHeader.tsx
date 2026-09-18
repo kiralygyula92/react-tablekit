@@ -11,7 +11,7 @@ type AnyColumn = Column<unknown>;
 
 const props = (table: AnyTable) => table.options as unknown as DataTableProps<unknown>;
 
-/* ── resize handle (05 §9) ────────────────────────────────────────────── */
+/* ── resize handle ────────────────────────────────────────────────────── */
 
 /** Keyboard steps of the resize handle. */
 const STEP = 10;
@@ -110,7 +110,7 @@ function ResizeHandle({ column }: { column: AnyColumn }) {
   );
 }
 
-/* ── column actions menu (05 §11) ─────────────────────────────────────── */
+/* ── column actions menu ──────────────────────────────────────────────── */
 
 function ColumnActions({ column }: { column: AnyColumn }) {
   const table = useTableContext();
@@ -155,7 +155,7 @@ function ColumnActions({ column }: { column: AnyColumn }) {
             : []),
         ]
       : []),
-    // "Filter…" opens this column's own control in a popover, in any display mode (05 §3.1).
+    // "Filter…" opens this column's own control in a popover, in any display mode.
     ...(column.getCanFilter()
       ? [
           item('filter', t('filterColumn'), () => {
@@ -250,7 +250,7 @@ function pinColumn(view: ResolvedView, column: AnyColumn, position: 'left' | 'ri
   });
 }
 
-/* ── ordering by pointer drag (05 §10) ────────────────────────────────── */
+/* ── ordering by pointer drag ─────────────────────────────────────────── */
 
 /** Drag state shared by the header cells of one table. */
 export interface ColumnDragState {
@@ -317,7 +317,7 @@ export function useColumnDrag(table: AnyTable, view: ResolvedView) {
 /* ── the header extras hook used by TableView ─────────────────────────── */
 
 /**
- * Renders the per-header column actions menu and resize handle (05 §9, §11). `DataTable` installs
+ * Renders the per-header column actions menu and resize handle. `DataTable` installs
  * it as `_headerExtras`, so custom layouts get the same behaviour for free.
  */
 export function HeaderExtras({ header }: { header: Header<unknown> }) {

@@ -15,23 +15,22 @@
 | `pnpm typecheck`            | `tsc` for the library (including tests) and the site                            |
 | `pnpm test`                 | Vitest: library (jsdom, with coverage gates and type tests) and site unit tests |
 | `pnpm build`                | Library (tsup + CSS) and site (Vite)                                            |
-| `pnpm size`                 | size-limit budgets (docs/09 §4)                                                 |
+| `pnpm size`                 | size-limit budgets for every entry point                                        |
 | `pnpm check:package`        | `publint` + `@arethetypeswrong/cli` on the packed tarball                       |
 | `pnpm e2e`                  | Playwright smoke, journeys, axe and visual tests                                |
 | `pnpm verify`               | All of the above, in CI order                                                   |
 
-`verify` runs `pnpm --filter site build:api` first: the generated API JSON under
-`apps/site/src/generated/` is not committed, so lint and typecheck would otherwise run against
-files a clean checkout does not have.
+`verify` runs `pnpm --filter site build:data` first: the generated reference and content data
+under `apps/site/src/generated/` is not committed, so lint and typecheck would otherwise run
+against files a clean checkout does not have.
 
 ## Policies
 
-- **Tests alongside code.** Core ≥ 90% lines / 85% branches, React ≥ 80%. Every known bug
-  (B1–B19) gets a named regression test.
+- **Tests alongside code.** Core ≥ 90% lines / 85% branches, React ≥ 80%. Every fixed bug gets
+  a regression test that names what it guards.
 - **Tokens are the API.** Visual CSS in `theme.css` must only read `--tk-*` variables
   (`pnpm --filter react-tablekit lint:css-tokens`).
 - **Core never imports React.**
 - **No `any` in `src/**`** without an `eslint-disable-next-line` and a reason.
 - **Changesets.** Every PR touching the library adds one (`pnpm changeset`).
 - **Commits** follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
-- **ADRs** for architecture decisions go in `docs/adr/`.

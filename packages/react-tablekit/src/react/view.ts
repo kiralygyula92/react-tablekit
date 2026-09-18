@@ -29,7 +29,7 @@ import { mergeProps } from './utils';
 
 type AnyView = DataTableViewProps<unknown>;
 
-/** Library view defaults (04 §2). Presets and providers layer on top. */
+/** Library view defaults. Presets and providers layer on top. */
 export const VIEW_DEFAULTS: AnyView = {
   layout: 'table',
   tableLayout: 'auto',
@@ -126,7 +126,7 @@ export interface ResolvedView {
   announce(message: string): void;
 }
 
-/** Resolves the effective theme from props / provider and the colour scheme (07 §2, §5). */
+/** Resolves the effective theme from props / provider and the colour scheme. */
 export function resolveTheme(
   themeProp: TableTheme | DeepPartial<TableTheme> | undefined,
   providerTheme: TableTheme | DeepPartial<TableTheme> | undefined,

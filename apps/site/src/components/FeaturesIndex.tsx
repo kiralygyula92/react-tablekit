@@ -5,7 +5,7 @@ import { Badge } from './Badge';
 
 /**
  * The features index and the sidebar are rendered from the same nav data, so the two can never
- * disagree about what exists or how it is grouped (PPDS archetype C).
+ * disagree about what exists or how it is grouped.
  */
 export function FeaturesIndex({
   sectionPath = '/react-tablekit/features-group',

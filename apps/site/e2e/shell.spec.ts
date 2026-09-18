@@ -31,7 +31,7 @@ const pages = JSON.parse(readFileSync(indexPath, 'utf8')) as IndexedPage[];
 for (const page_ of pages) {
   test(`${page_.pathname} renders without console errors and passes axe`, async ({ page }) => {
     await page.goto(page_.pathname);
-    // A page's heading is its title, written in one place (PPDS P10).
+    // A page's heading is its title, written in one place.
     await expect(
       page.getByRole('heading', { level: 1, name: page_.frontmatter.title }),
     ).toBeVisible();

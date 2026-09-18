@@ -1,7 +1,7 @@
 /**
  * Builds the content index the site routes, navigates and searches from.
  *
- * Pages are MDX files under `content/`; the file path is the URL (PPDS P2). Reading every page's
+ * Pages are MDX files under `content/`; the file path is the URL. Reading every page's
  * frontmatter and headings at build time means the app can lazy-load the page bodies without
  * losing the metadata it needs up front — the router, the sidebar, the table of contents and the
  * search index all read this one JSON file.
@@ -36,7 +36,7 @@ function walk(dir, ext, out = []) {
  * `react-tablekit/features/sorting/index.mdx` → `/react-tablekit/sorting/`.
  *
  * `features/` is a content-tree folder only: capability pages sit flat under the namespace so
- * their URLs stay short and stable (PPDS R1). The marketing tree is the site root.
+ * their URLs stay short and stable. The marketing tree is the site root.
  */
 export function routeFor(file) {
   const rel = file.replace(/\/index\.mdx$/, '').replace(/\.mdx$/, '');
@@ -69,10 +69,10 @@ const seenRoutes = new Map();
 /**
  * Which reference page documents which symbol, written by `build-api.mjs` from the same table
  * the reference pages are rendered from. A `symbols` entry that is not in here names something
- * the package does not export (PPDS check 11).
+ * the package does not export.
  */
 const symbolPages = existsSync(symbolsFile) ? JSON.parse(readFileSync(symbolsFile, 'utf8')) : {};
-/** symbol → the pages that cite it. The inversion of `symbols` frontmatter (PPDS check 12). */
+/** symbol → the pages that cite it. The inversion of `symbols` frontmatter. */
 const usedBy = {};
 
 for (const file of walk(contentRoot, '.mdx').sort()) {

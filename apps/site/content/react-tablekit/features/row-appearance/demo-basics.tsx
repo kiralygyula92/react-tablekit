@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Row appearance (05 §23). Striping and hover are table-wide switches; `getRowClassName` and
+ * Row appearance. Striping and hover are table-wide switches; `getRowClassName` and
  * `getRowStyle` decorate individual rows from their data — here, suspended people are dimmed and
  * remote workers carry an accent border.
  */

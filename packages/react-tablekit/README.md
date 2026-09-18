@@ -81,10 +81,10 @@ Measured min+gzip, React external:
 
 | Entry                                        | Size     |
 | -------------------------------------------- | -------- |
-| `import { DataTable } from 'react-tablekit'` | 56.5 kB  |
-| Full import                                  | 60.06 kB |
+| `import { DataTable } from 'react-tablekit'` | 56.67 kB |
+| Full import                                  | 60.24 kB |
 | `react-tablekit/core`                        | 20.75 kB |
-| `react-tablekit/styles.css`                  | 6.09 kB  |
+| `react-tablekit/styles.css`                  | 6.15 kB  |
 
 `DataTable` is batteries-included by design: its default layout reaches the toolbar, filter panel,
 selection bar and pagination, so the first two numbers are close together. If you need a small

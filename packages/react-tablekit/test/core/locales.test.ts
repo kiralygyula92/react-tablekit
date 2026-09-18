@@ -30,7 +30,7 @@ const ALLOWED_IDENTICAL: Record<string, string[]> = {
   es: ['groupedBy', 'no', 'searchHotkeyHint'],
 };
 
-describe.each(Object.keys(locales))('locale %s (06 §8)', (name) => {
+describe.each(Object.keys(locales))('locale %s', (name) => {
   const locale = locales[name]!;
   const localeEntries = new Map(entries(locale));
 

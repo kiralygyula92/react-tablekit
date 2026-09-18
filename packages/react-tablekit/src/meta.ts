@@ -16,7 +16,7 @@ import { presets, TOKEN_VARS, type TokenPath } from './themes';
 
 export { version } from './version';
 
-/* ── slots (06 §1) ────────────────────────────────────────────────────── */
+/* ── slots ────────────────────────────────────────────────────────────── */
 
 /** Every replaceable slot name, read from the default registry. */
 export const slotNames: string[] = Object.keys(defaultSlots).sort();
@@ -66,7 +66,7 @@ export const slotMeta: SlotMeta[] = slotNames.map((name) => ({
   element: SLOT_ELEMENTS[name] ?? 'button',
 }));
 
-/* ── handlers (06 §5) ─────────────────────────────────────────────────── */
+/* ── handlers ─────────────────────────────────────────────────────────── */
 
 /**
  * Every handler name. The `satisfies` clause plus the exhaustiveness check below make this list a
@@ -106,7 +106,7 @@ export { handlerListIsComplete };
 /** Handler metadata for the `/api/handlers` page. */
 export const handlerMeta: { name: string }[] = handlerNames.map((name) => ({ name }));
 
-/* ── theme tokens (07 §2) ─────────────────────────────────────────────── */
+/* ── theme tokens ─────────────────────────────────────────────────────── */
 
 /** One token: its path, CSS variable and value in each built-in preset. */
 export interface TokenMeta {
@@ -137,7 +137,7 @@ export const tokenMeta: TokenMeta[] = (Object.entries(TOKEN_VARS) as [TokenPath,
   }),
 );
 
-/* ── localization (06 §8) ─────────────────────────────────────────────── */
+/* ── localization ─────────────────────────────────────────────────────── */
 
 /** Every localization key (nested groups flattened to `operators.contains` form). */
 export const localeKeys: string[] = Object.entries(en)
@@ -158,7 +158,7 @@ export const localeMeta: { key: string; english: string }[] = localeKeys.map((ke
   return { key, english: typeof value === 'string' ? value : '(function)' };
 });
 
-/* ── icons (06 §7) ────────────────────────────────────────────────────── */
+/* ── icons ────────────────────────────────────────────────────────────── */
 
 /** Every built-in icon name. */
 export const iconNames: string[] = Object.keys(defaultIcons).sort();

@@ -12,7 +12,7 @@ const source = createLocalDataSource(people, {
 });
 
 /**
- * Cursor pagination (03 §6): the server returns opaque cursors instead of a page count, so the
+ * Cursor pagination: the server returns opaque cursors instead of a page count, so the
  * numbered variant is unavailable and the table shows “of many”. Next and Previous follow the
  * cursors the server sent, and the request log shows them.
  */

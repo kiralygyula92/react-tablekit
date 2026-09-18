@@ -9,7 +9,7 @@ export interface IconProps {
 /** An icon: a node, or a component rendered with `IconProps`. */
 export type TableIcon = ReactNode | ComponentType<IconProps>;
 
-/** Every icon key (06 §7). */
+/** Every icon key. */
 export interface TableIcons {
   sortAsc: TableIcon;
   sortDesc: TableIcon;

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { renderTable, type Person } from './helpers';
 
-/** The viewport breakpoint comes from `window.innerWidth` (05 §13). */
+/** The viewport breakpoint comes from `window.innerWidth`. */
 function setWidth(width: number) {
   window.innerWidth = width;
   window.dispatchEvent(new Event('resize'));
@@ -23,7 +23,7 @@ const cardsTable = (props = {}) => {
   });
 };
 
-describe('cards layout (05 §13)', () => {
+describe('cards layout', () => {
   it('renders a list of articles instead of a table below the breakpoint', () => {
     const { container } = cardsTable();
     expect(container.querySelector('table')).toBeNull();

@@ -18,7 +18,7 @@ const tree: Person[] = [
   { id: 'b', name: 'B', age: 40, joined: '2020-01-01', active: true },
 ];
 
-describe('row selection (05 §5)', () => {
+describe('row selection', () => {
   it('multi selection with page and all toggles', () => {
     const table = makeTable({ enableRowSelection: true, data: numbered(25) });
     table.getRow('r1')!.toggleSelected();
@@ -101,7 +101,7 @@ describe('row selection (05 §5)', () => {
   });
 });
 
-describe('expansion (05 §6)', () => {
+describe('expansion', () => {
   it('flattens expanded sub-rows into the row model', () => {
     const table = makeTable({ data: tree, getSubRows: (p) => p.children });
     expect(ids(table.getRowModel().rows)).toEqual(['a', 'b']);
@@ -153,7 +153,7 @@ describe('expansion (05 §6)', () => {
   });
 });
 
-describe('grouping and aggregation (05 §7)', () => {
+describe('grouping and aggregation', () => {
   it('groups rows with aggregates and expandable group rows', () => {
     const table = makeTable({
       enableGrouping: true,
@@ -233,7 +233,7 @@ describe('grouping and aggregation (05 §7)', () => {
   });
 });
 
-describe('row pinning (05 §12)', () => {
+describe('row pinning', () => {
   it('keeps pinned rows across pages and filters', () => {
     const table = makeTable({ enableRowPinning: true, data: numbered(25) });
     table.getRow('r15', true)!.pin('top');
@@ -247,7 +247,7 @@ describe('row pinning (05 §12)', () => {
   });
 });
 
-describe('CSV export (05 §20)', () => {
+describe('CSV export', () => {
   it('RFC 4180 quoting', () => {
     expect(csvEscape('plain')).toBe('plain');
     expect(csvEscape('a,b')).toBe('"a,b"');

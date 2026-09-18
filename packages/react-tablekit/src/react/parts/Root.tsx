@@ -15,7 +15,7 @@ export type RootProps<TData> = DataTableViewProps<TData> & {
 
 /**
  * Provides the table, the resolved view (slots, theme, localization…) and the layout registry to
- * the composable parts (06 §9).
+ * the composable parts.
  */
 export function Root<TData>({ table, children, ...viewProps }: RootProps<TData>) {
   const anyTable = table as TableInstance<unknown>;

@@ -329,7 +329,7 @@ code {
   }
 }
 
-/* ── Example pages (08 §2) ─────────────────────────────────────────── */
+/* ── Example pages ─────────────────────────────────────────────────── */
 .example-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -605,7 +605,7 @@ code {
   padding-top: 10px;
 }
 
-/* ── Ctrl+K search palette (08 §1) ──────────────────────────────────────── */
+/* ── Ctrl+K search palette ──────────────────────────────────────────────── */
 
 /* A search field in shape, a button in behaviour: it opens the palette rather than typing
    into anything, and it is wide enough to read as the place to search from. */

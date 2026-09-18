@@ -1,8 +1,8 @@
-/** Page frontmatter (PPDS §8.3). `title` and `description` are written once and reused. */
+/** Page frontmatter. `title` and `description` are written once and reused. */
 export interface Frontmatter {
   title: string;
   description: string;
-  /** Archetype from PPDS §6. Drives which blocks the conformance check requires. */
+  /** The kind of page. Drives which blocks the conformance check requires. */
   archetype:
     'overview' | 'capability' | 'features-index' | 'reference' | 'getting-started' | 'editorial';
   capabilityId?: string;
@@ -21,7 +21,7 @@ export interface Frontmatter {
   links?: { issues?: string; source?: string; spec?: string };
 }
 
-/** One heading in the right-rail table of contents (PPDS §7.4). */
+/** One heading in the right-rail table of contents. */
 export interface Heading {
   id: string;
   text: string;

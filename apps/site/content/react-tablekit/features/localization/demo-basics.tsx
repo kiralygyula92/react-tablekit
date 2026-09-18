@@ -17,7 +17,7 @@ const LOCALES: Record<string, { label: string; localization: TableLocalization; 
   };
 
 /**
- * Localization (06 §8): every user-visible string comes from a `TableLocalization` object, and
+ * Localization: every user-visible string comes from a `TableLocalization` object, and
  * `locale` drives the `Intl` formatters (number, date and the row range). Locale packs ship as
  * subpath exports, so you only bundle the ones you import.
  *

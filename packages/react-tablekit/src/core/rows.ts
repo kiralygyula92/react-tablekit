@@ -214,7 +214,7 @@ export function createCell<TData>(
       !cell.getIsPlaceholder() &&
       !!column.getAggregationFn(),
     getContext: () => {
-      // Stable context objects (02 §7 rule 4): reused while their inputs are unchanged.
+      // Stable context objects: reused while their inputs are unchanged.
       const state = table.getState();
       const render = table.options._renderContext;
       const isSelected = row.getIsSelected();

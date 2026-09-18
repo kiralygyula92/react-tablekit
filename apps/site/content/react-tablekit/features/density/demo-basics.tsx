@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Density (05 §19) changes row height and cell padding only — never the layout. The toolbar
+ * Density changes row height and cell padding only — never the layout. The toolbar
  * button cycles compact → standard → comfortable; `initialState.density` picks the start.
  */
 export default function DensityExample() {

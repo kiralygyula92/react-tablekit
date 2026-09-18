@@ -15,7 +15,7 @@ import type { TableInstance } from '../../core/types';
 export interface LayoutRegistry {
   containerRef: RefObject<HTMLDivElement | null>;
   tableRef: RefObject<HTMLTableElement | null>;
-  /** Number of visible bottom pagination bars; the container drops its bottom border when > 0 (B5). */
+  /** Number of visible bottom pagination bars; the container drops its bottom border when > 0. */
   footerCount: number;
   registerFooter: () => () => void;
   /** Open state of the filter section, shared by `FiltersButton` and `FilterPanel`. */
@@ -55,7 +55,7 @@ export function useTableVersion(table: TableInstance<unknown>): number {
   return useSyncExternalStore(table.subscribe, table._getVersion, table._getVersion);
 }
 
-/** Polite, debounced live-region announcer (05 §16). */
+/** Polite, debounced live-region announcer. */
 export function useAnnouncer() {
   const [message, setMessage] = useState('');
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);

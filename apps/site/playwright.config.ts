@@ -4,7 +4,7 @@ import { defineConfig, devices } from '@playwright/test';
 // a dedicated port means a stray server cannot be mistaken for this site (reuseExistingServer).
 const PORT = 4183;
 const isCI = !!process.env.CI;
-// Chromium on PRs; all three engines on main / release (docs/09 §5).
+// Chromium on PRs; all three engines on main / release.
 const allBrowsers = process.env.E2E_ALL_BROWSERS === '1';
 
 export default defineConfig({
@@ -33,7 +33,7 @@ export default defineConfig({
           { name: 'webkit', use: { ...devices['Desktop Safari'] }, testIgnore: /visual\.spec\.ts/ },
         ]
       : []),
-    // Pixel baselines are per platform; run explicitly with `pnpm e2e:visual` (docs/09 §4).
+    // Pixel baselines are per platform; run explicitly with `pnpm e2e:visual`.
     { name: 'visual', use: { ...devices['Desktop Chrome'] }, testMatch: /visual\.spec\.ts/ },
   ],
   webServer: {

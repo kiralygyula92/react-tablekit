@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Collapsible row content (05 §6.1): `renderDetailPanel` adds a full-width row under the expanded
+ * Collapsible row content: `renderDetailPanel` adds a full-width row under the expanded
  * one, with an expand toggle column. The panel is sticky-left, so it stays put while a wide table
  * scrolls sideways.
  */

@@ -60,7 +60,7 @@ const columns = [
   }),
 ];
 
-/** Column types, formatting, alignment and fallback values (05 §2). */
+/** Column types, formatting, alignment and fallback values. */
 export default function ColumnTypesExample() {
   return (
     <DataTable<DemoPerson>

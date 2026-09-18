@@ -35,7 +35,7 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   },
 ];
 
-/** Identical on both surfaces (PPDS §2.3). */
+/** The footer every page shares. */
 export function SiteFooter() {
   return (
     <footer className="site-footer">

@@ -11,7 +11,7 @@ const source = createLocalDataSource(people, {
 });
 
 /**
- * Hybrid mode (03 §1.2): the server paginates, the browser sorts the page it was given. That sorts
+ * Hybrid mode: the server paginates, the browser sorts the page it was given. That sorts
  * only the current page, which is why the engine warns unless you acknowledge it with
  * `acknowledgePageLocalSorting`. Sorting here never triggers a request — watch the log.
  */

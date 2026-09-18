@@ -54,7 +54,7 @@ describe('toText', () => {
 });
 
 describe('overlay positioning', () => {
-  it('publishes the header height on the container on mount (B11 regression)', () => {
+  it('publishes the header height on the container on mount', () => {
     // The container is an ancestor, so its ref is not attached yet when the table's layout effect runs.
     const { container } = renderTable();
     const el = container.querySelector<HTMLElement>('.tk-container')!;
@@ -93,7 +93,7 @@ describe('hotkeys', () => {
   });
 });
 
-describe('option layering and prop merging (06 §0)', () => {
+describe('option layering and prop merging', () => {
   it('merges nested display objects, localization, classNames, styles and slotProps', () => {
     const a = {
       pagination: { showRowRange: true },
@@ -245,7 +245,7 @@ describe('DataTable variants', () => {
   });
 });
 
-describe('pagination variants (05 §4.1)', () => {
+describe('pagination variants', () => {
   it('loadMore accumulates by paging; hidden when exhausted', async () => {
     const user = userEvent.setup();
     const { container } = renderTable({

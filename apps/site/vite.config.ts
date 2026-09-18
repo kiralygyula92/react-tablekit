@@ -11,8 +11,8 @@ const lib = (p: string) =>
   fileURLToPath(new URL(`../../packages/react-tablekit/src/${p}`, import.meta.url));
 
 /**
- * The site always runs against the library *source* (docs/08: "it always runs against the
- * current source"), so every public subpath export is aliased to its src counterpart.
+ * The site always runs against the library *source*, so every public subpath export is aliased
+ * to its src counterpart.
  * Order matters: the most specific patterns come first.
  */
 export const libraryAliases: Alias[] = [

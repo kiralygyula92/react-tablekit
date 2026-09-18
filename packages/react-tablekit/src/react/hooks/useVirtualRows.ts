@@ -45,7 +45,7 @@ export interface VirtualRowsResult {
 const DEFAULT_ESTIMATE = 40;
 
 /**
- * Headless row virtualization (05 §14): renders only the rows near the viewport of a bounded
+ * Headless row virtualization: renders only the rows near the viewport of a bounded
  * scroll container, with optional dynamic measurement.
  *
  * @example

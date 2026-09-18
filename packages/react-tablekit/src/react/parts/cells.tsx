@@ -15,7 +15,7 @@ export const isDisplayColumn = (column: Column<unknown>) => DISPLAY_IDS.has(colu
 
 const isEmpty = (v: unknown) => v === undefined || v === null || v === '';
 
-/** Wraps case/diacritic-insensitive matches of the search words in `<mark>` (05 §2). */
+/** Wraps case/diacritic-insensitive matches of the search words in `<mark>`. */
 export function highlight(text: string, query: string): ReactNode {
   const words = fold(query).split(/\s+/).filter(Boolean);
   if (!words.length || !text) return text;
@@ -199,7 +199,7 @@ export function toggleSort(
   );
 }
 
-/** Default row click: selection / expansion per options, then the `onRowClick` prop (06 §5). */
+/** Default row click: selection / expansion per options, then the `onRowClick` prop. */
 export function rowClick(
   view: ResolvedView,
   table: TableInstance<unknown>,

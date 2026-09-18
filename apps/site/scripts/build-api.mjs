@@ -1,5 +1,5 @@
 /**
- * Transforms TypeDoc's `api.json` into the compact per-page JSON the API pages render (08 §6.2).
+ * Transforms TypeDoc's `api.json` into the compact per-page JSON the API pages render.
  *
  * It runs TypeDoc itself when that file is missing, so there is no build order to get right: the
  * script that needs the data produces it, in development, in CI and on the host. Getting that

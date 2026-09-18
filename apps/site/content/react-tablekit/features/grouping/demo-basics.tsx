@@ -30,7 +30,7 @@ const columns = [
 const data = generatePeople(200);
 
 /**
- * Grouping and aggregation (05 §7): group by one or more columns from the column menu, and the
+ * Grouping and aggregation: group by one or more columns from the column menu, and the
  * group rows show the value, the row count and the aggregates of the other columns. The footer
  * aggregates the whole filtered set, not just the page.
  */

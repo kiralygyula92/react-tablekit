@@ -5,7 +5,7 @@ import { bodyRows, numbered, renderTable } from './helpers';
 
 const current = () => screen.getByRole('button', { current: 'page' }).textContent;
 
-describe('pagination controls (05 §4)', () => {
+describe('pagination controls', () => {
   it('first / last / next / previous move through the pages', async () => {
     const user = userEvent.setup();
     renderTable({
@@ -50,7 +50,7 @@ describe('pagination controls (05 §4)', () => {
       initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
     });
     await user.click(screen.getByRole('button', { name: 'Next' }));
-    // Announcements are debounced by 150ms (05 §16).
+    // Announcements are debounced by 150ms.
     await expect
       .poll(() => container.querySelector('.tk-sr-live')?.textContent)
       .toBe('Page 2 of 5');

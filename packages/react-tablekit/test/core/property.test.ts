@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { createTable, type AnyColumnDef, type TableQuery } from '../../src/core';
 
 /**
- * Property tests (09 §1): the engine's client pipeline is compared against a naive reference
+ * Property tests: the engine's client pipeline is compared against a naive reference
  * implementation of the same specification, and a simulated server driven by the emitted
- * `TableQuery` is compared against client mode (03 §6 equivalence).
+ * `TableQuery` is compared against client mode (equivalence).
  */
 
 interface Row {
@@ -73,7 +73,7 @@ const parse = (q: {
 
 /* ── reference implementation ──────────────────────────────────────────── */
 
-/** Case- and diacritic-insensitive fold, per 05 §2. */
+/** Case- and diacritic-insensitive fold. */
 const fold = (value: string | number | boolean | null | undefined) =>
   String(value ?? '')
     .normalize('NFD')
@@ -101,7 +101,7 @@ function reference(data: Row[], q: ReturnType<typeof parse>): Row[] {
 
   if (q.sort) {
     const { id, desc } = q.sort;
-    // Stable sort; null/undefined always last, regardless of direction (05 §1).
+    // Stable sort; null/undefined always last, regardless of direction.
     rows = rows
       .map((row, index) => ({ row, index }))
       .sort((a, b) => {
@@ -124,7 +124,7 @@ function reference(data: Row[], q: ReturnType<typeof parse>): Row[] {
 const pageOf = (rows: Row[], pageIndex: number, pageSize: number) =>
   rows.slice(pageIndex * pageSize, pageIndex * pageSize + pageSize);
 
-/** Where the server adapter lands after the out-of-range correction (03 §5: last page). */
+/** Where the server adapter lands after the out-of-range correction (last page). */
 const correctedPage = (total: number, pageIndex: number, pageSize: number) => {
   const pageCount = Math.ceil(total / pageSize);
   return pageIndex >= pageCount ? Math.max(0, pageCount - 1) : pageIndex;
@@ -237,7 +237,7 @@ describe('client pipeline equals the reference implementation', () => {
   });
 });
 
-describe('server mode equals client mode (03 §6)', () => {
+describe('server mode equals client mode', () => {
   it('the emitted TableQuery reproduces the client result', async () => {
     await fc.assert(
       fc.asyncProperty(dataArb, queryArb, async (data, raw) => {
@@ -286,7 +286,7 @@ describe('server mode equals client mode (03 §6)', () => {
 
         const expectedAll = reference(data, q);
         const page = correctedPage(expectedAll.length, q.pageIndex, q.pageSize);
-        // One fetch, plus at most one more for the out-of-range correction (03 §5).
+        // One fetch, plus at most one more for the out-of-range correction.
         expect(seen.length, 'fetches').toBeLessThanOrEqual(page === q.pageIndex ? 1 : 2);
         expect(seen[0]!.globalFilter).toBe(q.globalFilter);
         expect(seen[0]!.pagination).toMatchObject({

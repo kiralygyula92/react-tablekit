@@ -5,7 +5,7 @@ import { createTable } from '../../src/core';
 import { generatePeople, type BenchPerson } from './data';
 
 /**
- * The performance budgets of 09 §4, measured as a gate rather than a benchmark: each operation is
+ * The performance budgets, measured as a gate rather than a benchmark: each operation is
  * run several times and the **median** is compared with the budget, so one unlucky GC pause does
  * not fail the suite. The numbers are generous on CI hardware; a real regression moves them by
  * much more than the margin.
@@ -40,7 +40,7 @@ const columns = [
 
 const rows10k = generatePeople(10_000);
 
-describe('performance budgets (09 §4)', () => {
+describe('performance budgets', () => {
   it('client sort of 10k rows is under 50ms', () => {
     const table = createTable<BenchPerson>({
       data: rows10k,
@@ -78,10 +78,10 @@ describe('performance budgets (09 §4)', () => {
   });
 
   /**
-   * 09 §4 asks for "≤ 16 ms" here, but plain React markup for the same 50x10 grid already costs
-   * ~14 ms in jsdom, so the absolute number measures the environment more than the library (see
-   * ADR-003). The gate is the ratio to that floor instead: machine-independent, and a real
-   * regression moves it immediately.
+   * The target here was "≤ 16 ms", but plain React markup for the same 50x10 grid already costs
+   * ~14 ms in jsdom, so the absolute number measures the environment more than the library. The
+   * gate is the ratio to that floor instead: machine-independent, and a real regression moves it
+   * immediately.
    */
   it('initial render of 50 rows x 10 columns stays within 3x plain React markup', () => {
     const rows50 = rows10k.slice(0, 50);

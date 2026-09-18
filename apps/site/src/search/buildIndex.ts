@@ -12,7 +12,7 @@ import { sectionFor } from '../nav/nav';
 /** Where a result came from; also the group heading in the palette. */
 export type SearchSection = 'Pages' | 'Headings' | 'API' | 'Tokens' | 'Icons';
 
-/** One entry in the in-memory index (PPDS §2.2: search, with no external service). */
+/** One entry in the in-memory index: search with no external service. */
 export interface SearchEntry {
   id: string;
   title: string;

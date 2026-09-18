@@ -5,7 +5,7 @@ const data = generatePeople(40);
 const col = createColumnHelper<DemoPerson>();
 
 /**
- * Row pinning (05 §12). A pinned row stays visible while the rows around it are sorted, filtered
+ * Row pinning. A pinned row stays visible while the rows around it are sorted, filtered
  * and paged away — the comparison row you keep referring back to.
  */
 const columns = [

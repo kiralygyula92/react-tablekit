@@ -13,7 +13,7 @@ function walk(dir: string): string[] {
 }
 
 describe('core layering', () => {
-  it('never imports react or react-dom (headless-first, docs/02 §3)', () => {
+  it('never imports react or react-dom (headless-first)', () => {
     const offenders = walk(coreDir).filter((file) =>
       /from\s+['"](react|react-dom)(\/[^'"]*)?['"]/.test(readFileSync(file, 'utf8')),
     );

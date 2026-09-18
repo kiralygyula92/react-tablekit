@@ -12,7 +12,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(500, 7);
 
 /**
- * The same dataset twice (03 §5.3): the left table computes everything in the browser; the right
+ * The same dataset twice: the left table computes everything in the browser; the right
  * one sends each query to `createLocalDataSource`, which simulates a server (latency, abort) with
  * the engine's own filter/sort functions. Identical interactions give identical rows.
  */

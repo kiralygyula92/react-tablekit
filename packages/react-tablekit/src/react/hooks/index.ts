@@ -34,7 +34,7 @@ export interface DataSourceState<TData> extends DataStatus {
 }
 
 /**
- * Headless access to server mode (03 §5.2): the rows, counts and loading flags of a table driven
+ * Headless access to server mode: the rows, counts and loading flags of a table driven
  * by `dataSource`. Create the table with the same `dataSource` (`useDataTable({ dataSource })`).
  */
 export function useDataSource<TData>(
@@ -71,7 +71,7 @@ interface PanelEntry {
 const panelCaches = new WeakMap<object, Map<string, PanelEntry>>();
 
 /**
- * Loads data for a detail panel, cached per row id and loader (05 §6.1).
+ * Loads data for a detail panel, cached per row id and loader.
  *
  * @example
  * ```tsx
@@ -121,7 +121,7 @@ export function useDetailPanelData<TData, TResult>(
   };
 }
 
-/** The current breakpoint, using the theme's breakpoints (04 §6). */
+/** The current breakpoint, using the theme's breakpoints. */
 export function useBreakpoint(): Breakpoint {
   const view = useContext(ViewContext);
   const defaults = useContext(DefaultsContext);

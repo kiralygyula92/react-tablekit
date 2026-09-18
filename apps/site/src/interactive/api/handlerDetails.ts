@@ -7,7 +7,7 @@ import { handlerMeta } from 'react-tablekit/meta';
  * does by default is written here.
  */
 
-/** Context and default behaviour per handler (06 §5); the names come from the package. */
+/** Context and default behaviour per handler; the names come from the package. */
 const DETAILS: Record<string, { context: string; behaviour: string }> = {
   onSortToggle: {
     context: '{ column, desc?, multi, event }',

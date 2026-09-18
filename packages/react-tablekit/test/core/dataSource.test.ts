@@ -112,7 +112,7 @@ describe('dataSource: loading lifecycle', () => {
   });
 });
 
-describe('dataSource: search debounce, min length and page reset (03 §9.2)', () => {
+describe('dataSource: search debounce, min length and page reset', () => {
   beforeEach(() => vi.useFakeTimers());
   afterEach(() => vi.useRealTimers());
 
@@ -155,7 +155,7 @@ describe('dataSource: search debounce, min length and page reset (03 §9.2)', ()
   });
 });
 
-describe('dataSource: abort + race (03 §9.3)', () => {
+describe('dataSource: abort + race', () => {
   it('rapid page clicks: only the last response is applied', async () => {
     const { table, calls } = setup();
     calls[0]!.resolve(page(0));
@@ -197,7 +197,7 @@ describe('dataSource: abort + race (03 §9.3)', () => {
 });
 
 describe('dataSource: server echo and range correction', () => {
-  it('adopts the echoed query without an extra fetch (03 §9.4)', async () => {
+  it('adopts the echoed query without an extra fetch', async () => {
     const { table, calls } = setup();
     calls[0]!.resolve({ ...page(0, 25), query: { pagination: { pageIndex: 0, pageSize: 25 } } });
     await flush();
@@ -206,7 +206,7 @@ describe('dataSource: server echo and range correction', () => {
     expect(calls).toHaveLength(1);
   });
 
-  it('page out of range after a refetch corrects itself once (03 §9.5)', async () => {
+  it('page out of range after a refetch corrects itself once', async () => {
     const { table, calls } = setup({
       initialState: { pagination: { pageIndex: 9, pageSize: 10 } },
     });
@@ -220,7 +220,7 @@ describe('dataSource: server echo and range correction', () => {
   });
 });
 
-describe('dataSource: errors (03 §9.10)', () => {
+describe('dataSource: errors', () => {
   it('no data: error state with a working retry', async () => {
     const onError = vi.fn();
     const { table, calls } = setup({ onError });
@@ -294,7 +294,7 @@ describe('dataSource: refresh, polling, optimistic updates', () => {
   });
 });
 
-describe('dataSource: load-more accumulation (03 §6, 05 §4.1)', () => {
+describe('dataSource: load-more accumulation', () => {
   it('appends the next page and starts over when the query changes', async () => {
     // The React layer merges its view props into the options, which is how the engine infers
     // accumulation from the pagination variant.
@@ -337,7 +337,7 @@ describe('dataSource: load-more accumulation (03 §6, 05 §4.1)', () => {
   });
 });
 
-describe('dataSource: hybrid modes (03 §1.2)', () => {
+describe('dataSource: hybrid modes', () => {
   it('server pagination + client sorting sorts the fetched page without refetching', async () => {
     // A dataSource implies dataMode "server", so client sorting is an explicit per-feature override.
     const { table, calls } = setup({
@@ -381,7 +381,7 @@ describe('dataSource: hybrid modes (03 §1.2)', () => {
   });
 });
 
-describe('dataSource: cursor pagination (03 §9.8)', () => {
+describe('dataSource: cursor pagination', () => {
   it('uses nextCursor/prevCursor and reports an unknown total', async () => {
     const { table, calls } = setup({ paginationType: 'cursor' });
     calls[0]!.resolve({ rows: numbered(10), nextCursor: 'c10', prevCursor: null });
@@ -399,7 +399,7 @@ describe('dataSource: cursor pagination (03 §9.8)', () => {
   });
 });
 
-describe('dataSource: lazy children (03 §9.9)', () => {
+describe('dataSource: lazy children', () => {
   it('fetches once per row per query and refetches after the query changes', async () => {
     const fetchChildren = vi.fn((row: { id: string }) =>
       Promise.resolve([
@@ -431,7 +431,7 @@ describe('dataSource: lazy children (03 §9.9)', () => {
   });
 });
 
-describe('selection across server pages (03 §6.1, §9.7)', () => {
+describe('selection across server pages', () => {
   it('the exclusion model survives page changes and clears on filter change', async () => {
     const { table, calls } = setup({
       enableRowSelection: true,

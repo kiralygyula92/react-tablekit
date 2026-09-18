@@ -12,7 +12,7 @@ afterEach(() => {
   localStorage.clear();
 });
 
-describe('URL state encoding (03 §7)', () => {
+describe('URL state encoding', () => {
   it('uses the compact, documented spelling', () => {
     const state: Partial<TableState> = {
       pagination: { pageIndex: 1, pageSize: 25 },
@@ -65,7 +65,7 @@ describe('URL state encoding (03 §7)', () => {
   });
 });
 
-describe('syncState (03 §7)', () => {
+describe('syncState', () => {
   it('writes the URL as the state changes', async () => {
     const user = userEvent.setup();
     renderTable({

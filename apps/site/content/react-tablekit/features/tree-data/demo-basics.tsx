@@ -12,7 +12,7 @@ const columns = [
 const data = buildOrgTree();
 
 /**
- * Tree data (05 §6.2): `getSubRows` turns nested records into expandable rows with indentation,
+ * Tree data: `getSubRows` turns nested records into expandable rows with indentation,
  * an expand toggle in the first column, and “expand all” in the toolbar. Filtering keeps parents
  * whose descendants match.
  */

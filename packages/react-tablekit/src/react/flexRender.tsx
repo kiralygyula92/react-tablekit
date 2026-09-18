@@ -23,7 +23,7 @@ export function flexRender<TProps extends object>(
   return template as ReactNode;
 }
 
-/** Renders a cell's `cell` template (06 §10 headless usage). */
+/** Renders a cell's `cell` template (headless usage). */
 export function renderCell<TData>(cell: Cell<TData>): ReactNode {
   return flexRender(cell.column.columnDef.cell, cell.getContext());
 }

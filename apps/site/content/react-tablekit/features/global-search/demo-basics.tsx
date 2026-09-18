@@ -6,7 +6,7 @@ const people = generatePeople(60);
 const others = generatePeople(40, 7);
 
 /**
- * Client-side global search (05 §2): debounce, minimum length, match highlighting and
+ * Client-side global search: debounce, minimum length, match highlighting and
  * diacritic-insensitive matching. Two tables share the `mod+k` hotkey to show that it is scoped
  * to the most recently focused or hovered table, never both at once.
  */
@@ -37,7 +37,7 @@ export default function GlobalSearchExample() {
         <h2>Contractors</h2>
         <p className="site-muted">
           The same hotkey, a different table. Whichever table you last touched wins, so the two
-          never both react (fixes B10).
+          never both react.
         </p>
         <DataTable
           aria-label="Contractors"

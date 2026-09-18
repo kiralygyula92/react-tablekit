@@ -9,7 +9,7 @@ import type { ResolvedView } from './view';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- provider defaults apply to tables of any row type
 type AnyProps = Partial<DataTableProps<any>>;
 
-/** App-wide defaults (04 §7). Nested providers merge. */
+/** App-wide defaults. Nested providers merge. */
 export const DefaultsContext = createContext<AnyProps>({});
 /** The table instance of the nearest `DataTable.Root`. */
 export const TableContext = createContext<TableInstance<unknown> | null>(null);
@@ -114,7 +114,7 @@ export function useView(): ResolvedView {
 
 /**
  * Inside a custom slot: the resolved slots plus the library defaults, so a replacement can
- * wrap the default (06 §1.2).
+ * wrap the default.
  */
 export function useTableSlots<TData = unknown>(): TableSlots<TData> & {
   defaults: TableSlots<TData>;

@@ -36,7 +36,7 @@ describe('<DataTable> rendering', () => {
     expect(bodyRows(container)).toHaveLength(6);
   });
 
-  it('B8 regression: rows have no checkbox role and no aria-selected without selection', () => {
+  it('rows have no checkbox role and no aria-selected without selection', () => {
     const { container } = renderTable({ toolbar: false });
     const row = bodyRows(container)[0]!;
     expect(row).not.toHaveAttribute('role');
@@ -50,7 +50,7 @@ describe('<DataTable> rendering', () => {
     expect(p3.querySelector('[data-column-id="age"]')).toHaveTextContent('-');
   });
 
-  it('B13 regression: widths go on <col>, min/max widths on header and body cells alike', () => {
+  it('widths go on <col>, min/max widths on header and body cells alike', () => {
     const { container } = renderTable({
       toolbar: false,
       columns: [{ accessorKey: 'name', width: '15%', minWidth: '160px', maxWidth: 300 }],
@@ -118,7 +118,7 @@ describe('sorting UI', () => {
   });
 });
 
-describe('pagination UI (05 §4)', () => {
+describe('pagination UI', () => {
   const data = numbered(95);
 
   it('renders numbered pagination with aria-current and navigates', async () => {
@@ -138,7 +138,7 @@ describe('pagination UI (05 §4)', () => {
     expect(within(nav).getByRole('button', { name: 'Next' })).toBeDisabled();
   });
 
-  it('B1 regression in the UI: no ellipsis between adjacent pages (n=10, c=2)', async () => {
+  it('the UI never shows an ellipsis between adjacent pages (n=10, c=2)', async () => {
     const user = userEvent.setup();
     renderTable({ data, toolbar: false });
     const nav = screen.getByRole('navigation', { name: 'Pagination' });
@@ -149,21 +149,21 @@ describe('pagination UI (05 §4)', () => {
     expect(items).toEqual(['1', '2', '3', '4', '…', '9', '10']);
   });
 
-  it('B5 regression: hides on a single page and the container keeps its bottom border', async () => {
+  it('hides on a single page and the container keeps its bottom border', async () => {
     const { container } = renderTable({ toolbar: false });
     await tick();
     expect(screen.queryByRole('navigation', { name: 'Pagination' })).toBeNull();
     expect(container.querySelector('.tk-container')).not.toHaveAttribute('data-has-footer');
   });
 
-  it('B5: with pagination attached the container drops its bottom border', async () => {
+  it('with pagination attached the container drops its bottom border', async () => {
     const { container } = renderTable({ data, toolbar: false });
     await waitFor(() =>
       expect(container.querySelector('.tk-container')).toHaveAttribute('data-has-footer'),
     );
   });
 
-  it('B4 regression: the page count follows the page size; the size selector keeps position', async () => {
+  it('the page count follows the page size; the size selector keeps position', async () => {
     const user = userEvent.setup();
     const { container } = renderTable({
       data,
@@ -208,7 +208,7 @@ describe('pagination UI (05 §4)', () => {
   });
 });
 
-describe('states (03 §8)', () => {
+describe('states', () => {
   it("initial load: 'text' shows one centred Loading row; 'skeleton' shows skeleton rows", () => {
     const { container, rerender } = renderTable({
       data: [],
@@ -251,7 +251,7 @@ describe('states (03 §8)', () => {
     expect(container.querySelector('.tk-state')).toHaveTextContent('Please choose a site first');
   });
 
-  it('B7 regression: the refetch overlay blocks interaction and the table is aria-busy', async () => {
+  it('the refetch overlay blocks interaction and the table is aria-busy', async () => {
     const onRowClick = vi.fn();
     const { container } = renderTable({
       fetching: true,
@@ -267,7 +267,7 @@ describe('states (03 §8)', () => {
     expect((body as HTMLElement & { inert?: boolean }).inert).toBe(true);
   });
 
-  it('B6 regression: the overlay lives inside the positioned container', async () => {
+  it('the overlay lives inside the positioned container', async () => {
     const { container } = renderTable({ fetching: true, loadingOverlayDelayMs: 0, toolbar: false });
     await waitFor(() =>
       expect(container.querySelector('.tk-container > .tk-overlay')).toBeInTheDocument(),
@@ -311,7 +311,7 @@ describe('states (03 §8)', () => {
   });
 });
 
-describe('global search (05 §2)', () => {
+describe('global search', () => {
   it('filters rows and Escape clears', async () => {
     const user = userEvent.setup();
     const { container } = renderTable();
@@ -323,7 +323,7 @@ describe('global search (05 §2)', () => {
     expect(rowIds(container)).toHaveLength(6);
   });
 
-  it('B10 regression: the hotkey is opt-in, scoped per table and focuses its own input', async () => {
+  it('the hotkey is opt-in, scoped per table and focuses its own input', async () => {
     const user = userEvent.setup();
     render(
       <>
@@ -370,7 +370,7 @@ describe('global search (05 §2)', () => {
 });
 
 describe('server mode', () => {
-  it('controlled server mode (03 §4): renders the page and emits pagination changes', async () => {
+  it('controlled server mode: renders the page and emits pagination changes', async () => {
     const user = userEvent.setup();
     function Controlled() {
       const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
@@ -507,7 +507,7 @@ describe('customization (06)', () => {
     expect(rowIds(container)[0]).toBe('p6');
   });
 
-  it('B9 regression: every string comes from localization (pseudo-locale)', () => {
+  it('every string comes from localization (pseudo-locale)', () => {
     const pseudo = Object.fromEntries(
       Object.entries(en).map(([key, value]) => [
         key,

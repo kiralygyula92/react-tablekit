@@ -63,7 +63,7 @@ export interface ColumnSort {
 /** Multi-column sorting, in priority order. */
 export type SortingState = ColumnSort[];
 
-/** Operators understood by the built-in filter variants (03 §6.2). */
+/** Operators understood by the built-in filter variants. */
 export type FilterOperator =
   | 'contains'
   | 'notContains'
@@ -93,7 +93,7 @@ export interface ColumnFilter {
 /** All active column filters. */
 export type ColumnFiltersState = ColumnFilter[];
 
-/** Pagination state. `cursor` is used by cursor pagination (03 §6). */
+/** Pagination state. `cursor` is used by cursor pagination. */
 export interface PaginationState {
   pageIndex: number;
   pageSize: number;
@@ -103,7 +103,7 @@ export interface PaginationState {
 /**
  * Selected row ids. May include ids that are not on the current page.
  *
- * **"Select all matching" (exclusion model, 03 §6.1):** `{ __all: true }` means every row that
+ * **"Select all matching" (exclusion model):** `{ __all: true }` means every row that
  * matches the current query is selected; ids mapped to `false` are the exceptions.
  */
 export type RowSelectionState = Record<string, boolean>;
@@ -146,7 +146,7 @@ export interface RowPinningState {
 /** Row density. Scales cell padding. */
 export type Density = 'compact' | 'standard' | 'comfortable';
 
-/** The complete table state. Every slice can be controlled or uncontrolled (02 §4.4). */
+/** The complete table state. Every slice can be controlled or uncontrolled. */
 export interface TableState {
   columnVisibility: VisibilityState;
   columnOrder: ColumnOrderState;
@@ -165,7 +165,7 @@ export interface TableState {
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
- * Query (03 §2)
+ * Query
  * ──────────────────────────────────────────────────────────────────────────── */
 
 /**
@@ -206,7 +206,7 @@ export type InitialTableState = Partial<Omit<TableState, 'columnPinning' | 'pagi
 };
 
 /* ────────────────────────────────────────────────────────────────────────────
- * Data source (03 §5)
+ * Data source
  * ──────────────────────────────────────────────────────────────────────────── */
 
 /** Facets for one column: option values with counts, or a numeric/date range. */
@@ -297,10 +297,10 @@ export type AggregationFn<TData> = (
   childRows: Row<TData>[],
 ) => unknown;
 
-/** Registry of sorting functions. Augment to register custom names (06 §6). */
+/** Registry of sorting functions. Augment to register custom names. */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- augmentation point
 export interface SortingFnRegistry {}
-/** Registry of filter functions. Augment to register custom names (06 §6). */
+/** Registry of filter functions. Augment to register custom names. */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- augmentation point
 export interface FilterFnRegistry {}
 /** Registry of aggregation functions. Augment to register custom names. */
@@ -628,7 +628,7 @@ export interface GroupColumnDef<TData, TValue = unknown> extends ColumnDefBase<T
   accessorFn?: never;
 }
 
-/** A column definition (04 §3). `TValue` is inferred by `createColumnHelper`. */
+/** A column definition. `TValue` is inferred by `createColumnHelper`. */
 export type ColumnDef<TData, TValue = unknown> =
   | AccessorKeyColumnDef<TData, TValue>
   | AccessorFnColumnDef<TData, TValue>
@@ -639,7 +639,7 @@ export type ColumnDef<TData, TValue = unknown> =
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- the value type is erased on purpose
 export type AnyColumnDef<TData> = ColumnDef<TData, any>;
 
-/** A resolved column (04 §5). */
+/** A resolved column. */
 export interface Column<TData, TValue = unknown> {
   id: string;
   depth: number;
@@ -757,7 +757,7 @@ export interface Column<TData, TValue = unknown> {
   getAggregationFn(): AggregationFn<TData> | undefined;
 }
 
-/** One header cell (04 §5, multi-row headers supported). */
+/** One header cell (multi-row headers supported). */
 export interface Header<TData, TValue = unknown> {
   id: string;
   index: number;
@@ -805,7 +805,7 @@ export interface Cell<TData, TValue = unknown> {
   getIsPlaceholder(): boolean;
 }
 
-/** A row (02 §4.5). Accessor values are cached per row. */
+/** A row. Accessor values are cached per row. */
 export interface Row<TData> {
   id: string;
   index: number;
@@ -917,7 +917,7 @@ export interface TableFeature<TData> {
   ): void;
 }
 
-/** Engine options (04 §4). `DataTableProps` adds view-only props on top. */
+/** Engine options. `DataTableProps` adds view-only props on top. */
 export interface TableOptions<TData> {
   /** Rows (client mode), or the current page (controlled server mode). @default [] */
   data?: TData[];
@@ -954,11 +954,11 @@ export interface TableOptions<TData> {
   /** @default `'offset'` */
   paginationType?: 'offset' | 'cursor';
   /**
-   * Append each fetched page to the previous ones instead of replacing them (03 §6). Inferred
+   * Append each fetched page to the previous ones instead of replacing them. Inferred
    * from a `loadMore` / `infinite` pagination variant; set it explicitly for a custom UI.
    */
   appendPages?: boolean;
-  /** Called whenever the normalized query changes, with the reason (03 §2). */
+  /** Called whenever the normalized query changes, with the reason. */
   onQueryChange?: (query: TableQuery, change: QueryChange) => void;
   /** @default 300 */
   searchDebounceMs?: number;
@@ -1173,7 +1173,7 @@ export interface ExportCsvOptions {
   signal?: AbortSignal;
 }
 
-/** The table instance (04 §5). All setters accept an `Updater`. */
+/** The table instance. All setters accept an `Updater`. */
 export interface TableInstance<TData> {
   // core
   options: ResolvedTableOptions<TData>;
@@ -1238,7 +1238,7 @@ export interface TableInstance<TData> {
   getRowCount(): number;
   /** Number of pages, derived from the row count and page size. */
   getPageCount(): number;
-  /** The normalized query (03 §2), with server keys applied. */
+  /** The normalized query, with server keys applied. */
   getQuery(): TableQuery;
   /** Applies pending debounced query changes immediately. */
   flushQuery(): void;
@@ -1304,7 +1304,7 @@ export interface TableInstance<TData> {
   getCanNextPage(): boolean;
   /** Whether a previous page exists. */
   getCanPreviousPage(): boolean;
-  /** The page buttons and ellipses to render for the current page (05 §4.4). */
+  /** The page buttons and ellipses to render for the current page. */
   getPageItems(opts?: Omit<PageItemsArgs, 'pageIndex' | 'pageCount'>): PageItem[];
 
   // selection
@@ -1328,7 +1328,7 @@ export interface TableInstance<TData> {
   getSelectedRowModel(): RowModel<TData>;
   /** The ids of the selected rows. */
   getSelectedRowIds(): string[];
-  /** What to send to a server for a bulk action: ids, or the query plus exclusions (03 §6.1). */
+  /** What to send to a server for a bulk action: ids, or the query plus exclusions. */
   getSelectionQuery(): SelectionQuery;
   /** Selects every row matching the current query, including rows not yet loaded. */
   selectAllMatching(): void;

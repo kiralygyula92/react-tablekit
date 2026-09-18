@@ -28,7 +28,7 @@ test.describe('global search', () => {
     await expect(marks.first()).toHaveText(/zoë/i);
   });
 
-  test('the Ctrl+K hotkey is scoped to the table you last touched (B10)', async ({ page }) => {
+  test('the Ctrl+K hotkey is scoped to the table you last touched', async ({ page }) => {
     await page.goto(demoUrl('features/global-search/demo-basics'));
     const employees = page.getByRole('searchbox', { name: 'Search' }).first();
     const contractors = page.getByRole('searchbox', { name: 'Search' }).last();

@@ -1,10 +1,10 @@
 /**
- * Fails the build when a public symbol lacks a TSDoc description (09 §5 gate 7).
+ * Fails the build when a public symbol lacks a TSDoc description.
  *
  * TypeDoc exits 0 on warnings, so this wrapper inspects them. Members of *anonymous* inline object
  * types — the callbacks inside a slot's prop bag, reported as `SlotPropsMap.X.__type.onChange` —
  * are exempt: the slot itself is documented and its callbacks are listed with their types on
- * `/api/slots`. See docs/adr/004-spec-deviations.md (D11).
+ * `/api/slots`.
  */
 import { spawnSync } from 'node:child_process';
 

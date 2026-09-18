@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Four replaced slots (06 §1). Every slot receives the state it needs as props, so a
+ * Four replaced slots. Every slot receives the state it needs as props, so a
  * replacement is a plain component — there is no registry to configure and no CSS to fight.
  */
 const slots: Partial<TableSlots<DemoPerson>> = {

@@ -34,7 +34,7 @@ for (const [name, theme] of Object.entries(presets)) {
   );
 }
 
-describe('design tokens (07 §3)', () => {
+describe('design tokens', () => {
   it.each(Object.keys(expected))('%s matches the JS theme objects', (file) => {
     const url = new URL(file, stylesDir);
     if (update) writeFileSync(url, expected[file]!);
@@ -70,7 +70,7 @@ describe('design tokens (07 §3)', () => {
     expect(used.filter((v) => !defined.has(v))).toEqual([]);
   });
 
-  it('B16 regression: pagination colours are tokens, not hard-coded hex (also on mobile)', () => {
+  it('pagination colours are tokens, not hard-coded hex (also on mobile)', () => {
     const theme = readFileSync(new URL('theme.css', stylesDir), 'utf8');
     // Every pagination rule, compact variant included, must resolve its colours through tokens.
     const rules = [...theme.matchAll(/&[^{}]*(?:tk-pagination|tk-page-)[^{}]*\{([^{}]*)\}/g)].map(
@@ -87,7 +87,7 @@ describe('design tokens (07 §3)', () => {
       expect(Object.values(TOKEN_VARS)).toContain(name);
   });
 
-  it('B19 regression: pinned cells inherit the row background instead of a hard-coded white', () => {
+  it('pinned cells inherit the row background instead of a hard-coded white', () => {
     const theme = readFileSync(new URL('theme.css', stylesDir), 'utf8');
     // Every row state sets the row variable...
     for (const state of ['data-selected', 'data-striped'])
@@ -141,7 +141,7 @@ function contrast(a: string, b: string): number {
   return (x + 0.05) / (y + 0.05);
 }
 
-describe('colour contrast (05 §16)', () => {
+describe('colour contrast', () => {
   it.each(['light', 'classic', 'dark', 'compact'] as const)(
     '%s text pairs meet WCAG AA (4.5:1)',
     (name) => {

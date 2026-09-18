@@ -90,7 +90,7 @@ test('a table on the page keeps the hotkey for its own search', async ({ page })
   const tableSearch = page.getByRole('searchbox').first();
   await expect(tableSearch).toBeVisible();
 
-  // The hotkey is scoped to the table last focused or hovered (B10), and this page has two.
+  // The hotkey is scoped to the table last focused or hovered, and this page has two.
   // Hovering the first one is what makes it the table that should answer.
   await tableSearch.hover();
   await page.keyboard.press('Control+k');

@@ -99,7 +99,7 @@ const basic: BuiltInSortingFnType = (rowA, rowB, id) =>
 const boolean: BuiltInSortingFnType = (rowA, rowB, id) =>
   basicCompare(getSortValue(rowA, id) ? 1 : 0, getSortValue(rowB, id) ? 1 : 0);
 
-/** Built-in sorting functions (05 §1). */
+/** Built-in sorting functions. */
 export const sortingFns = {
   /** Natural, case-insensitive ("a2" < "a10"). */
   alphanumeric,

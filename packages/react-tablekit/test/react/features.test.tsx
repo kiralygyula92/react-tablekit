@@ -55,7 +55,7 @@ const tree: Person[] = [
   { id: 'b', name: 'Leaf B', age: 40, joined: '2020-01-01', active: true },
 ];
 
-describe('cell building blocks (04 §9)', () => {
+describe('cell building blocks', () => {
   it('ActionButton: accessible name, tooltip on hover, stops propagation, disabled wrapper', async () => {
     const user = userEvent.setup();
     const onClick = vi.fn();
@@ -180,7 +180,7 @@ describe('cell building blocks (04 §9)', () => {
   });
 });
 
-describe('toolbar, filters and chips (05 §3, §18)', () => {
+describe('toolbar, filters and chips', () => {
   const filterColumns: AnyColumnDef<Person>[] = [
     { accessorKey: 'name', header: 'Name' },
     { accessorKey: 'age', header: 'Age', type: 'number' },
@@ -382,7 +382,7 @@ describe('toolbar, filters and chips (05 §3, §18)', () => {
   });
 });
 
-describe('selection, expansion, grouping rendering (05 §5–7)', () => {
+describe('selection, expansion, grouping rendering', () => {
   it('row checkboxes, header tri-state, selection bar with bulk actions and Shift range', async () => {
     const user = userEvent.setup();
     const { container } = renderTable({
@@ -421,7 +421,7 @@ describe('selection, expansion, grouping rendering (05 §5–7)', () => {
       renderRowActions: () => <button type="button">Act</button>,
     });
     expect(screen.queryByRole('checkbox', { name: 'Select all rows on this page' })).toBeNull();
-    // Single selection has radio semantics (05 §5), not checkboxes.
+    // Single selection has radio semantics, not checkboxes.
     expect(screen.getAllByRole('radio', { name: 'Select row' })).toHaveLength(
       bodyRows(container).length,
     );
@@ -577,7 +577,7 @@ describe('selection, expansion, grouping rendering (05 §5–7)', () => {
     expect(container.querySelector('.tk-truncate')).toBeInTheDocument();
   });
 
-  it('B14 regression: the header sticks inside a max-height scroll container (a picker dialog)', () => {
+  it('the header sticks inside a max-height scroll container (a picker dialog)', () => {
     const { container } = renderTable({
       toolbar: false,
       enableStickyHeader: true,
@@ -591,7 +591,7 @@ describe('selection, expansion, grouping rendering (05 §5–7)', () => {
   });
 });
 
-describe('providers and hooks (04 §6–7)', () => {
+describe('providers and hooks', () => {
   it('TableThemeProvider applies theme variables and data-theme; TableLocaleProvider strings', () => {
     const { container } = render(
       <TableThemeProvider theme={{ name: 'brand', color: { accent: '#7C3AED' } }}>

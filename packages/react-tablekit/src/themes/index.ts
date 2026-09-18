@@ -3,7 +3,7 @@ import type { DeepPartial, TableTheme, TableThemeTokens } from './types';
 export type * from './types';
 
 /**
- * Token path → CSS variable. The single source of truth for the token catalogue (07 §3);
+ * Token path → CSS variable. The single source of truth for the token catalogue;
  * `tokenMeta` in `react-tablekit/meta` and the preset CSS files are derived from it.
  */
 export const TOKEN_VARS = {
@@ -129,7 +129,7 @@ function deepMerge<T>(base: T, override: unknown): T {
   return out as T;
 }
 
-/** Deep-merges overrides onto a base theme and returns a complete `TableTheme` (07 §2). */
+/** Deep-merges overrides onto a base theme and returns a complete `TableTheme`. */
 export function createTheme(base: TableTheme, ...overrides: DeepPartial<TableTheme>[]): TableTheme {
   return overrides.reduce<TableTheme>((acc, o) => deepMerge(acc, o), base);
 }
@@ -278,7 +278,7 @@ export const lightTheme: TableTheme = {
 };
 
 /**
- * `classic`: a dense, compact look (07 §4). Values are frozen by the semver
+ * `classic`: a dense, compact look. Values are frozen by the semver
  * policy.
  */
 export const classicTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, {
@@ -320,7 +320,7 @@ classicTheme.defaults = {
   searchDebounceMs: 300,
 };
 
-/** `dark`: AA-verified dark palette (07 §5). */
+/** `dark`: AA-verified dark palette. */
 export const darkTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, {
   name: 'dark',
   colorScheme: 'dark',
@@ -374,7 +374,7 @@ export const darkTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, {
   },
 });
 
-/** `compact`: dense by default, 13px font, 32px controls (07 §5). */
+/** `compact`: dense by default, 13px font, 32px controls. */
 export const compactTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, {
   name: 'compact',
   font: { size: '13px' },
@@ -391,7 +391,7 @@ export const compactTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, 
 });
 compactTheme.defaults = { ...lightTheme.defaults, density: 'compact' };
 
-/** `minimal`: no outer border, no header background, dividers only (07 §5). */
+/** `minimal`: no outer border, no header background, dividers only. */
 export const minimalTheme: TableTheme = /* @__PURE__ */ createTheme(lightTheme, {
   name: 'minimal',
   header: { bg: 'transparent' },

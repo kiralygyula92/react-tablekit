@@ -4,7 +4,7 @@ import { generatePeople, type DemoPerson } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 
 /**
- * 100 000 rows in one scroll container (05 §14): only the rows near the viewport are in the DOM,
+ * 100 000 rows in one scroll container: only the rows near the viewport are in the DOM,
  * with spacer rows keeping the scrollbar honest. Sorting, searching and filtering still run over
  * the whole dataset, and the table exposes grid semantics so screen readers get the real totals.
  */

@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 
 const data = generatePeople(40);
 
-/** A brand theme: start from a preset and override only what differs (07 §5). */
+/** A brand theme: start from a preset and override only what differs. */
 const brand = createTheme(lightTheme, {
   color: { accent: '#7C3AED', surface: '#FDFCFF' },
   header: { bg: '#F3EEFF', color: '#3B2A63' },
@@ -13,7 +13,7 @@ const brand = createTheme(lightTheme, {
 });
 
 /**
- * Three ways to change the look (07 §5–§7):
+ * Three ways to change the look:
  *
  * - `theme` with `createTheme` — typed, and the same object works in every table;
  * - a CSS class that sets the `--tk-*` variables — no JavaScript involved;

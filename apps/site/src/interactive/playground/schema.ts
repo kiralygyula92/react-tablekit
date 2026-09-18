@@ -1,5 +1,5 @@
 /**
- * The playground's **setup** controls (08 §4): the things around the table that are not props of
+ * The playground's **setup** controls: the things around the table that are not props of
  * it — which data to show, whether it comes from memory or a simulated API, the preset, the
  * language and the initial state. Every actual prop is generated from the package's types in
  * `./props.ts`, so none is listed here.

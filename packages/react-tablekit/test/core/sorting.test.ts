@@ -5,7 +5,7 @@ import { ids, makeTable, type Person } from '../fixtures';
 const names = (table: ReturnType<typeof makeTable>) =>
   table.getRowModel().rows.map((r) => r.getValue<string>('name'));
 
-describe('sorting cycle (05 §1)', () => {
+describe('sorting cycle', () => {
   it('asc → desc → none', () => {
     const table = makeTable();
     const col = table.getColumn('city')!;
@@ -104,7 +104,7 @@ describe('multi-sort', () => {
   });
 });
 
-describe('sorting functions (B18)', () => {
+describe('sorting functions', () => {
   it('text sorting is locale-aware and case/diacritic-insensitive', () => {
     const table = makeTable({ initialState: { sorting: [{ id: 'name', desc: false }] } });
     expect(names(table)).toEqual([
@@ -160,7 +160,7 @@ describe('sorting functions (B18)', () => {
     expect(trues).toEqual(['p1', 'p3', 'p4', 'p6']);
   });
 
-  it('B18 regression: mixed and null values sort by a typed, locale-aware comparator', () => {
+  it('mixed and null values sort by a typed, locale-aware comparator', () => {
     // A naive `<`/`>` comparison lets nulls land anywhere and sorts "Zoë" after "z".
     const asc = makeTable({ initialState: { sorting: [{ id: 'age', desc: false }] } });
     const desc = makeTable({ initialState: { sorting: [{ id: 'age', desc: true }] } });

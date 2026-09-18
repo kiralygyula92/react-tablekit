@@ -165,7 +165,7 @@ describe('column ordering', () => {
   });
 });
 
-describe('column pinning (B2)', () => {
+describe('column pinning', () => {
   const pinCols: AnyColumnDef<Person>[] = [
     { accessorKey: 'name', pin: 'left', size: 120 },
     { accessorKey: 'age', size: 80 },
@@ -174,7 +174,7 @@ describe('column pinning (B2)', () => {
     { id: 'actions', pin: 'right', size: 48, static: true },
   ];
 
-  it('B2 regression: any column, any count, both sides', () => {
+  it('any column, any count, both sides', () => {
     const table = makeTable({ columns: pinCols });
     table.getColumn('age')!.pin('left');
     expect(table.getLeftVisibleLeafColumns().map((c) => c.id)).toEqual(['name', 'age']);

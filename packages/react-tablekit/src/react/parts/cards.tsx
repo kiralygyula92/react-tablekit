@@ -31,7 +31,7 @@ function cardColumns(table: AnyTable): Column<unknown>[] {
 }
 
 /**
- * The mobile cards layout (05 §13): each row becomes an article with label/value pairs, the
+ * The mobile cards layout: each row becomes an article with label/value pairs, the
  * selection checkbox in its header and the row actions in its footer. Semantically a list of
  * articles, so screen readers announce "list, N items" instead of a table.
  */
@@ -101,7 +101,7 @@ export function CardsView() {
   );
 }
 
-/** Whether the table should render as cards at the current breakpoint (05 §13). */
+/** Whether the table should render as cards at the current breakpoint. */
 export function useCardsLayout(): boolean {
   const table = useTableContext();
   const view = useView();

@@ -15,7 +15,7 @@ import type { Placement, RowAction, SlotPropsMap } from '../types';
 import { cx } from '../utils';
 
 /**
- * Cell building blocks (04 §9). They cover the layouts tables need repeatedly and honour slot
+ * Cell building blocks. They cover the layouts tables need repeatedly and honour slot
  * overrides when rendered inside a table (they also work standalone).
  */
 

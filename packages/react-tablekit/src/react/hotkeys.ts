@@ -84,7 +84,7 @@ function onKeyDown(this: Document, e: KeyboardEvent) {
   const candidates = [...entries].filter((en) => en.doc === this && matchesHotkey(e, en.hotkey));
   if (!candidates.length) return;
   const hk = candidates[0]!.hotkey;
-  // Plain keys never steal typing from another text field (05 §2).
+  // Plain keys never steal typing from another text field.
   if (!hk.mod && !hk.ctrl && !hk.meta && isTextField(this.activeElement)) return;
   const target = candidates.reduce((a, b) =>
     b.lastActive > a.lastActive || (b.lastActive === a.lastActive && b.order > a.order) ? b : a,
@@ -94,7 +94,7 @@ function onKeyDown(this: Document, e: KeyboardEvent) {
 }
 
 /**
- * Registers a scoped hotkey (fixes B10): only the most recently focused/hovered table with the
+ * Registers a scoped hotkey: only the most recently focused/hovered table with the
  * same hotkey reacts, and it focuses its own input.
  */
 export function registerHotkey(hotkey: string, doc: Document, trigger: (e: KeyboardEvent) => void) {

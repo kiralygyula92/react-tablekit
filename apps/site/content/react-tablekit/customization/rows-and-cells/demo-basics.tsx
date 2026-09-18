@@ -6,7 +6,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(40);
 
 /**
- * Row-level overrides (06 §4): `renderRow` wraps or replaces a row while still calling
+ * Row-level overrides: `renderRow` wraps or replaces a row while still calling
  * `defaultRender`, `getRowProps` adds attributes and events, `getRowClassName` styles state, and
  * disabled rows ignore clicks.
  */

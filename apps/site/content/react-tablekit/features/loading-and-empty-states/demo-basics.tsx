@@ -8,7 +8,7 @@ type StateName = 'loading' | 'skeleton' | 'refetching' | 'empty' | 'noResults' |
 const people = generatePeople(40);
 
 /**
- * Every data state (03 §8, 05 §17): the first load as text or skeleton rows, the refetch overlay
+ * Every data state: the first load as text or skeleton rows, the refetch overlay
  * that keeps the rows readable, the two empty states (no data at all vs nothing matching the
  * filters) and the error state with Retry.
  */

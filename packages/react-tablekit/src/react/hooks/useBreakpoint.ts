@@ -3,7 +3,7 @@ import { breakpointForWidth, DEFAULT_BREAKPOINTS } from '../../core/responsive';
 import type { Breakpoint, Breakpoints } from '../../themes/types';
 
 /**
- * The current viewport breakpoint (05 §13). SSR-safe: the server (and hydration) renders with
+ * The current viewport breakpoint. SSR-safe: the server (and hydration) renders with
  * `ssrBreakpoint`, then the client updates.
  */
 export function useViewportBreakpoint(

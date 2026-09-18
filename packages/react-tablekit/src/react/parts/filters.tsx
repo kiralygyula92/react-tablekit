@@ -14,7 +14,7 @@ type AnyColumn = Column<unknown>;
 const OPTION_VARIANTS = new Set(['select', 'multiSelect']);
 
 /**
- * Options for a select-like filter (05 §3.4): static, a function, async (with a loading state),
+ * Options for a select-like filter: static, a function, async (with a loading state),
  * server facets (`fetchFacets`, lazy, cached per query) or client facets with counts.
  */
 function useFilterOptions(
@@ -269,7 +269,7 @@ export function FiltersButton<TData>({
   );
 }
 
-/** Human summary of a filter value for the chips (05 §3.2). */
+/** Human summary of a filter value for the chips. */
 function summarize(
   column: AnyColumn,
   value: unknown,
@@ -345,7 +345,7 @@ function ChipsInner({ table, view }: { table: AnyTable; view: ResolvedView }) {
   );
 }
 
-/** `DataTable.ActiveFilterChips` (05 §3.2). */
+/** `DataTable.ActiveFilterChips`. */
 export function ActiveFilterChips<TData>({ table: tableProp }: { table?: TableInstance<TData> }) {
   const table = useOptionalTable(tableProp) as AnyTable;
   useTableVersion(table);

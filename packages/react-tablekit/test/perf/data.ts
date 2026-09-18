@@ -1,4 +1,4 @@
-/** A wide-ish row for the performance budgets (09 §4). */
+/** A wide-ish row for the performance budgets. */
 export interface BenchPerson {
   id: string;
   name: string;

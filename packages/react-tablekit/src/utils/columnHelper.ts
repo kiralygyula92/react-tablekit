@@ -31,7 +31,7 @@ export interface ColumnHelper<TData> {
 }
 
 /**
- * Typed column builders (04 §3).
+ * Typed column builders.
  *
  * @example
  * ```tsx

@@ -85,11 +85,11 @@ const ALL_RESET_REASONS: ResetPageReason[] = [
   'grouping',
   'pageSize',
 ];
-/** Display columns that follow the left pins (05 §5). */
+/** Display columns that follow the left pins. */
 const LEADING_DISPLAY_COLUMNS = ['tk-select', 'tk-expand', 'tk-row-number'];
 const ACTIONS_COLUMNS = ['tk-actions', 'actions'];
 
-/** Resolves `dataMode` / `xMode` aliases into `manualX` flags (03 §1). */
+/** Resolves `dataMode` / `xMode` aliases into `manualX` flags. */
 export function resolveOptions<TData>(options: TableOptions<TData>): ResolvedTableOptions<TData> {
   const base = options.dataMode ?? (options.dataSource ? 'server' : 'client');
   const isServer = (mode: TableOptions<TData>['paginationMode']) => (mode ?? base) === 'server';
@@ -107,7 +107,7 @@ export function resolveOptions<TData>(options: TableOptions<TData>): ResolvedTab
   };
 }
 
-/** Dev warnings for questionable hybrid combinations (03 §1.2). */
+/** Dev warnings for questionable hybrid combinations. */
 function validateModes<TData>(o: ResolvedTableOptions<TData>): void {
   if (process.env.NODE_ENV === 'production') return;
   if (o.manualGrouping && !o.manualPagination && (o.enableGrouping ?? false)) {
@@ -140,7 +140,7 @@ type InternalTable<TData> = TableInstance<TData> & {
 };
 
 /**
- * Creates a headless table instance (02 §4.1). Framework-agnostic: React binds to it through
+ * Creates a headless table instance. Framework-agnostic: React binds to it through
  * `subscribe` + `getState`.
  *
  * @example
@@ -334,7 +334,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
     });
   };
 
-  /* ── query tracking (03 §2) ───────────────────────────────────────── */
+  /* ── query tracking ───────────────────────────────────────────────── */
 
   const buildQuery = (s: TableState): TableQuery => ({
     pagination: s.pagination,
@@ -373,7 +373,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
   table.getQuery = () => mapQuery();
 
   /**
-   * In hybrid mode only the server-managed features reach the data source (03 §1.2). Client-side
+   * In hybrid mode only the server-managed features reach the data source. Client-side
    * parts are blanked out, so, for example, server pagination + client sorting really does sort
    * just the page that was fetched instead of asking the server to re-sort everything.
    */
@@ -508,7 +508,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
         r !== 'refresh' &&
         shouldResetPage(r as ResetPageReason) &&
         // A client-side change under server pagination only affects the page already fetched
-        // (03 §1.2), so it must not jump back to page 1 — and must not refetch.
+        //, so it must not jump back to page 1 — and must not refetch.
         (isServerReason(r) || !table.options.manualPagination),
     );
     if (resetFor && (next.pagination.pageIndex !== 0 || next.pagination.cursor)) {
@@ -565,7 +565,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
     if (reasons.length) batch(() => commit(next, reasons));
   };
 
-  /** Server echo (03 §5.1): adopt into state and query without refetching. */
+  /** Server echo: adopt into state and query without refetching. */
   function adoptQuery(partial: Partial<TableQuery>) {
     const cols = getAllFlatColumns();
     const bySortKey = new Map(cols.map((c) => [c.columnDef.sortServerKey ?? c.id, c.id]));
@@ -1027,7 +1027,7 @@ export function createTable<TData>(userOptions: TableOptions<TData>): TableInsta
           ...(old.cursor !== undefined ? { cursor: null } : {}),
         };
       }
-      // Keep the first visible row on screen (05 §4.2).
+      // Keep the first visible row on screen.
       const firstRow = old.pageIndex * old.pageSize;
       return { ...old, pageSize, pageIndex: Math.floor(firstRow / pageSize) };
     });

@@ -1,4 +1,4 @@
-// Enforces "tokens are the API" (07 §1) on theme.css:
+// Enforces "tokens are the API" on theme.css:
 //  1. No colour literals (#hex, rgb(), hsl(), named colours) in any declaration except custom
 //     property definitions (component tokens such as --tk-shadow-popover live at the top).
 //  2. Colour, background, border, radius, shadow and typography properties must read a --tk-*

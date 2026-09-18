@@ -281,7 +281,7 @@ function collectLeaves<TData>(rows: Row<TData>[]): Row<TData>[] {
 
 /* ── sorting ──────────────────────────────────────────────────────────── */
 
-/** Stable multi-column sort; sub-rows are sorted inside their parents (05 §1). */
+/** Stable multi-column sort; sub-rows are sorted inside their parents. */
 export function sortRowModel<TData>(
   table: TableInstance<TData>,
   model: RowModel<TData>,

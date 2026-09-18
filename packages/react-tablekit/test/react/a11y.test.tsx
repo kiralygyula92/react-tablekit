@@ -6,7 +6,7 @@ import { DataTable, type DataTableProps } from '../../src';
 import { people, personColumns, type Person } from '../fixtures';
 
 /**
- * Unit-level a11y checks (09 §1): every feature configuration renders without axe violations.
+ * Unit-level a11y checks: every feature configuration renders without axe violations.
  * The demo site runs the same rule set over whole pages in Playwright.
  */
 async function expectNoViolations(container: HTMLElement) {

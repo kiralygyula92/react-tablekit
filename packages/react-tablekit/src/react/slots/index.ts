@@ -72,7 +72,7 @@ import {
   SelectionCheckbox,
 } from './toolbar';
 
-/** The library's default implementation of every slot (06 §1.1). */
+/** The library's default implementation of every slot. */
 export const defaultSlots = {
   Root,
   Toolbar,

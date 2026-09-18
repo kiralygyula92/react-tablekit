@@ -4,7 +4,7 @@ import { RequestLog, useRequestLog } from '@/demo-support/requestLog';
 
 const col = createColumnHelper<DemoPerson>();
 
-/** The server sorts by its own field names, mapped with `sortServerKey` (05 §1). */
+/** The server sorts by its own field names, mapped with `sortServerKey`. */
 const columns = [
   col.accessor((p) => `${p.firstName} ${p.lastName}`, {
     id: 'name',

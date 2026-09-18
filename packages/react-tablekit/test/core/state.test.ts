@@ -155,7 +155,7 @@ describe('reset', () => {
   });
 });
 
-describe('data modes (03 §1)', () => {
+describe('data modes', () => {
   it('dataMode server sets every manual flag but not manualExpanding', () => {
     const table = makeTable({ dataMode: 'server', acknowledgePageLocalSorting: true });
     const o = table.options;

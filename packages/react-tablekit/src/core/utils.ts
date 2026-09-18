@@ -22,7 +22,7 @@ export interface MemoOptions {
 }
 
 /**
- * Memoizes `compute` on the shallow-equal array returned by `getDeps` (02 §4.3).
+ * Memoizes `compute` on the shallow-equal array returned by `getDeps`.
  * Powers every row-model stage and derived value.
  */
 export function memo<TDeps extends readonly unknown[], TResult>(

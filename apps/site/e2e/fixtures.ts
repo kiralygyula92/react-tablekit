@@ -2,8 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { test as base, expect, type Page } from '@playwright/test';
 
 /**
- * Shared test: an automatic fixture fails every test on any console error or uncaught page error
- * (docs/08 §8: "it renders, has no console errors, and passes axe").
+ * Shared test: an automatic fixture fails every test on any console error or uncaught page error.
  */
 export const test = base.extend<{ failOnConsoleErrors: undefined }>({
   failOnConsoleErrors: [
@@ -33,7 +32,7 @@ interface A11yOptions {
   contrastExceptions?: readonly string[];
 }
 
-/** Zero serious/critical axe violations (docs/09 §1). */
+/** Zero serious/critical axe violations. */
 export async function expectNoA11yViolations(page: Page, options: A11yOptions = {}): Promise<void> {
   const results = await new AxeBuilder({ page }).analyze();
   const exceptions = options.contrastExceptions ?? [];

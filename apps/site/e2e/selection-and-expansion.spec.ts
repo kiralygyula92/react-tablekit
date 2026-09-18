@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 import { demoUrl } from './demos';
 
 /**
- * A selectable table exposes `role="grid"` and a tree `role="treegrid"` (ADR-004 D8), so a lookup
+ * A selectable table exposes `role="grid"` and a tree `role="treegrid"`, so a lookup
  * by accessible name has to accept all three roles.
  */
 const tableByName = (page: Page, name: string) =>

@@ -126,7 +126,7 @@ export function fuzzyScore(text: string, query: string): number {
   return score;
 }
 
-/** Text variant: honours the text operators (03 §6.2). */
+/** Text variant: honours the text operators. */
 const textOperatorFn = define(
   (row, id, value, ctx) => {
     const cell = fold(getFilterString(row, id));
@@ -189,7 +189,7 @@ const dateOperatorFn = define(
   { autoRemove: (v) => !v },
 );
 
-/** Built-in filter functions (05 §3.3). */
+/** Built-in filter functions. */
 export const filterFns = {
   includesString,
   includesStringSensitive: define(

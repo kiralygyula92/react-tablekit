@@ -19,7 +19,7 @@ describe('client pagination', () => {
     expect(ids(table.getRowModel().rows)).toEqual(['r20', 'r21', 'r22', 'r23', 'r24']);
   });
 
-  it('B4 regression: the page count follows the page size (no hard-coded 10)', () => {
+  it('the page count follows the page size (no hard-coded 10)', () => {
     const table = table25({ initialState: { pagination: { pageIndex: 0, pageSize: 5 } } });
     expect(table.getPageCount()).toBe(5);
     table.setPageSize(25);
@@ -48,7 +48,7 @@ describe('client pagination', () => {
     expect(table.getState().pagination.pageIndex).toBe(0);
   });
 
-  it('changing the page size keeps the first visible row on screen (05 §4.2)', () => {
+  it('changing the page size keeps the first visible row on screen', () => {
     const table = table25();
     table.setPageIndex(2); // rows 20..24
     table.setPageSize(5);

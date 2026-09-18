@@ -20,7 +20,7 @@ const columns = [
   col.accessor('age', { header: 'Age', type: 'number' }),
 ];
 
-describe('SSR safety (09 §2)', () => {
+describe('SSR safety', () => {
   it('the React entry can be imported without window/document', async () => {
     expect(typeof globalThis.window).toBe('undefined');
     const mod = await import('../../src');

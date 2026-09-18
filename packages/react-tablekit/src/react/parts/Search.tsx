@@ -15,7 +15,7 @@ export interface SearchProps<TData> {
 }
 
 /**
- * The global search input (05 §2). Render it anywhere inside `DataTable.Root` (for example in a
+ * The global search input. Render it anywhere inside `DataTable.Root` (for example in a
  * page header) or pass `table` explicitly.
  */
 export function Search<TData>({

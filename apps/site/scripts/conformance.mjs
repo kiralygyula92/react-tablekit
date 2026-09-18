@@ -1,13 +1,12 @@
 /**
- * The 26 conformance checks from the plugin docs standard (PPDS §11), run against the built
- * site.
+ * The site's conformance checks, run against the built site: page structure, navigation, the
+ * generated reference, the machine-readable surface, metadata, redirects and links.
  *
  * It reads the generated artefacts and `dist/`, so it checks what is actually shipped rather
  * than what the source intends. Run it after `pnpm --filter site build`; `--report <file>`
  * writes the result as Markdown.
  *
- * A check that the standard marks not-applicable for this project points at its entry in
- * `docs/ppds/EXCEPTIONS.md`; anything else that fails, fails the build.
+ * Any check that fails, fails the build.
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -72,8 +71,6 @@ const check = (id, group, name, fn) => {
   }
   results.push({ id, group, name, failures, status: failures.length === 0 ? 'pass' : 'fail' });
 };
-const excepted = (id, group, name, reason) =>
-  results.push({ id, group, name, failures: [], status: 'n/a', reason });
 
 /* ── Structure ───────────────────────────────────────────────────────────── */
 
@@ -141,7 +138,7 @@ check(4, 'Structure', 'No capability page exceeds 8 H2s or ~2,000 words', () =>
     }),
 );
 
-check(5, 'Structure', 'Sidebar section order matches the standard', () => {
+check(5, 'Structure', 'The sidebar sections keep their fixed order', () => {
   const expected = [
     'Getting started',
     'Features',
@@ -236,13 +233,9 @@ check(12, 'Reference', "Every reference page's usedBy is non-empty or marked int
 
 /* ── Pricing ─────────────────────────────────────────────────────────────── */
 
-excepted(13, 'Pricing', 'Every pricing-matrix row href resolves', 'E-01, E-02');
-excepted(14, 'Pricing', 'Every non-free capability appears in the matrix', 'E-01, E-02, E-03');
-excepted(15, 'Pricing', 'Every plan card has a distinct CTA verb', 'E-01');
-
 /* ── Machine surface ─────────────────────────────────────────────────────── */
 
-check(16, 'Machine surface', 'llms.txt lists every published page and every entry resolves', () => {
+check(13, 'Machine surface', 'llms.txt lists every published page and every entry resolves', () => {
   const llms = read(path.join(dist, 'llms.txt'));
   const listed = [...llms.matchAll(/\]\(https?:\/\/[^/]+(\/[^)]*)\)/g)].map((m) => m[1]);
   const failures = [];
@@ -256,13 +249,13 @@ check(16, 'Machine surface', 'llms.txt lists every published page and every entr
   return failures;
 });
 
-check(17, 'Machine surface', 'Every docs URL has a Markdown twin', () =>
+check(14, 'Machine surface', 'Every docs URL has a Markdown twin', () =>
   pages
     .filter((page) => !existsSync(path.join(dist, page.pathname, 'index.md')))
     .map((page) => `${page.pathname}index.md is missing`),
 );
 
-check(18, 'Machine surface', 'sitemap.xml covers both surfaces', () => {
+check(15, 'Machine surface', 'sitemap.xml lists every published page', () => {
   const sitemap = read(path.join(dist, 'sitemap.xml'));
   return pages
     .filter((page) => !sitemap.includes(`<loc>`) || !sitemap.includes(`${page.pathname}</loc>`))
@@ -287,7 +280,7 @@ const REQUIRED_META = [
   'name="plugin:id"',
 ];
 
-check(19, 'Metadata', 'Every page emits the full metadata set', () =>
+check(16, 'Metadata', 'Every page emits the full metadata set', () =>
   pages.flatMap((page) => {
     const html = htmlOf(page.pathname);
     if (!html) return [`${page.pathname}: not prerendered`];
@@ -298,7 +291,7 @@ check(19, 'Metadata', 'Every page emits the full metadata set', () =>
   }),
 );
 
-check(20, 'Metadata', 'The description is written once and reused everywhere', () => {
+check(17, 'Metadata', 'The description is written once and reused everywhere', () => {
   const llms = read(path.join(dist, 'llms.txt'));
   return pages.flatMap((page) => {
     const html = htmlOf(page.pathname);
@@ -314,7 +307,7 @@ check(20, 'Metadata', 'The description is written once and reused everywhere', (
   });
 });
 
-check(21, 'Metadata', 'Every page has a canonical URL with a trailing slash', () =>
+check(18, 'Metadata', 'Every page has a canonical URL with a trailing slash', () =>
   pages.flatMap((page) => {
     const html = htmlOf(page.pathname);
     if (!html) return [`${page.pathname}: not prerendered`];
@@ -326,7 +319,7 @@ check(21, 'Metadata', 'Every page has a canonical URL with a trailing slash', ()
 
 /* ── Migration ───────────────────────────────────────────────────────────── */
 
-check(22, 'Migration', 'Every legacy URL 301s', () => {
+check(19, 'Migration', 'Every legacy URL 301s', () => {
   const rows = read(path.join(contentRoot, 'react-tablekit', 'migration', 'url-map.csv'))
     .trim()
     .split(/\r?\n/)
@@ -339,7 +332,7 @@ check(22, 'Migration', 'Every legacy URL 301s', () => {
     .map(([legacy, , , target]) => `${legacy} → ${target} is not configured`);
 });
 
-check(23, 'Migration', 'No internal link 404s', () => {
+check(20, 'Migration', 'No internal link 404s', () => {
   const known = new Set(pages.map((p) => p.pathname));
   const failures = [];
   for (const page of pages) {
@@ -354,7 +347,7 @@ check(23, 'Migration', 'No internal link 404s', () => {
   return failures;
 });
 
-check(24, 'Migration', 'Old version docs still resolve', () => {
+check(21, 'Migration', 'Old version docs still resolve', () => {
   const versions = config.versions ?? [];
   return versions
     .filter((v) => !byPath.has(v.href))
@@ -363,7 +356,7 @@ check(24, 'Migration', 'Old version docs still resolve', () => {
 
 /* ── Portfolio consistency ───────────────────────────────────────────────── */
 
-check(25, 'Portfolio', 'Section names, badge vocabulary and taxonomy come from data', () => {
+check(22, 'Portfolio', 'Section names, badge vocabulary and taxonomy come from data', () => {
   const failures = [];
   const declared = new Set(config.taxonomy ?? []);
   for (const page of pages) {
@@ -379,7 +372,7 @@ check(25, 'Portfolio', 'Section names, badge vocabulary and taxonomy come from d
   return failures;
 });
 
-check(26, 'Portfolio', 'Shared components are imported, not forked', () => {
+check(23, 'Portfolio', 'Shared components are imported, not forked', () => {
   // With one plugin in the repository there is nothing to fork *from*; what this can check is
   // that the blocks the standard names shared exist exactly once in the site's own tree.
   const shared = ['Demo', 'Badge', 'Callout', 'FeaturesIndex'];
@@ -406,40 +399,33 @@ function escapeHtml(value) {
 
 const failed = results.filter((r) => r.status === 'fail');
 const passed = results.filter((r) => r.status === 'pass');
-const skipped = results.filter((r) => r.status === 'n/a');
 
 for (const result of results) {
-  const mark = result.status === 'pass' ? 'ok  ' : result.status === 'n/a' ? 'n/a ' : 'FAIL';
+  const mark = result.status === 'pass' ? 'ok  ' : 'FAIL';
   console.log(`${mark} ${String(result.id).padStart(2)} ${result.name}`);
   for (const failure of result.failures.slice(0, 10)) console.log(`        ${failure}`);
   if (result.failures.length > 10) {
     console.log(`        … and ${result.failures.length - 10} more`);
   }
 }
-console.log(
-  `\n[conformance] ${passed.length} passed, ${failed.length} failed, ${skipped.length} not applicable`,
-);
+console.log(`\n[conformance] ${passed.length} passed, ${failed.length} failed`);
 
 const reportIndex = process.argv.indexOf('--report');
 if (reportIndex > -1 && process.argv[reportIndex + 1]) {
   const lines = [
-    '# Conformance report — PPDS v1.0 §11',
+    '# Site conformance report',
     '',
     `Generated by \`apps/site/scripts/conformance.mjs\` against the built site on ${new Date()
       .toISOString()
       .slice(0, 10)}.`,
     '',
-    `**${passed.length} passed · ${failed.length} failed · ${skipped.length} not applicable**`,
+    `**${passed.length} passed · ${failed.length} failed**`,
     '',
     '| # | Group | Check | Result |',
     '| --- | --- | --- | --- |',
     ...results.map((r) => {
       const verdict =
-        r.status === 'pass'
-          ? 'Pass'
-          : r.status === 'n/a'
-            ? `Not applicable (${r.reason})`
-            : `**Fail** — ${r.failures.slice(0, 3).join('; ')}`;
+        r.status === 'pass' ? 'Pass' : `**Fail** — ${r.failures.slice(0, 3).join('; ')}`;
       return `| ${r.id} | ${r.group} | ${r.name} | ${verdict} |`;
     }),
     '',

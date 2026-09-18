@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(80);
 
 /**
- * Column power features (05 §9–§11): drag a header to reorder, drag its right edge (or focus it
+ * Column power features: drag a header to reorder, drag its right edge (or focus it
  * and press ←/→, Shift for 50px) to resize, and use the “⋮” menu on any header to sort, filter,
  * pin, hide or autosize that column. The Columns button toggles visibility.
  */

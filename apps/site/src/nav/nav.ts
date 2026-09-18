@@ -3,9 +3,9 @@ import navData from '../../content/react-tablekit/nav.json';
 import titles from '../../content/react-tablekit/titles.json';
 
 /**
- * The plugin descriptor from `docs/ppds/plugin-site.schema.json`. Declared as a type rather than
- * inferred from the JSON so an optional field stays optional in the code: the site has to keep
- * working when a field the schema allows to be absent actually is.
+ * The plugin descriptor, `content/react-tablekit/plugin.config.json`. Declared as a type rather
+ * than inferred from the JSON so an optional field stays optional in the code: the site has to
+ * keep working when one is actually absent.
  */
 export interface PluginConfig {
   id: string;
@@ -38,7 +38,7 @@ export const pluginConfig: PluginConfig = config;
 export const nav = navData as NavNode[];
 const titleMap = titles as Record<string, string>;
 
-/** Titles live in one map so a rename touches one file (PPDS N2). */
+/** Titles live in one map so a rename touches one file. */
 export const titleFor = (pathname: string): string =>
   titleMap[pathname] ?? pathname.replace(/\/$/, '').split('/').pop() ?? pathname;
 

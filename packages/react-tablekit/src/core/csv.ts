@@ -32,7 +32,7 @@ export function exportableColumns<TData>(columns: Column<TData>[]): Column<TData
 }
 
 /**
- * Builds CSV text from rows and columns (05 §20): RFC 4180 quoting, optional UTF-8 BOM,
+ * Builds CSV text from rows and columns: RFC 4180 quoting, optional UTF-8 BOM,
  * headers from `meta.exportHeader ?? string header ?? id`, values from `exportValue ?? format`.
  */
 export function rowsToCsv<TData>(

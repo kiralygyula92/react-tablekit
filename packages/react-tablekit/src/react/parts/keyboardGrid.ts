@@ -17,7 +17,7 @@ interface Position {
 
 const cellsOfRow = (row: HTMLTableRowElement) => [...row.querySelectorAll<HTMLElement>(CELL)];
 
-/** Every navigable row of the grid: the header rows first, then the body (05 §15). */
+/** Every navigable row of the grid: the header rows first, then the body. */
 function gridRows(table: HTMLTableElement): HTMLTableRowElement[] {
   return [
     ...table.querySelectorAll<HTMLTableRowElement>('thead > tr'),
@@ -42,7 +42,7 @@ function focusCell(table: HTMLTableElement, position: Position, roving: boolean)
 }
 
 /**
- * WAI-ARIA "Data Grid" keyboard navigation (05 §15). Returns the props for the table element; it
+ * WAI-ARIA "Data Grid" keyboard navigation. Returns the props for the table element; it
  * is only active when `enableKeyboardNavigation` is set.
  */
 export function useKeyboardGrid(

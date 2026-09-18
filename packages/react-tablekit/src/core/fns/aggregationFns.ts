@@ -13,7 +13,7 @@ const numbers = <TData>(id: string, rows: Row<TData>[]): number[] =>
     .map((r) => r.getValue(id))
     .filter((v): v is number => typeof v === 'number' && !Number.isNaN(v));
 
-/** Built-in aggregation functions (04 §3). All work on leaf rows. */
+/** Built-in aggregation functions. All work on leaf rows. */
 export const aggregationFns = {
   sum: ((id, leafRows) => numbers(id, leafRows).reduce((a, b) => a + b, 0)) as Fn,
   min: ((id, leafRows) => {

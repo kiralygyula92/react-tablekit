@@ -2,7 +2,7 @@ import { expect, test } from './fixtures';
 import { demoUrl } from './demos';
 
 /**
- * Visual baselines for the showcase pages at 1440 and 390 (docs/09 §4). Font rendering differs per
+ * Visual baselines for the showcase pages at 1440 and 390. Font rendering differs per
  * OS, so baselines are stored per platform and the suite runs as its own Playwright project:
  * `pnpm e2e:visual` (add `--update-snapshots` after an intended change).
  */
@@ -27,7 +27,7 @@ for (const { id, name, table } of PAGES) {
     test(`${name} at ${viewport.width}px`, { tag: '@visual' }, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.goto(demoUrl(id));
-      // A selectable table is a grid and a tree a treegrid (ADR-004 D8).
+      // A selectable table is a grid and a tree a treegrid.
       const target = page
         .getByRole('table', { name: table })
         .or(page.getByRole('grid', { name: table }))

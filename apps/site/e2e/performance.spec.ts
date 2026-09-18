@@ -2,7 +2,7 @@ import { expect, test } from './fixtures';
 import { demoUrl } from './demos';
 
 /**
- * The browser-side performance budget of 09 §4: scrolling 100 000 virtualized rows for ~2s must
+ * The browser-side performance budget: scrolling 100 000 virtualized rows for ~2s must
  * not produce a long task over 50ms. Long tasks are collected with PerformanceObserver, which is
  * what the budget is really about (a frozen main thread), rather than a trace file.
  */

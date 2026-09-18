@@ -10,7 +10,7 @@ type P<K extends keyof SlotPropsMap<unknown>> = SlotPropsMap<unknown>[K];
 
 /**
  * Default `SearchInput` slot: `type="search"`, a start icon, a clear button and the optional
- * hotkey hint chip (05 §2).
+ * hotkey hint chip.
  */
 export function SearchInput({
   value,

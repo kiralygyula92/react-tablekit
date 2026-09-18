@@ -189,7 +189,7 @@ export const LoadMoreButton = forwardRef<HTMLButtonElement, P<'LoadMoreButton'>>
 );
 
 /**
- * Default `Pagination` slot: renders the numbered, compact and simple bars (05 §4.1).
+ * Default `Pagination` slot: renders the numbered, compact and simple bars.
  * `loadMore` / `infinite` are rendered by the Pagination part itself.
  */
 export const Pagination = forwardRef<HTMLElement, P<'Pagination'>>(function Pagination(

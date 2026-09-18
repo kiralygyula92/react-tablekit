@@ -3,7 +3,7 @@ import type { NavNode } from '../nav/nav';
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
 /**
- * The only place a badge is rendered. Its state comes from the nav node (PPDS P7/N4), so the
+ * The only place a badge is rendered. Its state comes from the nav node, so the
  * sidebar, the page heading and the features index can never disagree.
  */
 export function Badge({ node }: { node: Pick<NavNode, 'plan' | 'lifecycle'> }) {

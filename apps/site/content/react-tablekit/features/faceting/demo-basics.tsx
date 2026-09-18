@@ -11,7 +11,7 @@ const source = createLocalDataSource(people, {
 });
 
 /**
- * Server filtering and faceting (05 §3.4): filters and the search are serialized into the query,
+ * Server filtering and faceting: filters and the search are serialized into the query,
  * and the option lists plus their counts are loaded lazily through `dataSource.fetchFacets`, so
  * the browser never sees the full dataset.
  */

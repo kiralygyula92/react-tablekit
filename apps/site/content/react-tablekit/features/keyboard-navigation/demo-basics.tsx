@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(60);
 
 /**
- * Keyboard grid navigation (05 §15), following the WAI-ARIA "Data Grid" pattern. The whole table
+ * Keyboard grid navigation, following the WAI-ARIA "Data Grid" pattern. The whole table
  * is a single tab stop: Tab enters it and Tab leaves it again, arrows move between cells.
  */
 export default function KeyboardNavigationExample() {

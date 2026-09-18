@@ -7,7 +7,7 @@ export function cx(...parts: (string | false | null | undefined)[]): string | un
   return out || undefined;
 }
 
-/** An event that the user can mark to skip the library's own handler (06 §0). */
+/** An event that the user can mark to skip the library's own handler. */
 export interface TablekitEvent {
   preventTablekitDefault?: () => void;
 }
@@ -78,7 +78,7 @@ export function toCssSize(value: number | string | undefined): string | undefine
   return typeof value === 'number' ? `${value}px` : value;
 }
 
-/** `true` when the event target is an interactive element inside `container` (05 §5). */
+/** `true` when the event target is an interactive element inside `container`. */
 export function isInteractiveTarget(target: EventTarget | null, container: Element): boolean {
   let el = target as Element | null;
   while (el && el !== container) {

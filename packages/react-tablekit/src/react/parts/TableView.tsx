@@ -43,12 +43,12 @@ function useSizing(table: AnyTable, view: ResolvedView) {
   return !!table.options.enableColumnResizing || view.props.tableLayout === 'fixed';
 }
 
-/** CSS width for `<col>` (B13: widths live in the colgroup so header and body agree). */
+/** CSS width for `<col>` (widths live in the colgroup so header and body agree). */
 function colWidth(column: AnyColumn, px: boolean): string | undefined {
   return px ? `${column.getSize()}px` : toCssSize(column.columnDef.width);
 }
 
-/** min/max widths applied consistently to header and body cells (B13). */
+/** min/max widths applied consistently to header and body cells. */
 function sizeStyle(column: AnyColumn, px: boolean): CSSProperties {
   const def = column.columnDef;
   if (px)
@@ -128,7 +128,7 @@ const resolveFn = <C, V>(
   ctx: C,
 ): V | undefined => (typeof value === 'function' ? (value as (c: C) => V | undefined)(ctx) : value);
 
-/* ── virtualization (05 §14) ──────────────────────────────────────────── */
+/* ── virtualization ───────────────────────────────────────────────────── */
 
 /** Row height estimate per density, used when `estimateRowHeight` is not given. */
 const DENSITY_ROW_HEIGHT: Record<string, number> = { compact: 36, standard: 48, comfortable: 60 };
@@ -159,8 +159,8 @@ export interface ContainerProps {
 }
 
 /**
- * The positioned scroll container (02 §6). It owns the overlay positioning (fixes B6), the
- * scroll-shadow flags and the bottom border/radius depending on an attached footer (fixes B5).
+ * The positioned scroll container. It owns the overlay positioning, the
+ * scroll-shadow flags and the bottom border/radius depending on an attached footer.
  */
 export function Container({
   children,
@@ -174,7 +174,7 @@ export function Container({
   const layout = useLayout();
   const [scroll, setScroll] = useState({ left: false, right: false, overflows: false });
   const hasFooter = hasFooterProp ?? layout.footerCount > 0;
-  // Below the mobile breakpoint the rows can render as cards instead of a table (05 §13).
+  // Below the mobile breakpoint the rows can render as cards instead of a table.
   const cards = useCardsLayout();
 
   useIsomorphicLayoutEffect(() => {
@@ -259,7 +259,7 @@ export function TableElement({ className, style }: { className?: string; style?:
   const status = table.getDataStatus();
   const busy = status.loading || status.fetching;
 
-  // The overlay starts at the bottom of the header: measured with a ResizeObserver (fixes B11).
+  // The overlay starts at the bottom of the header: measured with a ResizeObserver.
   // The container is an ancestor, so its ref is attached *after* this layout effect runs on mount:
   // read it lazily. The ResizeObserver's initial callback (after commit) then sets the value.
   useIsomorphicLayoutEffect(() => {
@@ -282,9 +282,7 @@ export function TableElement({ className, style }: { className?: string; style?:
     !props['aria-labelledby'] &&
     !props.caption
   ) {
-    warnOnce(
-      'Give every table an accessible name: `aria-label`, `aria-labelledby` or `caption` (04 §2.5).',
-    );
+    warnOnce('Give every table an accessible name: `aria-label`, `aria-labelledby` or `caption`.');
   }
 
   const paginated = table.options.enablePagination !== false;
@@ -315,7 +313,7 @@ export function TableElement({ className, style }: { className?: string; style?:
     'aria-busy': busy || undefined,
     // Row ARIA states are conditional on the table's role (ARIA 1.2, axe `aria-conditional-attr`):
     // `aria-selected` needs a grid, and `aria-level` on hierarchical rows needs a treegrid.
-    // A virtualized body is a grid too, so the real totals reach screen readers (05 §14).
+    // A virtualized body is a grid too, so the real totals reach screen readers.
     role: hierarchical
       ? 'treegrid'
       : table.options.enableRowSelection || shouldVirtualize(table)
@@ -536,7 +534,7 @@ function HeaderCellView({
 
 /**
  * Column actions menu and resize handle. `_headerExtras` replaces them wholesale; otherwise the
- * built-in implementation renders whatever the column allows (05 §9, §11).
+ * built-in implementation renders whatever the column allows.
  */
 function HeaderExtras({ header }: { header: Header<unknown> }) {
   const extras = useView().props._headerExtras as ((h: Header<unknown>) => ReactNode) | undefined;
@@ -591,7 +589,7 @@ function TableBody({ offsets, px }: { offsets: Offsets; px: boolean }) {
     rows.length > 0
   ) {
     warnOnce(
-      'Row virtualization needs a bounded height: set `maxHeight` (05 §14). Rendering every row instead.',
+      'Row virtualization needs a bounded height: set `maxHeight`. Rendering every row instead.',
     );
   }
 
@@ -733,7 +731,7 @@ interface BodyRowProps {
   meta: unknown;
   density: string;
   renderKey: string;
-  /** Set while virtualized: measures the rendered row (05 §14). */
+  /** Set while virtualized: measures the rendered row. */
   measureElement?: ((element: HTMLElement | null) => void) | undefined;
 }
 
@@ -742,7 +740,7 @@ const shallowOffsetsEqual = (a: Offsets, b: Offsets) => {
   return ka.length === Object.keys(b).length && ka.every((k) => a[k] === b[k]);
 };
 
-/** A memoized body row (02 §5): re-renders only when its own state, columns, view or meta change. */
+/** A memoized body row: re-renders only when its own state, columns, view or meta change. */
 const BodyRow = memo(
   function BodyRow(p: BodyRowProps) {
     const {
@@ -829,7 +827,7 @@ const BodyRow = memo(
       'data-pinned': isPinned || undefined,
       'data-clickable': (clickable && !isDisabled) || undefined,
       'data-striped': index % 2 === 1 || undefined,
-      // B8: aria-selected only when selection is enabled; no checkbox role on rows.
+      // aria-selected only when selection is enabled; no checkbox role on rows.
       'aria-selected': selectionEnabled ? isSelected : undefined,
       'aria-rowindex': ariaRowIndex,
       'aria-disabled': isDisabled || undefined,
@@ -921,7 +919,7 @@ const BodyRow = memo(
     shallowOffsetsEqual(a.offsets, b.offsets),
 );
 
-/** Collapsible detail row (05 §6.1): lazy, optional keepMounted, animated with grid rows. */
+/** Collapsible detail row: lazy, optional keepMounted, animated with grid rows. */
 function DetailRowView({
   row,
   open,
@@ -1054,7 +1052,7 @@ function TableFoot({ offsets, px }: { offsets: Offsets; px: boolean }) {
 
 /**
  * `DataTable.LoadingOverlay`: shown while refetching with rows on screen, after
- * `loadingOverlayDelayMs` (05 §17). Positioned inside the container below the header (B6, B11).
+ * `loadingOverlayDelayMs`. Positioned inside the container below the header.
  */
 export function LoadingOverlay() {
   const table = useTableContext();
@@ -1088,7 +1086,7 @@ export function LoadingOverlay() {
 }
 
 /**
- * Dismissible error banner shown above the rows when a refetch fails with stale data (03 §8).
+ * Dismissible error banner shown above the rows when a refetch fails with stale data.
  */
 export function ErrorBannerPart() {
   const table = useTableContext();

@@ -9,7 +9,7 @@ import { Search } from './Search';
 
 type AnyTable = TableInstance<unknown>;
 
-/** `DataTable.ColumnsButton`: visibility (and ordering) menu (05 §11). */
+/** `DataTable.ColumnsButton`: visibility (and ordering) menu. */
 export function ColumnsButton<TData>({ table: tableProp }: { table?: TableInstance<TData> }) {
   const table = useOptionalTable(tableProp) as AnyTable;
   useTableVersion(table);
@@ -55,7 +55,7 @@ export function DensityButton<TData>({ table: tableProp }: { table?: TableInstan
   return <view.slots.DensityButton {...(view.slot('DensityButton', base, base) as typeof base)} />;
 }
 
-/** Saves a blob as a file via a temporary `<a download>` (05 §20). */
+/** Saves a blob as a file via a temporary `<a download>`. */
 export function downloadBlob(blob: Blob, fileName: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -68,7 +68,7 @@ export function downloadBlob(blob: Blob, fileName: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** `DataTable.ExportButton`: CSV page / all matching / selected, and copy (05 §20). */
+/** `DataTable.ExportButton`: CSV page / all matching / selected, and copy. */
 export function ExportButton<TData>({ table: tableProp }: { table?: TableInstance<TData> }) {
   const table = useOptionalTable(tableProp) as AnyTable;
   useTableVersion(table);
@@ -150,7 +150,7 @@ export function ExportButton<TData>({ table: tableProp }: { table?: TableInstanc
   );
 }
 
-/** `DataTable.SelectionBar` (05 §5). */
+/** `DataTable.SelectionBar`. */
 export function SelectionBar<TData>({ table: tableProp }: { table?: TableInstance<TData> }) {
   const table = useOptionalTable(tableProp) as AnyTable;
   useTableVersion(table);
@@ -197,7 +197,7 @@ export function hasToolbarFeatures(table: AnyTable, props: DataTableProps<unknow
   );
 }
 
-/** `DataTable.Toolbar`: `[search, filters, chips] … [actions, density, columns, export]` (05 §18). */
+/** `DataTable.Toolbar`: `[search, filters, chips] … [actions, density, columns, export]`. */
 export function Toolbar<TData>({
   table: tableProp,
   className,

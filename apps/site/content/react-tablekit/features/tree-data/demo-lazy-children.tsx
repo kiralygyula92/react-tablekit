@@ -36,7 +36,7 @@ const orgDataSource: DataSource<OrgNode> = {
 };
 
 /**
- * Lazily loaded tree rows (05 §6.2): only the roots are fetched up front, and expanding a row
+ * Lazily loaded tree rows: only the roots are fetched up front, and expanding a row
  * calls `dataSource.fetchChildren` once per row per query, showing a spinner in that row while it
  * loads. `getRowCanExpand` tells the table which rows are worth a toggle.
  */

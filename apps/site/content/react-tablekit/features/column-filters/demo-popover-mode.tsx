@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(150);
 
 /**
- * `filterDisplayMode="popover"` plus `enableColumnActions` (05 §3.1): the same controls in a
+ * `filterDisplayMode="popover"` plus `enableColumnActions`: the same controls in a
  * popover anchored to the Filters button, and a "Filter…" entry in each column's actions menu that
  * opens just that column's filter.
  */

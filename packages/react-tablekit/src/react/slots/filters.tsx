@@ -208,7 +208,7 @@ const numOrNull = (s: string): number | null =>
 const isoDate = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-/** Built-in date presets (05 §3.3); labels come from `localization.datePresets`. */
+/** Built-in date presets; labels come from `localization.datePresets`. */
 export function defaultDatePresets(labels: Record<string, string>) {
   const today = () => {
     const d = new Date();
@@ -242,7 +242,7 @@ export function defaultDatePresets(labels: Record<string, string>) {
   return Object.entries(ranges).map(([id, range]) => ({ id, label: labels[id] ?? id, range }));
 }
 
-/** Default `FilterControl` slot: the input for one column's filter variant (05 §3.3). */
+/** Default `FilterControl` slot: the input for one column's filter variant. */
 export function FilterControl({
   column,
   variant,
@@ -504,7 +504,7 @@ export const FilterPanel = forwardRef<HTMLDivElement, P<'FilterPanel'>>(function
   );
 });
 
-/** Default `ColumnsMenu` slot: visibility checkboxes, "Show all", "Hide all", "Reset" (05 §11). */
+/** Default `ColumnsMenu` slot: visibility checkboxes, "Show all", "Hide all", "Reset". */
 export const ColumnsMenu = forwardRef<HTMLDivElement, P<'ColumnsMenu'>>(function ColumnsMenu(
   { columns, table, onClose, className, ...rest },
   ref,

@@ -24,7 +24,7 @@ const columns = [
 ];
 
 /**
- * Ordering and visibility (05 §10). Drag a header to move a column, or use the Columns button
+ * Ordering and visibility. Drag a header to move a column, or use the Columns button
  * to show and hide them. Both are personal preferences rather than something you would share
  * in a link, so they persist to `localStorage` instead of the URL — reload and the layout you
  * arranged is still there.

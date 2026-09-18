@@ -1,13 +1,12 @@
 /**
- * Checks every redirect in `vercel.json` against a running server, and writes the result as CSV
- * (PPDS §11 check 22 and brief Phase 6.7 — "verify every redirect with a live check, not just
- * the config").
+ * Checks every redirect in `vercel.json` against a running server: a live check, not a reading of
+ * the config. With `--out` it also writes every result as CSV.
  *
  * The preview server does not read `vercel.json`, so this applies the rules itself and then
  * confirms that each destination is a page the server really serves. That catches the failure
  * the config alone cannot: a redirect that points somewhere that no longer exists.
  *
- *   node scripts/check-redirects.mjs --base http://localhost:4183 --out docs/ppds/qa/redirect-check.csv
+ *   node scripts/check-redirects.mjs --base http://localhost:4183 [--out redirect-check.csv]
  */
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -22,7 +21,7 @@ const arg = (name, fallback) => {
 };
 
 const base = arg('base', 'http://localhost:4183').replace(/\/$/, '');
-const out = arg('out', 'docs/ppds/qa/redirect-check.csv');
+const out = arg('out');
 
 const vercel = JSON.parse(readFileSync(path.join(siteRoot, 'vercel.json'), 'utf8'));
 
@@ -50,11 +49,17 @@ for (const redirect of vercel.redirects) {
   if (!ok) failures++;
 }
 
-const file = path.resolve(repoRoot, out);
-mkdirSync(path.dirname(file), { recursive: true });
-writeFileSync(file, `${rows.map((r) => r.join(',')).join('\n')}\n`);
+if (out) {
+  const file = path.resolve(repoRoot, out);
+  mkdirSync(path.dirname(file), { recursive: true });
+  writeFileSync(file, `${rows.map((r) => r.join(',')).join('\n')}\n`);
+}
+for (const [source, destination, , , result] of rows.slice(1)) {
+  if (result !== 'ok') console.log(`  ${source} → ${destination}: ${result}`);
+}
 
 console.log(
-  `[redirects] ${vercel.redirects.length} checked against ${base}, ${failures} broken → ${out}`,
+  `[redirects] ${vercel.redirects.length} checked against ${base}, ${failures} broken` +
+    (out ? ` → ${out}` : ''),
 );
 process.exit(failures > 0 ? 1 : 0);

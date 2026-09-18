@@ -8,7 +8,7 @@ export interface CommandPaletteProps {
 }
 
 /**
- * The Ctrl+K palette (08 §1): one in-memory index over the pages, guide headings, examples,
+ * The Ctrl+K palette: one in-memory index over the pages, guide headings, examples,
  * API symbols, tokens and icons.
  *
  * It is a native `<dialog>`, so the browser supplies the modality, the focus trap, the backdrop

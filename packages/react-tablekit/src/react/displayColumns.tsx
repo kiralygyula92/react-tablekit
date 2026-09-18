@@ -11,7 +11,7 @@ import {
 } from './parts/displayCells';
 import type { DataTableProps } from './types';
 
-/** Ids of the auto-inserted display columns (05 §5, §6.3, §23; 04 §2.6). */
+/** Ids of the auto-inserted display columns. */
 export const DISPLAY_COLUMN_IDS = {
   select: 'tk-select',
   expand: 'tk-expand',

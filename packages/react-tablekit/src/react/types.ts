@@ -37,11 +37,11 @@ import type { DeepPartial, TableTheme } from '../themes/types';
  * Display options
  * ──────────────────────────────────────────────────────────────────────────── */
 
-/** Pagination UI variants (05 §4.1). */
+/** Pagination UI variants. */
 export type PaginationVariant =
   'numbered' | 'compact' | 'simple' | 'loadMore' | 'infinite' | 'none';
 
-/** Pagination display options (04 §2.5). */
+/** Pagination display options. */
 export interface PaginationDisplayOptions {
   /** @default `{ base: 'compact', md: 'numbered' }` */
   variant?: ResponsiveValue<PaginationVariant>;
@@ -77,7 +77,7 @@ export interface CompactPaginationOptions {
   pageItemsAlgorithm?: PageItemsArgs['algorithm'];
 }
 
-/** Responsive behaviour (05 §13). */
+/** Responsive behaviour. */
 export interface ResponsiveOptions<TData> {
   breakpoints?: Partial<Record<Breakpoint, number>>;
   /** Below this breakpoint the table is "mobile". @default 'md' */
@@ -95,7 +95,7 @@ export interface ResponsiveOptions<TData> {
 /** Why an empty/loading/error state is shown. */
 export type EmptyReason = 'loading' | 'noRows' | 'noResults' | 'error' | 'custom';
 
-/** `syncState` (03 §7). */
+/** `syncState`. */
 export interface SyncStateOptions {
   url?: { keys?: (keyof TableState)[]; prefix?: string; mode?: 'push' | 'replace' };
   storage?: {
@@ -114,7 +114,7 @@ export type RowHTMLProps = ComponentPropsWithRef<'tr'> &
 export type CellHTMLProps = ComponentPropsWithRef<'td'> &
   Record<`data-${string}`, string | number | boolean | undefined>;
 
-/** Full row override context (06 §4.2). */
+/** Full row override context. */
 export interface RowRenderContext<TData> {
   row: Row<TData>;
   table: TableInstance<TData>;
@@ -151,7 +151,7 @@ export interface RowAction {
 }
 
 /* ────────────────────────────────────────────────────────────────────────────
- * Slots (06 §1)
+ * Slots
  * ──────────────────────────────────────────────────────────────────────────── */
 
 type Html<T extends keyof React.JSX.IntrinsicElements> = Omit<
@@ -520,7 +520,7 @@ export type SlotName = keyof SlotPropsMap<unknown>;
 /** The key used by `slotProps` / `classNames` / `styles` (camelCase slot name). */
 export type SlotKey = Uncapitalize<SlotName>;
 
-/** Replaceable components for every part of the table (06 §1). */
+/** Replaceable components for every part of the table. */
 export type TableSlots<TData> = { [K in SlotName]: ComponentType<SlotPropsMap<TData>[K]> };
 
 /** Context passed to function forms of `slotProps` / `classNames` / `styles`. */
@@ -549,7 +549,7 @@ export type TableStyles<TData> = {
 };
 
 /* ────────────────────────────────────────────────────────────────────────────
- * Handlers (06 §5)
+ * Handlers
  * ──────────────────────────────────────────────────────────────────────────── */
 
 /** Middleware: call `next()` to run the default (optionally with modified input); skip it to cancel. */
@@ -604,7 +604,7 @@ export type HandlerContext<
  * DataTable props
  * ──────────────────────────────────────────────────────────────────────────── */
 
-/** View-only props (04 §2). */
+/** View-only props. */
 export interface DataTableViewProps<TData> {
   // layout & display
   /** @default 'table' (auto 'grid' when virtualized) */
@@ -663,7 +663,7 @@ export interface DataTableViewProps<TData> {
   searchPlaceholder?: string;
   /**
    * Wraps global-search matches in `<mark class="tk-highlight">` in text cells rendered by the
-   * default cell renderer (05 §2). @default false
+   * default cell renderer. @default false
    */
   highlightSearchMatches?: boolean;
   /** e.g. `'mod+k'`, scoped to this table. @default false */
@@ -825,7 +825,7 @@ export interface DataTableViewProps<TData> {
   tableRef?: (table: TableInstance<TData>) => void;
 }
 
-/** `<DataTable>` props: engine options + view props (04 §2). */
+/** `<DataTable>` props: engine options + view props. */
 export type DataTableProps<TData> = Omit<TableOptions<TData>, 'columns'> &
   DataTableViewProps<TData> & {
     /** Column definitions. Required unless `table` is given. */
@@ -834,7 +834,7 @@ export type DataTableProps<TData> = Omit<TableOptions<TData>, 'columns'> &
     table?: TableInstance<TData>;
   };
 
-/** The imperative handle of `<DataTable ref>` (04 §2.10). */
+/** The imperative handle of `<DataTable ref>`. */
 export interface DataTableHandle<TData> {
   /** The underlying table instance. */
   table: TableInstance<TData>;

@@ -9,7 +9,7 @@ const headerIds = (container: HTMLElement) =>
     (th) => th.dataset.columnId,
   );
 
-describe('column resizing (05 §9)', () => {
+describe('column resizing', () => {
   it('exposes a keyboard-operable separator that resizes and resets the column', async () => {
     const user = userEvent.setup();
     const { container } = renderTable({ toolbar: false, enableColumnResizing: true });
@@ -27,7 +27,7 @@ describe('column resizing (05 §9)', () => {
     // Enter resets to the column's own size.
     await user.keyboard('{Enter}');
     expect(Number(handle.getAttribute('aria-valuenow'))).toBe(before);
-    // Resizing switches the table to fixed layout with px widths (05 §9).
+    // Resizing switches the table to fixed layout with px widths.
     expect(container.querySelector('table')).toHaveStyle({ tableLayout: 'fixed' });
   });
 
@@ -43,7 +43,7 @@ describe('column resizing (05 §9)', () => {
   });
 });
 
-describe('column actions menu (05 §11)', () => {
+describe('column actions menu', () => {
   const open = async (user: ReturnType<typeof userEvent.setup>, columnId: string) => {
     await user.click(screen.getByRole('button', { name: `Column actions: ${columnId}` }));
     return screen.getByRole('menu', { name: 'Column actions' });
@@ -123,7 +123,7 @@ describe('column actions menu (05 §11)', () => {
   });
 });
 
-describe('column ordering (05 §10)', () => {
+describe('column ordering', () => {
   it('moves a column by drag and drop and announces it', async () => {
     const { container } = renderTable({ toolbar: false, enableColumnOrdering: true });
     const before = headerIds(container);
@@ -138,14 +138,14 @@ describe('column ordering (05 §10)', () => {
     const after = headerIds(container);
     expect(after).not.toEqual(before);
     expect(after.indexOf('name')).toBe(before.indexOf('city'));
-    // Live-region announcements are debounced by 150ms (05 §16).
+    // Live-region announcements are debounced by 150ms.
     await waitFor(() =>
       expect(container.querySelector('.tk-sr-live')?.textContent).toMatch(/Moved Name to position/),
     );
   });
 });
 
-describe('row virtualization (05 §14)', () => {
+describe('row virtualization', () => {
   it('renders a window of rows with spacers and grid semantics', () => {
     const { container } = renderTable({
       toolbar: false,

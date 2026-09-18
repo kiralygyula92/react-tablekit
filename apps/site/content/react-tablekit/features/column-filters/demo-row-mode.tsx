@@ -5,7 +5,7 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(150);
 
 /**
- * `filterDisplayMode="row"` (05 §3.1): a second header row with an inline control under each
+ * `filterDisplayMode="row"`: a second header row with an inline control under each
  * filterable column. Tab order follows the columns, so keyboard users can filter without leaving
  * the header.
  */

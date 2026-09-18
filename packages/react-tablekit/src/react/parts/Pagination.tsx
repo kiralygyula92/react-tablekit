@@ -9,7 +9,7 @@ import { LayoutContext, useTableVersion } from './layout';
 /** Props of `DataTable.Pagination`. */
 export interface PaginationProps<TData> {
   table?: TableInstance<TData>;
-  /** Where this bar sits relative to the container (bottom bars attach to it, 07 §4). */
+  /** Where this bar sits relative to the container (bottom bars attach to it). */
   position?: 'top' | 'bottom';
   /** Overrides the responsive `pagination.variant`. */
   variant?: PaginationVariant;
@@ -17,7 +17,7 @@ export interface PaginationProps<TData> {
   style?: CSSProperties;
 }
 
-/** `DataTable.Pagination` (05 §4). */
+/** `DataTable.Pagination`. */
 export function Pagination<TData>({
   table: tableProp,
   position = 'bottom',
@@ -35,7 +35,7 @@ export function Pagination<TData>({
 
   const cursor = table.options.paginationType === 'cursor';
   let variant = variantProp ?? pagination.variant;
-  // Cursor pagination cannot jump to arbitrary pages: numbered/compact fall back to simple (03 §6).
+  // Cursor pagination cannot jump to arbitrary pages: numbered/compact fall back to simple.
   if (cursor && (variant === 'numbered' || variant === 'compact')) variant = 'simple';
 
   const state = table.getState().pagination;
@@ -53,7 +53,7 @@ export function Pagination<TData>({
     (multiPage || !pagination.hideOnSinglePage || variant === 'loadMore') &&
     rowCount !== 0;
 
-  // A visible bottom bar attaches to the container, which then drops its bottom border (B5).
+  // A visible bottom bar attaches to the container, which then drops its bottom border.
   const register = layout?.registerFooter;
   useIsomorphicLayoutEffect(() => {
     if (
@@ -99,7 +99,7 @@ export function Pagination<TData>({
     goToRef.current = goTo;
   });
 
-  // `infinite`: load the next page as the end of the scroll area comes into view (05 §4.1).
+  // `infinite`: load the next page as the end of the scroll area comes into view.
   const container = layout?.containerRef.current ?? null;
   const canNext = table.getCanNextPage();
   const fetching = status.fetching;

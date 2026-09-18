@@ -1,5 +1,4 @@
 {
-  "$schema": "../../../../docs/ppds/plugin-site.schema.json",
   "id": "react-tablekit",
   "name": "React Tablekit",
   "tagline": "A headless-core React data table where every feature works on the client and on the server.",

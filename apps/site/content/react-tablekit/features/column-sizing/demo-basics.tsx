@@ -27,7 +27,7 @@ const columns = [
 ];
 
 /**
- * Column sizing (05 §11). Drag a header's trailing edge, or focus it and press ←/→ (Shift for
+ * Column sizing. Drag a header's trailing edge, or focus it and press ←/→ (Shift for
  * a 50px step). `'onChange'` resizes live while dragging; `'onEnd'` waits for the release,
  * which is the better choice for very wide tables. Double-click a handle — or use "Autosize"
  * in the ⋮ menu — to fit the column to its content.

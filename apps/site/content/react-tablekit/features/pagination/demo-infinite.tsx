@@ -10,7 +10,7 @@ const source = createLocalDataSource(people, {
 });
 
 /**
- * Infinite pagination (05 §4.1): instead of page buttons, reaching the end of the scroll area
+ * Infinite pagination: instead of page buttons, reaching the end of the scroll area
  * loads the next page and appends it, with virtualization keeping the DOM small. A search or a
  * sort starts the list again from the first page.
  */

@@ -38,7 +38,7 @@ const columns = [
 ];
 
 /**
- * Pinned columns (05 §12) stay put while the rest scrolls sideways, and the scroll shadows
+ * Pinned columns stay put while the rest scrolls sideways, and the scroll shadows
  * show which side still has content. Flip the direction to see that pinning follows the
  * writing direction: in RTL the "left" side is rendered on the right.
  */

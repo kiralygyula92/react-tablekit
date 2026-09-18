@@ -25,7 +25,7 @@ const columns = [
 const data = generatePeople(200);
 
 /**
- * A bounded, scrollable table (05 §19): the header sticks to the top of the scroll container, the
+ * A bounded, scrollable table: the header sticks to the top of the scroll container, the
  * footer with its aggregates sticks to the bottom, and the pinned Department column stays put in
  * both axes. Pagination lives outside the scroll area, so it is always visible.
  */
