@@ -178,6 +178,16 @@ function blockTag(comment, tag) {
   return block ? commentText({ summary: block.content }) : undefined;
 }
 
+/**
+ * An `@example` as bare code. TypeDoc keeps the fence the comment was written with, and the page
+ * already renders the example inside a code block, so a fence left in prints as literal backticks.
+ */
+function exampleCode(text) {
+  if (text === undefined) return undefined;
+  const fenced = /^\s*(`{3,})[\w-]*\n([\s\S]*?)\n\1\s*$/.exec(text);
+  return fenced ? fenced[2] : text;
+}
+
 /** Renders a method's signature as its "type", e.g. `(id: string) => Row | undefined`. */
 function methodType(signature) {
   const params = (signature?.parameters ?? [])
@@ -309,8 +319,9 @@ function declarationOf(node, declarations) {
             ? 'type'
             : 'variable',
     description: commentText(node.comment) || commentText(node.signatures?.[0]?.comment),
-    example:
+    example: exampleCode(
       blockTag(node.comment, '@example') ?? blockTag(node.signatures?.[0]?.comment, '@example'),
+    ),
     members: collectMembers(node, declarations),
     signatures,
   };
