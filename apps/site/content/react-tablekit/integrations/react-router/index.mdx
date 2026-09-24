@@ -17,22 +17,18 @@ to the router instead:
 
 ```tsx
 import { useSearchParams } from 'react-router';
-import { useRouterSync } from 'react-tablekit';
+import { DataTable, useDataTable, useRouterSync } from 'react-tablekit';
 
 function People() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const routerSync = useRouterSync({
-    searchParams,
-    setSearchParams: (next) => setSearchParams(next, { replace: true }),
+  const table = useDataTable({ data: rows, columns, getRowId: (r) => r.id });
+
+  useRouterSync(table, {
+    getSearch: () => searchParams.toString(),
+    setSearch: (search, mode) => setSearchParams(search, { replace: mode === 'replace' }),
   });
 
-  return (
-    <DataTable
-      syncState={{ url: ['pagination', 'sorting', 'globalFilter', 'columnFilters'], ...routerSync }}
-      data={rows}
-      columns={columns}
-    />
-  );
+  return <DataTable table={table} aria-label="People" />;
 }
 ```
 

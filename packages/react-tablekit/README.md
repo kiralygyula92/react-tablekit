@@ -42,7 +42,14 @@ requests, ignoring out-of-order responses, adopting the server's echo of the que
 correcting a page that no longer exists.
 
 ```tsx
-const source = createRestDataSource({
+import { createRestDataSource } from 'react-tablekit';
+
+interface PeopleResponse {
+  items: Person[];
+  total: number;
+}
+
+const source = createRestDataSource<Person, PeopleResponse>({
   url: '/api/people/search',
   mapQuery: (q) => ({
     q: q.globalFilter,
@@ -81,9 +88,9 @@ Measured min+gzip, React external:
 
 | Entry                                        | Size     |
 | -------------------------------------------- | -------- |
-| `import { DataTable } from 'react-tablekit'` | 56.67 kB |
-| Full import                                  | 60.24 kB |
-| `react-tablekit/core`                        | 20.75 kB |
+| `import { DataTable } from 'react-tablekit'` | 57.47 kB |
+| Full import                                  | 61.1 kB  |
+| `react-tablekit/core`                        | 21.06 kB |
 | `react-tablekit/styles.css`                  | 6.15 kB  |
 
 `DataTable` is batteries-included by design: its default layout reaches the toolbar, filter panel,

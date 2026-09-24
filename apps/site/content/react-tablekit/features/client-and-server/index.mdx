@@ -57,17 +57,26 @@ immediately, for controlled state.
 refetch and facet handling for free:
 
 ```tsx
-const dataSource = createRestDataSource<Person>({
+interface PeoplePage {
+  content: Person[];
+  totalElements: number;
+}
+
+const dataSource = createRestDataSource<Person, PeoplePage>({
   url: '/api/people',
-  toParams: (query) => ({
+  mapQuery: (query) => ({
     page: query.pagination.pageIndex,
     size: query.pagination.pageSize,
     sort: query.sorting.map((s) => s.id + ',' + (s.desc ? 'desc' : 'asc')),
     q: query.globalFilter,
   }),
-  fromResponse: (body) => ({ rows: body.content, total: body.totalElements }),
+  mapResult: (body) => ({ rows: body.content, rowCount: body.totalElements }),
 });
 ```
+
+`mapQuery` turns the table's query into the request, and `mapResult` turns the response into
+rows and a total. The second type argument is the response's shape, which is what lets
+`mapResult` read it.
 
 `keepPreviousData` keeps the old page visible while the next one loads, `dedupeMs` collapses
 duplicate requests, and `refetchInterval` and `refetchOnWindowFocus` cover live data.

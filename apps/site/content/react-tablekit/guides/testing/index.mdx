@@ -55,10 +55,15 @@ filters, aggregates and query building; save rendered tests for interaction.
 ## Fake the server, not the fetch
 
 `createLocalDataSource` wraps an array in the same interface a REST source has, so a server-mode
-table can be tested without a network:
+table can be tested without a network. It takes the table's columns, so it filters and sorts the
+way the table would:
 
 ```tsx
-<DataTable dataMode="server" dataSource={createLocalDataSource(rows)} columns={columns} />
+<DataTable
+  dataMode="server"
+  dataSource={createLocalDataSource(rows, { columns })}
+  columns={columns}
+/>
 ```
 
 The table takes the same path it would in production — query, fetch, loading, empty — which is

@@ -34,9 +34,10 @@ modern default with more air. Both are the same component and the same markup.
 one into the custom properties, so a theme can live in a stylesheet instead of a prop:
 
 ```tsx
-const brand = createTheme('light', {
-  color: { accent: '#7c3aed', headerBg: '#faf5ff' },
-  radius: { container: 12 },
+const brand = createTheme(lightTheme, {
+  color: { accent: '#7c3aed' },
+  header: { bg: '#faf5ff' },
+  radius: { container: '12px' },
 });
 
 <DataTable theme={brand} data={rows} columns={columns} />;

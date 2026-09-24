@@ -66,20 +66,33 @@ This is the difference between a first paint that settles and one that visibly r
 
 ## State in the URL
 
-`useSearchParams` and `useRouter` give `useRouterSync` what it needs, so filters and paging become
-real navigations that a server component can read:
+`useSearchParams`, `useRouter` and `usePathname` give `useRouterSync` what it needs, so filters
+and paging become real navigations that a server component can read. It works on a table
+instance, so build one with `useDataTable` and render it with `<DataTable table={table} />`:
 
 ```tsx
-const searchParams = useSearchParams();
-const router = useRouter();
-const routerSync = useRouterSync({
-  searchParams,
-  setSearchParams: (next) => router.replace('?' + next.toString(), { scroll: false }),
-});
+'use client';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { DataTable, useDataTable, useRouterSync } from 'react-tablekit';
+
+export function PeopleTable({ data }: { data: Person[] }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const table = useDataTable({ data, columns, getRowId: (p) => p.id });
+
+  useRouterSync(table, {
+    getSearch: () => searchParams.toString(),
+    setSearch: (search, mode) => router[mode](pathname + search, { scroll: false }),
+  });
+
+  return <DataTable table={table} aria-label="People" />;
+}
 ```
 
-With `scroll: false` the page does not jump to the top when a filter changes. Use `replace` rather
-than `push` for anything that changes while typing.
+With `scroll: false` the page does not jump to the top when a filter changes. The table asks for
+`replace` by default, so typing in the search box does not fill the history;
+`useRouterSync(table, adapter, { url: { mode: 'push' } })` makes every change a history entry.
 
 ## Server actions
 

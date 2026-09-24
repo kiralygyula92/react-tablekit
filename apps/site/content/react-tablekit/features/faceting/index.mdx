@@ -32,11 +32,14 @@ In server mode the browser has one page, so counting locally would be wrong. The
 data source instead:
 
 ```tsx
-const dataSource = createRestDataSource({
-  url: '/api/people',
-  fetchFacets: async (query, columnIds) => api.facets(query, columnIds),
-});
+const dataSource: DataSource<Person> = {
+  ...createRestDataSource<Person, PeoplePage>({ url: '/api/people', mapQuery, mapResult }),
+  fetchFacets: (columnId, query, { signal }) => api.facets(columnId, query, signal),
+};
 ```
+
+`fetchFacets` is a method of the data source rather than an option of `createRestDataSource`,
+so it is added beside the REST source's own `fetch`. It is asked for one column at a time.
 
 Facets are requested lazily — the first time a filter control opens — and cached per query, so
 opening the same dropdown twice costs one round trip. `manualFaceting` and `facetingMode` force

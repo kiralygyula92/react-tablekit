@@ -48,11 +48,24 @@ whole table.
 reorder them rather than rebuilding the menu:
 
 ```tsx
-renderColumnActionsMenuItems={({ column, defaultItems }) => [
+renderColumnActionsMenuItems={({ column, defaultItems, closeMenu }) => [
   ...defaultItems,
-  { id: 'copy', label: 'Copy column', onSelect: () => copy(column.id) },
+  <button
+    key="copy"
+    type="button"
+    role="menuitem"
+    onClick={() => {
+      copy(column.id);
+      closeMenu();
+    }}
+  >
+    Copy column
+  </button>,
 ]}
 ```
+
+The items are React elements: the defaults are the table's own menu items, and yours sit beside
+them. `closeMenu` closes the menu once your item has done its work.
 
 ## Customization
 

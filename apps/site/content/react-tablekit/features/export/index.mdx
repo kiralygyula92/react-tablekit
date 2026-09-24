@@ -27,14 +27,20 @@ menu asks which one you meant rather than guessing.
 
 Headers come from `meta.exportHeader`, then a string `header`, then the column id. Values come
 from `exportValue`, then `format`, then the value stringified — so an exported date matches the
-displayed date, and an exported currency is a number rather than `$1,240.00` if you say so:
+displayed date, and an exported currency is a number rather than `$1,240.00` if you say so.
+`exportValue` receives the whole row, not the cell value:
 
 ```tsx
-col.accessor('total', { format: (v) => money.format(v), exportValue: (v) => v });
+col.accessor('total', { format: (v) => money.format(v), exportValue: (row) => row.total });
 ```
 
 Quoting follows RFC 4180, and a UTF-8 byte order mark is written by default so Excel opens
 accented text correctly. Display columns and `enableExport: false` columns are left out.
+
+A field a spreadsheet would run as a formula — one starting with `=`, `+`, `-` or `@` — is
+written with a leading `'`, so it opens as text. Plain numbers such as `-12` are left alone. The
+same applies to copying to the clipboard. `escapeFormulas: false` turns it off, for data you
+trust; see [Security](/react-tablekit/guides/security/).
 
 ### Exporting more than the browser has
 

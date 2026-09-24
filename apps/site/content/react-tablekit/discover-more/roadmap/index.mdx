@@ -19,8 +19,8 @@ changes with what people actually need.
 
 **Inline editing.** Cell, row and modal editing modes, with a validator per column, optimistic
 commits that roll back on rejection, and the keyboard model that goes with it — Enter commits and
-moves down, Tab commits and moves right, Escape cancels. The API names are already reserved so
-that adding it is not a breaking change.
+moves down, Tab commits and moves right, Escape cancels. It will arrive as new, optional props,
+so it lands in a minor release rather than a major one.
 
 **Column virtualization.** Row virtualization landed in 1.0; the column axis has not. It matters
 past roughly fifty columns, where rendering every cell in a row becomes the cost even when only

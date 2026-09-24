@@ -35,7 +35,7 @@ The object is merged over the defaults, so overriding one label does not mean su
 them:
 
 ```tsx
-<DataTable localization={{ search: { placeholder: 'Find a customer…' } }} />
+<DataTable localization={{ searchPlaceholder: 'Find a customer…' }} />
 ```
 
 That is also how you adjust wording for a domain — _records_ instead of _rows_ — without a
@@ -43,12 +43,12 @@ translation file.
 
 ### Values with a count
 
-Strings that depend on a number are functions rather than templates, which is what lets a
-language with three plural forms be correct:
+A string that depends on a number can be a function instead of a `{count}` template. It receives
+the same variables, which is what lets a language with several plural forms be correct:
 
 ```tsx
 localization={{
-  selection: { count: (n) => (n === 1 ? '1 kiválasztva' : n + ' kiválasztva') },
+  selectedCount: ({ count }) => (count === 1 ? '1 kiválasztva' : `${count} kiválasztva`),
 }}
 ```
 

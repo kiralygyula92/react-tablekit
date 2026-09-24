@@ -38,15 +38,17 @@ good place to enforce the whitelist.
 ## Export leaves your application
 
 CSV is opened in spreadsheets, and spreadsheets execute formulas. A value beginning with `=`,
-`+`, `-` or `@` can become a formula in Excel — CSV injection. The table quotes per RFC 4180,
-which is correct CSV, but correct CSV is not the same as safe-to-open-in-Excel.
+`+`, `-` or `@` can become a formula in Excel — CSV injection — and a formula such as
+`=HYPERLINK(...)` is enough to send the reader somewhere else. Correct CSV is not the same as
+safe-to-open-in-Excel.
 
-If your data can contain arbitrary text, prefix such values in `exportValue`:
+So the export neutralizes such fields by default: they are written with a leading `'`, and a
+spreadsheet shows them as text. Plain numbers such as `-12` or `-1,234.50` are left alone, so
+numeric columns stay numeric. It covers headers, `exportValue` results and copying to the
+clipboard. Turn it off only for data you trust:
 
 ```tsx
-col.accessor('note', {
-  exportValue: (v) => (/^[=+\-@]/.test(String(v)) ? "'" + v : v),
-});
+table.exportCsv({ escapeFormulas: false });
 ```
 
 Export also means the reader is taking a copy of the data somewhere you cannot control. If

@@ -29,7 +29,7 @@ handlers={{
   // Observe, then proceed
   onSortToggle: (ctx, next) => { track('sort', ctx.column.id); next(); },
 
-  // Change the intent — never multi-sort, whatever was clicked
+  // Change the intent — always pin to the left, whichever side was chosen
   onColumnPin: (ctx, next) => next({ position: 'left' }),
 
   // Cancel — a row click navigates instead of selecting

@@ -21,8 +21,8 @@ between them is about who the state belongs to:
 ```tsx
 <DataTable
   syncState={{
-    url: ['pagination', 'sorting', 'globalFilter', 'columnFilters'],
-    storage: { key: 'people-table', slices: ['columnVisibility', 'columnOrder', 'density'] },
+    url: { keys: ['pagination', 'sorting', 'globalFilter', 'columnFilters'] },
+    storage: { key: 'people-table', keys: ['columnVisibility', 'columnOrder', 'density'] },
   }}
 />
 ```

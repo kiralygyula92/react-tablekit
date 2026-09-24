@@ -28,10 +28,13 @@ The row still gets focus and keyboard activation; only the selection behaviour i
 Status columns rarely sort alphabetically. Register a comparator and name it:
 
 ```tsx
-const RANK = { critical: 0, high: 1, normal: 2, low: 3 };
+type Severity = 'critical' | 'high' | 'normal' | 'low';
+const RANK: Record<Severity, number> = { critical: 0, high: 1, normal: 2, low: 3 };
 
 <DataTable
-  sortingFns={{ severity: (a, b, id) => RANK[a.getValue(id)] - RANK[b.getValue(id)] }}
+  sortingFns={{
+    severity: (a, b, id) => RANK[a.getValue<Severity>(id)] - RANK[b.getValue<Severity>(id)],
+  }}
   columns={[col.accessor('severity', { sortingFn: 'severity' })]}
 />;
 ```
@@ -80,7 +83,7 @@ renderEmptyState={({ table }) =>
 ## A refresh button
 
 ```tsx
-renderToolbarEnd={() => <button onClick={() => table.refresh()}>Refresh</button>}
+renderToolbarEnd={(table) => <button onClick={() => table.refresh()}>Refresh</button>}
 ```
 
 `refresh()` refetches with the current query; `invalidate()` also drops cached facets and lazily
@@ -91,7 +94,7 @@ loaded children.
 ```tsx
 col.accessor('total', {
   format: (v) => money.format(v),
-  exportValue: (v) => v,
+  exportValue: (row) => row.total,
 });
 ```
 

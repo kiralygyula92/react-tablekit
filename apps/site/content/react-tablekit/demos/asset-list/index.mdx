@@ -18,13 +18,13 @@ with one column doing something harder: showing a variable number of related ite
 letting the row grow.
 
 - **Three chips and a count.** The cell renders up to three assets and collapses the rest into a
-  `+N` chip that opens the full list. The row height stays predictable however many assets an
-  account has.
+  `+N` chip; the row's Inspect action opens the full list. The row height stays predictable
+  however many assets an account has.
 - **Each chip is a button.** Clicking one selects that asset and does _not_ trigger the row's own
   click handler — interactive descendants are excluded from row clicks, so a cell can hold
   controls without fighting the row.
-- **The widest column absorbs the slack.** `grow` gives it the leftover width so the identifying
-  columns keep theirs.
+- **The widest column takes a share, with a floor.** It gets 40% of the width and never less than
+  200px, so the identifying columns keep theirs.
 
 ## How it is built
 
@@ -34,13 +34,17 @@ The whole behaviour is one `cell` renderer:
 col.accessor((a) => getAccountAssets(a), {
   id: 'assets',
   header: 'Assets',
-  grow: 1,
-  cell: ({ getValue, row, table }) => (
+  width: '40%',
+  minWidth: '200px',
+  cell: ({ getValue, table }) => (
     <ChipList
       items={getValue()}
-      max={3}
-      onSelect={(asset) => table.options.meta?.onSelectAsset?.(asset)}
-      onOverflow={() => table.options.meta?.onInspect?.(row.original)}
+      maxVisible={3}
+      renderChip={(asset) => (
+        <button type="button" onClick={() => meta(table).onSelectAsset(asset)}>
+          {assetLabel(asset)}
+        </button>
+      )}
     />
   ),
 });
@@ -51,7 +55,7 @@ supplies the callbacks, which is what keeps the column reusable across screens.
 
 ## Related
 
-- [Columns](/react-tablekit/columns/) — accessors, `cell` and `grow`.
+- [Columns](/react-tablekit/columns/) — accessors, `cell` and column widths.
 - [Rows and cells](/react-tablekit/customization/rows-and-cells/) — decorating without replacing.
 - [Cell building blocks](/react-tablekit/customization/cell-building-blocks/) — the primitives
   these chips are made of.
