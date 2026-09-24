@@ -7,6 +7,23 @@ export function csvEscape(value: string, delimiter = ','): string {
     : value;
 }
 
+/**
+ * How a spreadsheet recognises a formula: a field starting with `=`, `+`, `-` or `@`, or with a
+ * tab or carriage return that some importers strip first.
+ */
+const FORMULA_START = /^[=+\-@\t\r]/;
+/** A plain number, signed or grouped or a percentage: the one thing a `+` or `-` may begin. */
+const PLAIN_NUMBER = /^[+-]?[\d\s.,  ]*\d[\d\s.,  ]*%?$/;
+
+/**
+ * Makes a field safe to open in a spreadsheet (OWASP "CSV injection"): one that would run as a
+ * formula gets a leading `'`, so Excel, Sheets and LibreOffice show it as text. Plain numbers such
+ * as `-12` or `-1,234.50` are left alone, so numeric columns stay numeric.
+ */
+export function neutralizeFormula(value: string): string {
+  return FORMULA_START.test(value) && !PLAIN_NUMBER.test(value) ? `'${value}` : value;
+}
+
 function headerText<TData>(column: Column<TData>): string {
   const meta = column.columnDef.meta as { exportHeader?: string } | undefined;
   if (meta?.exportHeader) return meta.exportHeader;
@@ -32,20 +49,24 @@ export function exportableColumns<TData>(columns: Column<TData>[]): Column<TData
 }
 
 /**
- * Builds CSV text from rows and columns: RFC 4180 quoting, optional UTF-8 BOM,
- * headers from `meta.exportHeader ?? string header ?? id`, values from `exportValue ?? format`.
+ * Builds CSV text from rows and columns: RFC 4180 quoting, formula-like fields neutralized,
+ * optional UTF-8 BOM, headers from `meta.exportHeader ?? string header ?? id`, values from
+ * `exportValue ?? format`.
  */
 export function rowsToCsv<TData>(
   rows: Row<TData>[],
   columns: Column<TData>[],
-  opts: Pick<ExportCsvOptions, 'delimiter' | 'bom'> = {},
+  opts: Pick<ExportCsvOptions, 'delimiter' | 'bom' | 'escapeFormulas'> = {},
 ): string {
   const delimiter = opts.delimiter ?? ',';
+  // Headers too: a column can be named from data as easily as a cell is filled from it.
+  const safe = (opts.escapeFormulas ?? true) ? neutralizeFormula : (text: string) => text;
+  const field = (text: string) => csvEscape(safe(text), delimiter);
   const cols = exportableColumns(columns);
-  const lines = [cols.map((c) => csvEscape(headerText(c), delimiter)).join(delimiter)];
+  const lines = [cols.map((c) => field(headerText(c))).join(delimiter)];
   for (const row of rows) {
     if (row.getIsGrouped()) continue;
-    lines.push(cols.map((c) => csvEscape(cellText(c, row), delimiter)).join(delimiter));
+    lines.push(cols.map((c) => field(cellText(c, row))).join(delimiter));
   }
   const text = lines.join('\r\n');
   return (opts.bom ?? true) ? `﻿${text}` : text;

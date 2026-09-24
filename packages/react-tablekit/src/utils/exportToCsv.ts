@@ -3,8 +3,9 @@ import { rowsToCsv } from '../core/csv';
 import type { AnyColumnDef, ExportCsvOptions } from '../core/types';
 
 /**
- * Standalone CSV export: RFC 4180 quoting, optional UTF-8 BOM, headers from
- * `meta.exportHeader ?? string header ?? id`, values from `exportValue ?? format`.
+ * Standalone CSV export: RFC 4180 quoting, formula-like fields neutralized (`escapeFormulas`),
+ * optional UTF-8 BOM, headers from `meta.exportHeader ?? string header ?? id`, values from
+ * `exportValue ?? format`.
  *
  * @example
  * ```ts
@@ -14,7 +15,7 @@ import type { AnyColumnDef, ExportCsvOptions } from '../core/types';
 export function exportToCsv<TData>(
   rows: TData[],
   columns: AnyColumnDef<TData>[],
-  opts: Pick<ExportCsvOptions, 'delimiter' | 'bom' | 'columns'> = {},
+  opts: Pick<ExportCsvOptions, 'delimiter' | 'bom' | 'columns' | 'escapeFormulas'> = {},
 ): string {
   const table = createTable<TData>({ data: rows, columns, enablePagination: false });
   const cols = opts.columns

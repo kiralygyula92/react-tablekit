@@ -1,7 +1,7 @@
 import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { DataTable, decodeState, encodeState, useRouterSync } from '../../src';
+import { DataTable, decodeState, encodeState, useRouterSync, useSyncState } from '../../src';
 import { createTable, type TableInstance, type TableState } from '../../src/core';
 import { numbered, people, personColumns, renderTable, type Person } from './helpers';
 
@@ -218,5 +218,65 @@ describe('syncState', () => {
       syncState: { storage: { key: 'old', version: 3, keys: ['density'] } },
     });
     expect(container.querySelector('.tk-root')).toHaveAttribute('data-density', 'standard');
+  });
+});
+
+describe('syncState: what a link may restore', () => {
+  /** Mounts a table with a page-size selector and returns the page size it settled on. */
+  const restoredPageSize = async (query: string, pageSizeOptions: number[] | false = [10, 25]) => {
+    window.history.replaceState(null, '', `/?${query}`);
+    let instance: TableInstance<Person> | undefined;
+    render(
+      <DataTable<Person>
+        aria-label="People"
+        data={numbered(200)}
+        columns={personColumns}
+        getRowId={(p) => p.id}
+        toolbar={false}
+        pagination={{ pageSizeOptions }}
+        syncState={{ url: {} }}
+        tableRef={(t) => {
+          instance = t;
+        }}
+      />,
+    );
+    await waitFor(() => {
+      expect(instance).toBeDefined();
+    });
+    return instance!.getState().pagination.pageSize;
+  };
+
+  it('restores a page size the table offers', async () => {
+    expect(await restoredPageSize('tk.size=25')).toBe(25);
+  });
+
+  it('ignores a page size the table does not offer', async () => {
+    expect(await restoredPageSize('tk.size=50')).toBe(10);
+  });
+
+  it('ignores a page size crafted to render or request everything', async () => {
+    expect(await restoredPageSize('tk.size=100000000')).toBe(10);
+  });
+
+  it('allows a table with no list of sizes a generous ceiling, and no more', () => {
+    const run = (size: number) => {
+      window.history.replaceState(null, '', `/?tk.size=${size}`);
+      const table = createTable<Person>({
+        data: numbered(20),
+        columns: personColumns,
+        getRowId: (p) => p.id,
+      });
+      renderHook(() => {
+        useSyncState(table, { url: {} });
+      });
+      return table.getState().pagination.pageSize;
+    };
+    expect(run(500)).toBe(500);
+    expect(run(5000)).toBe(10);
+  });
+
+  it('ignores a density that does not exist', () => {
+    expect(decodeState('?tk.density=evil').density).toBeUndefined();
+    expect(decodeState('?tk.density=compact').density).toBe('compact');
   });
 });

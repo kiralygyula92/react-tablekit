@@ -119,11 +119,17 @@ export type TokenPath = keyof typeof TOKEN_VARS;
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
+/**
+ * Keys a merge must not write. A theme can come from JSON (a saved or user-chosen theme), and
+ * JSON may carry `__proto__`: assigning it would replace the merged object's prototype.
+ */
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 function deepMerge<T>(base: T, override: unknown): T {
   if (!isObject(override)) return base;
   const out: Record<string, unknown> = { ...(base as Record<string, unknown>) };
   for (const [key, value] of Object.entries(override)) {
-    if (value === undefined) continue;
+    if (value === undefined || UNSAFE_KEYS.has(key)) continue;
     out[key] = isObject(value) && isObject(out[key]) ? deepMerge(out[key], value) : value;
   }
   return out as T;

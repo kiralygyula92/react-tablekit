@@ -6,6 +6,9 @@ import type { SyncStateOptions } from './types';
  * URL format: ?tk.page=2&tk.size=25&tk.sort=name.asc&tk.q=smith&tk.f.status=active,pending
  * ──────────────────────────────────────────────────────────────────────────── */
 
+/** The densities a URL may restore; anything else in `tk.density` is ignored. */
+const DENSITIES = new Set<string>(['compact', 'standard', 'comfortable']);
+
 /** State slices that get a compact, stable URL spelling; anything else falls back to JSON. */
 const SHORT_KEYS: Partial<Record<keyof TableState, string>> = {
   pagination: 'page',
@@ -146,7 +149,7 @@ export function decodeState(search: string, prefix = 'tk'): Partial<TableState> 
   const group = get('group');
   if (group !== null) state.grouping = group.split(',').filter(Boolean);
   const density = get('density');
-  if (density !== null) state.density = density as TableState['density'];
+  if (density !== null && DENSITIES.has(density)) state.density = density as TableState['density'];
   const hidden = get('hidden');
   if (hidden !== null) {
     state.columnVisibility = Object.fromEntries(
@@ -208,6 +211,24 @@ function writeStorage(
   } catch {
     // Storage can be unavailable (private mode, quota); persistence is best-effort.
   }
+}
+
+/** The largest page size restored for a table that does not list the sizes it offers. */
+const MAX_RESTORED_PAGE_SIZE = 1000;
+
+/**
+ * Whether a page size from the URL or storage is one this table could have produced: its own
+ * current size, or one of the `pageSizeOptions` it offers. A link is anyone's to write, and
+ * `tk.size=100000000` must not make a client table render every row or a server table request
+ * them. A table with no list to check against gets a generous ceiling instead.
+ */
+function isRestorablePageSize<TData>(table: TableInstance<TData>, size: number): boolean {
+  if (size === table.getState().pagination.pageSize) return true;
+  const offered = (table.options as { pagination?: { pageSizeOptions?: number[] | false } })
+    .pagination?.pageSizeOptions;
+  return Array.isArray(offered) && offered.length > 0
+    ? offered.includes(size)
+    : size <= MAX_RESTORED_PAGE_SIZE;
 }
 
 const pick = (state: TableState, keys: (keyof TableState)[]): Partial<TableState> =>
@@ -298,6 +319,12 @@ export function useSyncState<TData>(
         : window.location.search;
     const fromUrl = url ? decodeState(search, url.prefix) : {};
     const restored = { ...fromStorage, ...fromUrl };
+    if (restored.pagination && !isRestorablePageSize(table, restored.pagination.pageSize)) {
+      restored.pagination = {
+        ...restored.pagination,
+        pageSize: table.getState().pagination.pageSize,
+      };
+    }
     if (Object.keys(restored).length > 0) {
       table.setState((prev) => ({ ...prev, ...restored }));
     }

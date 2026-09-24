@@ -32,7 +32,9 @@ module.exports = [
     name: 'react-tablekit/core',
     path: 'dist/core/index.js',
     import: '*',
-    limit: '21 kB',
+    // 21 → 21.5 kB: CSV export neutralizes spreadsheet formulas (CSV injection) in core, where
+    // every export path — the table's, `exportToCsv` and the clipboard — goes through.
+    limit: '21.5 kB',
     gzip: true,
     modifyEsbuildConfig: production,
   },

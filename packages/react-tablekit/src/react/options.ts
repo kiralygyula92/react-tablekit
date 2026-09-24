@@ -93,7 +93,8 @@ export function mergeTableProps<T extends object>(
   for (const layer of layers) {
     if (!layer) continue;
     for (const [key, value] of Object.entries(layer)) {
-      if (value === undefined) continue;
+      // Props spread from parsed JSON can carry `__proto__`; writing it would swap `out`'s prototype.
+      if (value === undefined || key === '__proto__') continue;
       const prev = out[key];
       if (prev === undefined) out[key] = value;
       else if (key === 'handlers' && isPlainObject(prev) && isPlainObject(value)) {

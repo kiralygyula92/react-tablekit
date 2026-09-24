@@ -27,6 +27,10 @@ supported, with ESM and CJS builds and type definitions for each.
   `useDataTable` (the engine, rendering nothing) and `createTable` (no React at all).
 - **Server rendering:** the first paint uses the breakpoint the client will hydrate into
   (`responsive.ssrBreakpoint`), so the layout does not shift on hydration.
+- **Safe by default:** cell values render as text, never HTML. CSV export and copy to clipboard
+  neutralize fields a spreadsheet would run as formulas (`escapeFormulas`, on by default). State
+  restored from a link is validated: a page size must be one the table offers, and unknown
+  values are ignored.
 
 The public API is the exported names plus the `tk-*` class names, the `--tk-*` variables, the
 `data-*` attributes, and the slot, handler and localization key names. Changing or removing any of
