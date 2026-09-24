@@ -8,22 +8,40 @@
  * Usage: `node scripts/build-api.mjs`. Output: `src/generated/api/<page>.json`.
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const LIB_DIR = resolve(here, '../../../packages/react-tablekit');
-const API_JSON = resolve(LIB_DIR, 'dist/api.json');
+// Outside `dist/`: everything in `dist/` is published, and this file is an input to the site, not
+// part of the package. It used to live there, and a full build left it in the npm tarball.
+const API_JSON = resolve(LIB_DIR, '.typedoc/api.json');
 const OUT_DIR = resolve(here, '../src/generated/api');
 
 /** Runs TypeDoc over the library's source, the same way its own `docs:json` script does. */
-function generateApiJson() {
+function generateApiJson(reason) {
   const require = createRequire(resolve(LIB_DIR, 'package.json'));
   const bin = resolve(dirname(require.resolve('typedoc/package.json')), 'bin/typedoc');
-  console.log('[build-api] dist/api.json not found — running TypeDoc');
+  console.log(`[build-api] ${reason} — running TypeDoc`);
   execFileSync(process.execPath, [bin, '--json', API_JSON], { cwd: LIB_DIR, stdio: 'inherit' });
+}
+
+/**
+ * Whether the TypeDoc output is older than anything it was generated from. It survives library
+ * builds, so without this check a new prop would be missing from the reference until someone
+ * thought to delete the file.
+ */
+function isStale() {
+  const built = statSync(API_JSON).mtimeMs;
+  const inputs = [
+    resolve(LIB_DIR, 'typedoc.json'),
+    ...readdirSync(resolve(LIB_DIR, 'src'), { recursive: true })
+      .map((file) => resolve(LIB_DIR, 'src', String(file)))
+      .filter((file) => /\.tsx?$/.test(file)),
+  ];
+  return inputs.some((file) => statSync(file).mtimeMs > built);
 }
 
 /** TypeDoc reflection kinds we care about. */
@@ -327,7 +345,8 @@ function declarationOf(node, declarations) {
   };
 }
 
-if (!existsSync(API_JSON)) generateApiJson();
+if (!existsSync(API_JSON)) generateApiJson('.typedoc/api.json not found');
+else if (isStale()) generateApiJson('the library source changed since .typedoc/api.json');
 
 const root = JSON.parse(readFileSync(API_JSON, 'utf8'));
 

@@ -95,7 +95,7 @@
     "size": "size-limit",
     "check:package": "node scripts/verify-dist.mjs && publint --strict && node scripts/attw.mjs",
     "lint:css-tokens": "node scripts/check-css-tokens.mjs",
-    "docs:json": "typedoc --json dist/api.json",
+    "docs:json": "typedoc --json .typedoc/api.json",
     "docs:check": "node scripts/docs-check.mjs",
     "prepublishOnly": "pnpm build",
     "gen:tokens": "node scripts/gen-tokens.mjs"

@@ -1,5 +1,7 @@
 // Post-build assertions on dist/ that publint/attw don't cover.
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const dist = new URL('../dist/', import.meta.url);
 const read = (p) => readFileSync(new URL(p, dist), 'utf8');
@@ -40,6 +42,17 @@ for (const file of [
     failures.push(`${file} must declare @layer tablekit.base before tablekit.theme`);
   }
   if (/@layer (?!tablekit\.)/.test(css)) failures.push(`${file} uses a layer outside tablekit.*`);
+}
+
+// Nothing but build output may be in dist/: everything there is published. A stray file is how
+// the site's TypeDoc dump once reached the npm tarball.
+const BUILD_OUTPUT = /\.(js|cjs|d\.ts|d\.cts|map|css)$/;
+const distDir = fileURLToPath(dist);
+for (const entry of readdirSync(distDir, { recursive: true, withFileTypes: true })) {
+  if (entry.isFile() && !BUILD_OUTPUT.test(entry.name)) {
+    const file = path.relative(distDir, path.join(entry.parentPath, entry.name));
+    failures.push(`${file.split(path.sep).join('/')} is not build output`);
+  }
 }
 
 if (failures.length) {

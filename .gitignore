@@ -32,3 +32,6 @@ apps/site/public/llms-full.txt
 apps/site/public/sitemap.xml
 apps/site/public/robots.txt
 apps/site/public/changelog.xml
+
+# TypeDoc output the site builds its API reference from
+packages/react-tablekit/.typedoc/
