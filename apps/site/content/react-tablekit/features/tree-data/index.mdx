@@ -8,7 +8,7 @@ symbols: [DataTableProps, Row, DataSource]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/expanding.ts
+  source: packages/react-tablekit/src/core/rowModels.ts
 ---
 
 ## Basics
@@ -45,7 +45,7 @@ does not refetch and a new filter does not show stale children.
 ### Filtering a tree
 
 By default a row is matched on its own values. `filterFromLeafRows` keeps a parent whenever any
-descendant matches and auto-expands the path to it — the behaviour you want when searching a
+descendant matches and auto-expands the path to it, the behaviour you want when searching a
 file tree. `maxLeafRowFilterDepth` caps how deep that search goes.
 
 ### Selection
@@ -75,10 +75,10 @@ expanded state without any extra attributes from you.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `getSubRows`, `getRowCanExpand`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `getSubRows`, `getRowCanExpand`,
   `treeColumnId`, `filterFromLeafRows`, `maxLeafRowFilterDepth`, `paginateExpandedRows`,
   `enableSubRowSelection`, `enableExpandAll`, `manualExpanding`.
-- [`Row`](/react-tablekit/api/table-instance/) — `depth`, `subRows`, `getParentRow`,
+- [`Row`](/react-tablekit/api/table-instance/): `depth`, `subRows`, `getParentRow`,
   `getLeafRows`, `getCanExpand`, `toggleExpanded`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `getRowChildrenStatus`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `getRowChildrenStatus`,
   `getExpandedRowModel`.

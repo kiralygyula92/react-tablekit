@@ -11,7 +11,7 @@ links:
 
 The authoritative changelog is
 [`CHANGELOG.md`](https://github.com/kiralygyula92/react-tablekit/blob/main/packages/react-tablekit/CHANGELOG.md)
-in the package, generated from changesets — every change that reaches a release has an entry
+in the package, generated from changesets: every change that reaches a release has an entry
 written when the change was made, not reconstructed afterwards. GitHub
 [releases](https://github.com/kiralygyula92/react-tablekit/releases) carry the same notes.
 
@@ -28,7 +28,7 @@ pinning, sizing, ordering, visibility and footers, row pinning, numbers and appe
 header and footer, density, virtualization, responsive layouts, export, persistence, keyboard
 navigation, localization, and a fully headless core.
 
-**Quality gates at release.** The end-to-end suite runs on Chromium, Firefox and WebKit — 702
+**Quality gates at release.** The end-to-end suite runs on Chromium, Firefox and WebKit: 702
 tests. Server-side rendering is covered by a smoke test that asserts what reaches the first paint,
 including `role="grid"` for a selectable table and the cards layout under a small `ssrBreakpoint`.
 Packaging passes `publint --strict` and `@arethetypeswrong/cli` on the packed tarball.
@@ -36,18 +36,18 @@ Packaging passes `publint --strict` and `@arethetypeswrong/cli` on the packed ta
 **Bundle budgets.** The measured sizes are the guards: about 58 kB min+gzip for
 `import { DataTable }`, 61.5 kB for the full import, 21 kB for `react-tablekit/core`, and under
 7 kB for `styles.css`. The originally specified 24 kB basic-usage target needs the feature modules
-split apart — a refactor deferred to 1.x rather than landed immediately before a stable release.
+split apart, a refactor deferred to 1.x rather than landed immediately before a stable release.
 Locale packs and CSS presets are separate entry points and are never reachable from the main one.
 
 ## Before 1.0
 
-The library was built in seven milestones — engine and rendering, search and filtering, selection
+The library was built in seven milestones (engine and rendering, search and filtering, selection
 and expansion, column power features and large data, grouping and export, theming and this site,
-then hardening — each ending with the full gate green. There are no pre-1.0 releases to migrate
+then hardening), each ending with the full gate green. There are no pre-1.0 releases to migrate
 from.
 
 ## Related
 
-- [Roadmap](/react-tablekit/discover-more/roadmap/) — what comes next.
-- [Versions](/react-tablekit/getting-started/versions/) — the semver policy.
-- [Migration](/react-tablekit/migration/) — moving from another table library.
+- [Roadmap](/react-tablekit/discover-more/roadmap/): what comes next.
+- [Versions](/react-tablekit/getting-started/versions/): the semver policy.
+- [Migration](/react-tablekit/migration/): moving from another table library.

@@ -1,6 +1,6 @@
 ---
 title: Cell building blocks
-description: Chips, truncated text, two-line text, tooltips and a row actions menu — the small components a cell usually needs, already themed and accessible.
+description: 'Chips, truncated text, two-line text, tooltips and a row actions menu: the small components a cell usually needs, already themed and accessible.'
 archetype: capability
 capabilityId: cell-building-blocks
 group: Customization
@@ -31,7 +31,7 @@ import { ActionButton, Chip, ChipList, TruncatedText, TwoLineText } from 'react-
 | Component        | For                                                                    |
 | ---------------- | ---------------------------------------------------------------------- |
 | `TruncatedText`  | Text that clips with an ellipsis and keeps the full value as a tooltip |
-| `TwoLineText`    | A primary value with a quieter second line — a name over an email      |
+| `TwoLineText`    | A primary value with a quieter second line, like a name over an email  |
 | `MultiLineList`  | Several values in one cell, stacked and clipped after a limit          |
 | `Chip`           | A status or label, coloured from its own definition                    |
 | `ChipList`       | Several chips with a `+N` overflow so the row height stays put         |
@@ -58,7 +58,7 @@ col.display({
 });
 ```
 
-`ActionButton` requires a `label` — an icon button without an accessible name is a dead end for a
+`ActionButton` requires a `label`: an icon button without an accessible name is a dead end for a
 screen reader, so the type will not let you write one.
 
 ### They do not swallow the row click
@@ -70,7 +70,7 @@ behaves the way a reader expects.
 ## Customization
 
 They are ordinary components: pass a class name, wrap them, or ignore them entirely. If your
-design system has its own, use those — these exist so that a table looks finished before you have
+design system has its own, use those. These exist so that a table looks finished before you have
 written any, not to be mandatory.
 
 `Chip` takes colours per value, and the same definitions are reused by the [filter
@@ -81,13 +81,13 @@ bar.
 
 - **They are presentational.** None of them touches table state; an `ActionButton` does whatever
   its `onClick` does.
-- **`TruncatedText` needs a bounded width** to truncate — in an auto-width column with no
+- **`TruncatedText` needs a bounded width** to truncate. In an auto-width column with no
   `maxWidth` there is nothing to clip against.
 - **`ChipList` measures nothing.** The overflow threshold is a count you pass, not a width
   calculation.
 
 ## API
 
-- [Utilities](/react-tablekit/api/utilities/) — the components and their prop types.
-- [Rows and cells](/react-tablekit/customization/rows-and-cells/) — where a cell renderer fits.
-- [Slots](/react-tablekit/api/slots/) — replacing the table's own primitives instead.
+- [Utilities](/react-tablekit/api/utilities/): the components and their prop types.
+- [Rows and cells](/react-tablekit/customization/rows-and-cells/): where a cell renderer fits.
+- [TableSlots](/react-tablekit/api/slots/): replacing the table's own primitives instead.

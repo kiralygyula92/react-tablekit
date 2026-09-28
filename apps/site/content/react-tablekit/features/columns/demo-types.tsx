@@ -40,7 +40,7 @@ const columns = [
     align: 'center',
     format: (v) => (v ? 'Yes' : 'No'),
   }),
-  // `city` is absent for roughly one row in six — that is what the fallback is for.
+  // `city` is absent for roughly one row in six; that is what the fallback is for.
   col.accessor('city', {
     header: 'City',
     renderFallbackValue: <span className="site-muted">unknown</span>,

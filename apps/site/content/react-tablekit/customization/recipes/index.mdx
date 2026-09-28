@@ -1,6 +1,6 @@
 ---
 title: Recipes
-description: Short answers to the questions that come up once a table is real — saved views, row navigation, custom sort orders, bulk actions and more.
+description: 'Short answers to the questions that come up once a table is real: saved views, row navigation, custom sort orders, bulk actions and more.'
 archetype: editorial
 group: Customization
 symbols: [DataTableProps, TableInstance]
@@ -48,12 +48,12 @@ const view = table.getState(); // save
 table.setState(savedView); // restore
 ```
 
-For the reader's own layout — visible columns, order, widths, density — use
+For the reader's own layout (visible columns, order, widths, density), use
 [`syncState.storage`](/react-tablekit/persistence/) instead and it happens automatically.
 
 ## A bulk action over everything matching
 
-Send the query, not a list of ids — there may be a hundred thousand of them:
+Send the query, not a list of ids; there may be a hundred thousand of them:
 
 ```tsx
 renderBulkActions={({ selectionQuery, selectedRows }) => (
@@ -121,7 +121,7 @@ Handlers chain, so this does not replace the table's own mouse handling.
 
 ## Related
 
-- [Handler middleware](/react-tablekit/customization/handlers/) — the cancellation model.
-- [Slots](/react-tablekit/customization/slots/) — `slotProps`, `classNames` and `styles`.
-- [Persistence](/react-tablekit/persistence/) — saving state properly.
-- [Best practices](/react-tablekit/guides/best-practices/) — the longer-form advice.
+- [Handler middleware](/react-tablekit/customization/handlers/): the cancellation model.
+- [Slots](/react-tablekit/customization/slots/): `slotProps`, `classNames` and `styles`.
+- [Persistence](/react-tablekit/persistence/): saving state properly.
+- [Best practices](/react-tablekit/guides/best-practices/): the longer-form advice.

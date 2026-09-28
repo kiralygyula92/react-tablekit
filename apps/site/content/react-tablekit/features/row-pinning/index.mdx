@@ -8,7 +8,7 @@ symbols: [DataTableProps, Row, TableInstance]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/rowPinning.ts
+  source: packages/react-tablekit/src/core/createTable.ts
 ---
 
 ## Basics
@@ -16,7 +16,7 @@ links:
 <Demo id="react-tablekit/features/row-pinning/demo-basics" label="Row pinning" />
 
 `enableRowPinning` lets a row be held at the top or the bottom of the table. Sort, filter and page
-all around it — it stays, which is what makes it useful for comparing one record against the
+all around it and it stays, which is what makes it useful for comparing one record against the
 rest.
 
 ```tsx
@@ -48,15 +48,15 @@ for CSS to give them their own treatment without a slot.
 ## Limitations
 
 - **Pinning is keyed by row id**, so it resets on refetch unless `getRowId` is stable.
-- **A pinned row is rendered twice in spirit, once in fact** — it is lifted out of the body, so it
+- **A pinned row is rendered twice in spirit, once in fact**: it is lifted out of the body, so it
   does not also appear in its sorted position.
 - **Pinned rows count against the page.** A page of ten with two pinned rows shows eight
   unpinned rows, not ten.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowPinning`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableRowPinning`,
   `keepPinnedRows`, `enableStickyHeader`, `enableStickyFooter`, `onRowPinningChange`.
-- [`Row`](/react-tablekit/api/table-instance/) — `pin`, `getIsPinned`, `getCanPin`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setRowPinning`, `resetRowPinning`,
+- [`Row`](/react-tablekit/api/table-instance/): `pin`, `getIsPinned`, `getCanPin`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setRowPinning`, `resetRowPinning`,
   `getTopRows`, `getBottomRows`, `getCenterRows`.

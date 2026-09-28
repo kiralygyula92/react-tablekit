@@ -1169,7 +1169,7 @@ export interface ExportCsvOptions {
   /** Prepend a UTF-8 BOM (for Excel). @default true */
   bom?: boolean;
   /**
-   * Prefix fields that a spreadsheet would run as a formula — starting with `=`, `+`, `-` or `@` —
+   * Prefix fields that a spreadsheet would run as a formula (starting with `=`, `+`, `-` or `@`)
    * with `'`, so Excel, Sheets and LibreOffice show them as text (CSV injection). Plain numbers are
    * left alone. Also applies to copying to the clipboard. Turn it off only for data you trust.
    * @default true

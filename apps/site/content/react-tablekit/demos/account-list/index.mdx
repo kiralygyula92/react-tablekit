@@ -1,10 +1,11 @@
 ---
 title: Account list
-description: A server-mode list screen — search in the page header, debounced requests, numbered pages, and the loading, refetch and empty states that go with them.
+description: 'A server-mode list screen: search in the page header, debounced requests, numbered pages, and the loading, refetch and empty states that go with them.'
 archetype: editorial
 group: Demos
 symbols: [DataTableProps, useDataTable, createRestDataSource]
 plan: free
+wide: true
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
 ---
@@ -43,12 +44,12 @@ const table = useDataTable<Account>({
 Everything else is rendering: `DataTable.Root` wraps the page, `DataTable.Search` goes in the
 header and `DataTable.Table` and `DataTable.Pagination` go where the design says.
 
-The theme switch above the table is part of the demo, not the library — it swaps the `classic`
+The theme switch above the table is part of the demo, not the library: it swaps the `classic`
 preset for `light` so you can see the same screen in two designs.
 
 ## Related
 
-- [Client and server](/react-tablekit/client-and-server/) — the data source behind it.
-- [Global search](/react-tablekit/global-search/) — debouncing, gating and the hotkey.
-- [Loading and empty states](/react-tablekit/loading-and-empty-states/) — the three states.
-- [Asset list](/react-tablekit/demos/asset-list/) — the same screen with interactive cells.
+- [Client and server](/react-tablekit/client-and-server/): the data source behind it.
+- [Global search](/react-tablekit/global-search/): debouncing, gating and the hotkey.
+- [Loading and empty states](/react-tablekit/loading-and-empty-states/): the three states.
+- [Asset list](/react-tablekit/demos/asset-list/): the same screen with interactive cells.

@@ -32,7 +32,7 @@ the row or the column without a renderer.
 
 The library's stylesheet is inside `@layer tablekit`. Tailwind's utilities are in its own layers,
 and unlayered CSS beats both. That means a utility class wins over the table's own rule without
-`!important` and without specificity games — which is the usual reason component libraries and
+`!important` and without specificity games, which is the usual reason component libraries and
 Tailwind fight.
 
 If you want the table's defaults to win in a particular place, put your rule in a lower layer
@@ -70,7 +70,7 @@ structure](/react-tablekit/customization/structure/).
 - **Dynamic class names must be complete strings.** Tailwind scans source text, so
   `'bg-' + color + '-50'` produces nothing. Use a lookup of full class names.
 - **`classNames` merges, it does not resolve conflicts.** Two utilities setting the same property
-  are resolved by CSS order, not by intent — a merge helper such as `tailwind-merge` is worth
+  are resolved by CSS order, not by intent, so a merge helper such as `tailwind-merge` is worth
   wrapping the function form in.
 - **Utilities do not reach pseudo-content.** Sticky offsets and pinned positions are computed in
   the structural CSS, which is not something to override with a utility.

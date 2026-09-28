@@ -1,6 +1,6 @@
 ---
 title: Row appearance
-description: Striping, hover and per-row classes, styles and props — the way a row shows what it is without a custom renderer.
+description: 'Striping, hover and per-row classes, styles and props: the way a row shows what it is without a custom renderer.'
 archetype: capability
 capabilityId: row-appearance
 group: Display & layout
@@ -33,7 +33,7 @@ CSS do the rest without a class name for every state.
 ### Interaction
 
 `onRowClick`, `onRowDoubleClick` and `onRowContextMenu` make the row itself interactive, and a
-row only becomes focusable when one of them is set — an unclickable row should not be a tab stop.
+row only becomes focusable when one of them is set; an unclickable row should not be a tab stop.
 `onRowMouseEnter` and `onRowMouseLeave` cover hover previews.
 
 Clicks that land on a button, a link, an input or an element marked `data-tk-stop` do not count
@@ -65,13 +65,13 @@ the colours themselves are [tokens](/react-tablekit/customization/tokens/).
 - **`getRowStyle` is inline style**, so it wins over the stylesheet. Prefer a class or a data
   attribute when a theme should still be able to override it.
 - **`renderRow` opts out of the table's own row markup**, including its accessibility
-  attributes — keep `defaultRender()` in the tree unless you are replacing those deliberately.
+  attributes, so keep `defaultRender()` in the tree unless you are replacing those deliberately.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableStriped`, `enableHover`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableStriped`, `enableHover`,
   `getRowClassName`, `getRowStyle`, `getRowProps`, `renderRow`, `isRowDisabled`, `onRowClick`,
   `onRowDoubleClick`, `onRowContextMenu`, `onRowMouseEnter`, `onRowMouseLeave`, `onCellClick`,
   `bordered`, `noWrap`.
-- [Theme tokens](/react-tablekit/api/theme-tokens/) — `--tk-row-bg`, `--tk-row-hover-bg`,
+- [Theme tokens](/react-tablekit/api/theme-tokens/): `--tk-row-bg`, `--tk-row-hover-bg`,
   `--tk-row-selected-bg`, `--tk-row-stripe-bg`.

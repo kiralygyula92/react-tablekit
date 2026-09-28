@@ -1,10 +1,11 @@
 ---
 title: Asset list
-description: Interactive content inside a cell — a chip list that collapses past three items, where each chip is a button and the row click still behaves.
+description: 'Interactive content inside a cell: a chip list that collapses past three items, where each chip is a button and the row click still behaves.'
 archetype: editorial
 group: Demos
 symbols: [ColumnDef, DataTableProps]
 plan: free
+wide: true
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
 ---
@@ -21,7 +22,7 @@ letting the row grow.
   `+N` chip; the row's Inspect action opens the full list. The row height stays predictable
   however many assets an account has.
 - **Each chip is a button.** Clicking one selects that asset and does _not_ trigger the row's own
-  click handler — interactive descendants are excluded from row clicks, so a cell can hold
+  click handler. Interactive descendants are excluded from row clicks, so a cell can hold
   controls without fighting the row.
 - **The widest column takes a share, with a floor.** It gets 40% of the width and never less than
   200px, so the identifying columns keep theirs.
@@ -55,8 +56,8 @@ supplies the callbacks, which is what keeps the column reusable across screens.
 
 ## Related
 
-- [Columns](/react-tablekit/columns/) — accessors, `cell` and column widths.
-- [Rows and cells](/react-tablekit/customization/rows-and-cells/) — decorating without replacing.
-- [Cell building blocks](/react-tablekit/customization/cell-building-blocks/) — the primitives
+- [Columns](/react-tablekit/columns/): accessors, `cell` and column widths.
+- [Rows and cells](/react-tablekit/customization/rows-and-cells/): decorating without replacing.
+- [Cell building blocks](/react-tablekit/customization/cell-building-blocks/): the primitives
   these chips are made of.
-- [Row selection](/react-tablekit/row-selection/) — the same interactive-descendant rule.
+- [Row selection](/react-tablekit/row-selection/): the same interactive-descendant rule.

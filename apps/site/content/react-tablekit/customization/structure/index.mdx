@@ -1,6 +1,6 @@
 ---
 title: Overriding structure
-description: Unstyled mode, primitive slots and composable parts — how to put a design system's own components in charge without losing the engine.
+description: "Unstyled mode, primitive slots and composable parts: how to put a design system's own components in charge without losing the engine."
 archetype: capability
 capabilityId: structure
 group: Customization
@@ -17,7 +17,7 @@ links:
 
 There are three levels of taking over the markup, and most projects need only the first.
 
-**Unstyled.** `unstyled` drops the presentational CSS and keeps the structural rules — sticky
+**Unstyled.** `unstyled` drops the presentational CSS and keeps the structural rules: sticky
 positioning, pinned offsets, the scroll container. You get a correct table with no opinions about
 how it looks.
 
@@ -25,8 +25,8 @@ how it looks.
 <DataTable unstyled slots={designSystemSlots} data={rows} columns={columns} />
 ```
 
-**Primitives.** Six [slots](/react-tablekit/customization/slots/) — `Button`, `IconButton`,
-`Checkbox`, `Select`, `TextInput`, `Menu` — account for nearly every control in the table.
+**Primitives.** Six [slots](/react-tablekit/customization/slots/), `Button`, `IconButton`,
+`Checkbox`, `Select`, `TextInput` and `Menu`, account for nearly every control in the table.
 Replacing those is what makes an adapter small:
 
 ```tsx
@@ -40,8 +40,8 @@ export const designSystemSlots = {
 };
 ```
 
-**Layout.** When the arrangement itself is wrong — search in the page header, filters in a
-sidebar, pagination in a sticky footer — use `DataTable.Root` and the composable parts. The table
+**Layout.** When the arrangement itself is wrong (search in the page header, filters in a
+sidebar, pagination in a sticky footer), use `DataTable.Root` and the composable parts. The table
 instance is shared, so every piece stays in sync:
 
 ```tsx
@@ -62,7 +62,7 @@ still win over the provider.
 
 ### All the way down
 
-If even the table element is wrong for what you are building — cards, a list, a chart —
+If even the table element is wrong for what you are building (cards, a list, a chart),
 [headless](/react-tablekit/headless/) keeps the engine and gives up the rendering entirely.
 
 ## Customization
@@ -81,7 +81,7 @@ tokens for what is left. That is a file, not a fork.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `unstyled`, `slots`, `slotProps`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `unstyled`, `slots`, `slotProps`,
   `classNames`, `styles`, `handlers`, `icons`, `localization`.
-- [Slots](/react-tablekit/api/slots/) — the full list, primitives included.
-- [Hooks](/react-tablekit/api/hooks/) — `useDataTable` for the composable form.
+- [TableSlots](/react-tablekit/api/slots/): the full list, primitives included.
+- [Hooks](/react-tablekit/api/hooks/): `useDataTable` for the composable form.

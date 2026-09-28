@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, TableInstance]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/globalFilter.ts
+  source: packages/react-tablekit/src/core/rowModels.ts
 ---
 
 ## Basics
@@ -19,7 +19,7 @@ The toolbar search box matches every column that has not opted out. Matching ign
 diacritics, so `zurich` finds `Zürich`. Escape clears the box while it has focus.
 
 Two props keep it from firing on every keystroke: `searchDebounceMs` waits for typing to stop,
-and `searchMinLength` ignores queries shorter than a threshold — together they are the difference
+and `searchMinLength` ignores queries shorter than a threshold. Together they are the difference
 between one request and eight.
 
 ### What a word matches
@@ -29,14 +29,14 @@ in any column and any order. `globalFilterMatch` changes that to `'any-word'`, o
 for a literal substring.
 
 A column decides what text it contributes. `getSearchValue` wins, then `format`, then the raw
-value stringified — so a formatted date is searched as it is displayed. Setting
+value stringified, so a formatted date is searched as it is displayed. Setting
 `enableGlobalFilter: false` removes a column from search entirely, which is worth doing for ids
 nobody types.
 
 ### Highlighting and the hotkey
 
-`highlightSearchMatches` wraps hits in a `mark` element inside text cells. `searchHotkey` — for
-example `'mod+k'` — focuses this table's box, and `showSearchHotkeyHint` prints the
+`highlightSearchMatches` wraps hits in a `mark` element inside text cells. `searchHotkey` (for
+example `'mod+k'`) focuses this table's box, and `showSearchHotkeyHint` prints the
 platform-correct chip next to it. With two tables on a page the hotkey goes to the one most
 recently focused or hovered, and it is ignored while you are typing in an unrelated field.
 
@@ -49,7 +49,7 @@ server](/react-tablekit/client-and-server/).
 ## Customization
 
 The box is a slot, and it is also a composable part: `<DataTable.Search table={table} />` renders
-it anywhere on the page — a page header, a dialog title bar — while the table keeps owning the
+it anywhere on the page (a page header, a dialog title bar) while the table keeps owning the
 state.
 
 ```tsx
@@ -77,9 +77,9 @@ state.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableGlobalFilter`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableGlobalFilter`,
   `searchDebounceMs`, `searchMinLength`, `searchMode`, `searchPlaceholder`, `searchHotkey`,
   `showSearchHotkeyHint`, `globalFilterFn`, `globalFilterMatch`, `highlightSearchMatches`,
   `onGlobalFilterChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableGlobalFilter`, `getSearchValue`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setGlobalFilter`, `resetGlobalFilter`.
+- [`ColumnDef`](/react-tablekit/api/column-def/): `enableGlobalFilter`, `getSearchValue`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setGlobalFilter`, `resetGlobalFilter`.

@@ -1,6 +1,6 @@
 ---
 title: Surface
-description: The panel the table sits on — a bordered card with its pagination attached, or nothing at all, with corners you choose.
+description: 'The panel the table sits on: a bordered card with its pagination attached, or nothing at all, with corners you choose.'
 archetype: capability
 capabilityId: surface
 group: Display & layout
@@ -25,8 +25,8 @@ and the pagination becomes a separate block beneath it rather than the bottom of
 <DataTable surface="plain" data={rows} columns={columns} />
 ```
 
-That is the one to reach for when the table is already inside a panel of your own — a dialog, a
-dashboard tile, a section with its own border — where a second frame around it is one frame too
+That is the one to reach for when the table is already inside a panel of your own (a dialog, a
+dashboard tile, a section with its own border), where a second frame around it is one frame too
 many.
 
 ### Corners
@@ -45,7 +45,7 @@ follows the same curve.
 
 ### Borders inside the table
 
-`bordered` is a different question — it draws the lines _between_ cells rather than around the
+`bordered` is a different question: it draws the lines _between_ cells rather than around the
 table. `'outer'` keeps the frame and the row dividers, `'rows'` keeps only the dividers, `'all'`
 draws a full grid, and `'none'` leaves the table unruled.
 
@@ -69,8 +69,8 @@ sit inside something more particular than a border can be given one.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `surface`, `rounded`, `bordered`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `surface`, `rounded`, `bordered`,
   `maxHeight`, `minWidth`, `maxWidth`, `unstyled`.
-- [Theme tokens](/react-tablekit/api/theme-tokens/) — `--tk-radius`, `--tk-container-border`,
+- [Theme tokens](/react-tablekit/api/theme-tokens/): `--tk-radius`, `--tk-container-border`,
   `--tk-container-shadow`, `--tk-color-surface`.
-- [Slots](/react-tablekit/api/slots/) — `Container`, `Pagination`.
+- [TableSlots](/react-tablekit/api/slots/): `Container`, `Pagination`.

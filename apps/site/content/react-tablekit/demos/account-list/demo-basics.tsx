@@ -12,7 +12,7 @@ import { accountColumns, type AccountListMeta } from './basics-columns';
  * numbered pagination, the initial loading row, the refetch overlay and an empty state.
  */
 export default function ShowcaseAccountList() {
-  const { theme, toggle } = useShowcaseTheme();
+  const { theme, colorScheme, toggle } = useShowcaseTheme();
   const [editing, setEditing] = useState<Account | null>(null);
   const meta: AccountListMeta = { onEditAccount: setEditing };
 
@@ -26,6 +26,7 @@ export default function ShowcaseAccountList() {
     searchHotkey: 'mod+k',
     initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
     theme,
+    colorScheme,
     meta,
     toolbar: false,
     'aria-label': 'account list table',
@@ -41,7 +42,7 @@ export default function ShowcaseAccountList() {
       {toggle}
       <DataTable.Root table={table}>
         <header className="showcase-header">
-          <h3 className="showcase-title">All accounts</h3>
+          <h2 className="showcase-title">All accounts</h2>
           <DataTable.Search />
           <button type="button" className="showcase-primary-button">
             Add account

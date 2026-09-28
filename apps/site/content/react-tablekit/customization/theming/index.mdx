@@ -16,7 +16,7 @@ links:
 <Demo id="react-tablekit/customization/theming/demo-presets" label="Theme presets" />
 
 A theme is a set of CSS custom properties. The presets are starting points, not a fork in the
-road — you can take one and change any part of it.
+road: you can take one and change any part of it.
 
 ```tsx
 import 'react-tablekit/styles.css';
@@ -44,7 +44,7 @@ const brand = createTheme(lightTheme, {
 ```
 
 Nothing here is class-name surgery. Because every value is a variable, an override reaches
-everything that reads it — the focus ring, the selected row, the spinner — without you finding
+everything that reads it (the focus ring, the selected row, the spinner) without you finding
 each one.
 
 ### Dark mode
@@ -58,8 +58,8 @@ values, so light and dark are one configuration rather than two stylesheets:
 
 ### Scoping
 
-Tokens cascade, so a theme can also be applied by an ancestor — a section, a dialog, a preview
-pane — and every table inside it follows. The stylesheet is inside `@layer tablekit`, which means
+Tokens cascade, so a theme can also be applied by an ancestor (a section, a dialog, a preview
+pane) and every table inside it follows. The stylesheet is inside `@layer tablekit`, which means
 your own rules win without `!important`.
 
 ## Customization
@@ -82,7 +82,7 @@ or a theme object.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `theme`, `darkTheme`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `theme`, `darkTheme`,
   `colorScheme`, `unstyled`, `className`, `classNames`, `styles`.
-- [Utilities](/react-tablekit/api/utilities/) — `createTheme`, `toCssVars`.
-- [Theme tokens](/react-tablekit/api/theme-tokens/) — every token and its value per preset.
+- [Utilities](/react-tablekit/api/utilities/): `createTheme`, `toCssVars`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/): every token and its value per preset.

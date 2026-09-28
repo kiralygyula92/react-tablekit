@@ -15,7 +15,7 @@ breaking it.
 ## What you get without asking
 
 - **Real table semantics.** A `table` with a `caption` or an `aria-label`, `th scope="col"`
-  headers, and — with `firstColumnAsRowHeader` — a `th scope="row"` per row, so a screen reader
+  headers and, with `firstColumnAsRowHeader`, a `th scope="row"` per row, so a screen reader
   can say which record a cell belongs to.
 - **Sort state.** `aria-sort` on the primary sorted column, which is what the specification
   allows, and an `aria-description` carrying the priority for the others.
@@ -23,7 +23,7 @@ breaking it.
   window, so a [virtualized](/react-tablekit/virtualization/) table says "row 4,201 of 100,000".
 - **Busy state.** `aria-busy` while fetching, so a reader is told the table is updating.
 - **Announcements.** A polite, debounced live region for sort changes, page changes, result
-  counts, loading, selection counts and column moves — the things a sighted reader sees happen.
+  counts, loading, selection counts and column moves: the things a sighted reader sees happen.
 - **Focus.** A visible ring on every interactive element, from the `--tk-focus-ring` token.
 - **Motion.** `prefers-reduced-motion` disables the animations.
 - **Contrast.** Every default token pair meets WCAG AA, and that is checked in the test suite
@@ -33,7 +33,7 @@ breaking it.
 
 Without [keyboard navigation](/react-tablekit/keyboard-navigation/), everything is still reachable
 by Tab: sort buttons, checkboxes, links, menus. Rows are not focusable unless `onRowClick` makes
-them interactive, which is correct — a row you cannot activate should not be a tab stop.
+them interactive, which is correct: a row you cannot activate should not be a tab stop.
 
 With it, the table becomes a grid: one tab stop, arrow keys between cells, Enter to step into a
 cell's controls and Escape to step back out. That is the WAI-ARIA data grid pattern, and it is the
@@ -63,7 +63,7 @@ right choice for a dense table a person works in all day.
 
 ## Known exception
 
-The `classic` preset's header text is `#717680` on `#FAFAFA` — about 4.4:1, just under the AA
+The `classic` preset's header text is `#717680` on `#FAFAFA`, about 4.4:1, just under the AA
 threshold for normal text. Those token values are frozen because the preset reproduces an
 existing design. Every other preset passes, and the exception is asserted in the test suite so it
 cannot spread.

@@ -6,7 +6,7 @@ const data = generatePeople(40);
 
 /**
  * Four replaced slots. Every slot receives the state it needs as props, so a
- * replacement is a plain component — there is no registry to configure and no CSS to fight.
+ * replacement is a plain component; there is no registry to configure and no CSS to fight.
  */
 const slots: Partial<TableSlots<DemoPerson>> = {
   /** A search box with its own wrapper; `inputRef` must be forwarded for the hotkey to focus it. */
@@ -32,7 +32,7 @@ const slots: Partial<TableSlots<DemoPerson>> = {
    * Wrapping the default is unnecessary here: the header cell is rebuilt, sorting included.
    *
    * Only presentation is taken from the slot props. The default `<th>` is itself clickable to
-   * sort, so spreading the rest would leave those handlers on the cell — and a real button inside
+   * sort, so spreading the rest would leave those handlers on the cell, and a real button inside
    * a clickable cell is a nested interactive control, which is an axe violation.
    */
   HeaderCell: ({ header, isSorted, canSort, children, className, style }) => (
@@ -43,7 +43,7 @@ const slots: Partial<TableSlots<DemoPerson>> = {
       aria-sort={isSorted === 'asc' ? 'ascending' : isSorted === 'desc' ? 'descending' : undefined}
     >
       {/*
-        `children` is already the sort control when the column is sortable — the default header
+        `children` is already the sort control when the column is sortable: the default header
         builds a button around the label. Wrapping it in another button would nest one interactive
         control inside another, so the custom indicator goes beside it rather than around it.
       */}

@@ -56,7 +56,7 @@
   "/react-tablekit/api/table-state/": "TableState",
   "/react-tablekit/api/hooks/": "Hooks",
   "/react-tablekit/api/utilities/": "Utilities",
-  "/react-tablekit/api/slots/": "Slots",
+  "/react-tablekit/api/slots/": "TableSlots",
   "/react-tablekit/api/handlers/": "Handlers",
   "/react-tablekit/api/theme-tokens/": "Theme tokens",
   "/react-tablekit/api/localization-keys/": "Localization keys",

@@ -1,6 +1,6 @@
 ---
 title: Faceting
-description: Filter options and counts computed from the data — from the loaded rows in client mode, from your API in server mode.
+description: 'Filter options and counts computed from the data: from the loaded rows in client mode, from your API in server mode.'
 archetype: capability
 capabilityId: faceting
 group: Core features
@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, Column, DataSource]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/faceting.ts
+  source: packages/react-tablekit/src/core/columns.ts
 ---
 
 ## Basics
@@ -19,7 +19,7 @@ A facet is the answer to "what can I filter this column by, and how many rows wo
 leave?" When a column has no `filterOptions`, the table works them out: the distinct values for a
 select or multi-select, and the minimum and maximum for a range or slider.
 
-Counts are shown next to each option — `Berlin (142)` — and they respect the _other_ active
+Counts are shown next to each option, as in `Berlin (142)`, and they respect the _other_ active
 filters, so the numbers describe what you would actually get.
 
 ### Client and server
@@ -41,7 +41,7 @@ const dataSource: DataSource<Person> = {
 `fetchFacets` is a method of the data source rather than an option of `createRestDataSource`,
 so it is added beside the REST source's own `fetch`. It is asked for one column at a time.
 
-Facets are requested lazily — the first time a filter control opens — and cached per query, so
+Facets are requested lazily, the first time a filter control opens, and cached per query, so
 opening the same dropdown twice costs one round trip. `manualFaceting` and `facetingMode` force
 the choice when the default inference is not what you want, and `facets` supplies them outright.
 
@@ -53,7 +53,7 @@ and known. Then `filterOptions` on the column is the only source, and no counts 
 
 ## Customization
 
-`filterOptions` accepts a static array, a function, or an async function — the control shows a
+`filterOptions` accepts a static array, a function, or an async function; the control shows a
 loading state while it resolves. Options carry their own presentation, which is what makes a
 status filter look like the status column:
 
@@ -81,9 +81,9 @@ Those colours are reused by the [filter chips](/react-tablekit/column-filters/).
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableFacetedValues`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableFacetedValues`,
   `facetingMode`, `manualFaceting`, `facets`, `showFacetCounts`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `filterOptions`, `filterVariant`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `getColumn(id).getFacetedUniqueValues`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `filterOptions`, `filterVariant`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `getColumn(id).getFacetedUniqueValues`,
   `getFacetedMinMaxValues`, `getServerFacets`, `loadFacets`.
-- [Utilities](/react-tablekit/api/utilities/) — `createRestDataSource`.
+- [Utilities](/react-tablekit/api/utilities/): `createRestDataSource`.

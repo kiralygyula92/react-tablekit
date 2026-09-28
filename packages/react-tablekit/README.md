@@ -63,7 +63,7 @@ const source = createRestDataSource<Person, PeopleResponse>({
 ```
 
 Each feature can also be split independently with `sortingMode`, `filterMode`, `searchMode`,
-`paginationMode`, `groupingMode` and `facetingMode` — server pagination with client sorting of the
+`paginationMode`, `groupingMode` and `facetingMode`: server pagination with client sorting of the
 fetched page, for example.
 
 ## What's included
@@ -78,7 +78,7 @@ fetched page, for example.
   (page / all / selection, with chunked server export), URL and `localStorage` persistence.
 - **Accessibility:** real table semantics, the roles the enabled state requires (`grid` when
   selectable, `treegrid` for hierarchical data), the WAI-ARIA data-grid keyboard pattern, and
-  polite live-region announcements — all localized.
+  polite live-region announcements, all localized.
 - **Customization:** nine levels, from props and CSS variables through slots and handler
   middleware to `useDataTable` (the engine, rendering nothing) and `createTable` (no React).
 
@@ -95,7 +95,7 @@ Measured min+gzip, React external:
 
 `DataTable` is batteries-included by design: its default layout reaches the toolbar, filter panel,
 selection bar and pagination, so the first two numbers are close together. If you need a small
-bundle, use **`react-tablekit/core`** — the engine with your own markup — or `useDataTable`, which
+bundle, use **`react-tablekit/core`** (the engine with your own markup) or `useDataTable`, which
 renders nothing. A lean React entry (`DataTableLite` with an explicit feature list) is planned for
 a 1.x release.
 

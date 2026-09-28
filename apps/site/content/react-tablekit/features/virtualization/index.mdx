@@ -1,6 +1,6 @@
 ---
 title: Virtualization
-description: Render the rows on screen instead of all of them — a hundred thousand rows with the same markup, the same keyboard model and the same counts for screen readers.
+description: 'Render the rows on screen instead of all of them: a hundred thousand rows with the same markup, the same keyboard model and the same counts for screen readers.'
 archetype: capability
 capabilityId: virtualization
 group: Display & layout
@@ -24,7 +24,7 @@ over.
 <DataTable data={rows} columns={columns} maxHeight={600} />
 ```
 
-The one thing it needs is a bounded height — `maxHeight`, or a parent that has one. Without it
+The one thing it needs is a bounded height: `maxHeight`, or a parent that has one. Without it
 there is no viewport to virtualize against, and the table says so in development.
 
 ### Row height
@@ -33,7 +33,7 @@ there is no viewport to virtualize against, and the table says so in development
 heights settle correctly after the first paint. Give a close estimate and the scrollbar is
 accurate immediately; give a poor one and it corrects itself as you scroll.
 
-`overscan` trades memory for smoothness — a few extra rows above and below the viewport mean
+`overscan` trades memory for smoothness: a few extra rows above and below the viewport mean
 fewer blank frames during a fast flick.
 
 ### Still a real table
@@ -47,13 +47,13 @@ into view.
 ### What it composes with
 
 Detail panels (measured), grouping, sticky headers, pinned columns and infinite pagination all
-work under virtualization — which is the point of building it in rather than bolting it on.
+work under virtualization, which is the point of building it in rather than bolting it on.
 
 ## Customization
 
 `useVirtualRows` is exported, so a [headless](/react-tablekit/headless/) table or a custom layout
 can use the same windowing the built-in body uses. `enableRowVirtualization: false` forces it off
-for a table where every row must be in the DOM — a print view, or a test that scrapes markup.
+for a table where every row must be in the DOM, such as a print view, or a test that scrapes markup.
 
 ## Limitations
 
@@ -66,7 +66,7 @@ for a table where every row must be in the DOM — a print view, or a test that 
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowVirtualization`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableRowVirtualization`,
   `virtualizationThreshold`, `estimateRowHeight`, `overscan`, `maxHeight`, `layout`.
-- [Hooks](/react-tablekit/api/hooks/) — `useVirtualRows`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `scrollToRow`, `getRowCount`.
+- [Hooks](/react-tablekit/api/hooks/): `useVirtualRows`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `scrollToRow`, `getRowCount`.

@@ -1,6 +1,6 @@
 ---
 title: Server data
-description: Wiring a table to an API end to end — the query, the adapter, the states, and the decisions that are easy to get wrong.
+description: 'Wiring a table to an API end to end: the query, the adapter, the states, and the decisions that are easy to get wrong.'
 archetype: editorial
 group: Guides
 symbols: [DataTableProps, TableQuery, createRestDataSource, useDataSource]
@@ -14,7 +14,7 @@ in order, when the data lives behind an API.
 
 ## Decide what the server owns
 
-`dataMode="server"` moves everything — paging, sorting, filtering, search, grouping, faceting.
+`dataMode="server"` moves everything: paging, sorting, filtering, search, grouping, faceting.
 That is the right default for a list that can grow, and the decision worth making explicitly is
 which parts you take back:
 
@@ -22,7 +22,7 @@ which parts you take back:
 <DataTable dataMode="server" sortingMode="client" acknowledgePageLocalSorting />
 ```
 
-Client sorting under server paging sorts _the page_. Sometimes that is exactly right — a
+Client sorting under server paging sorts _the page_. Sometimes that is exactly right: a
 ten-row page the reader wants ordered differently. Usually it is a bug. The acknowledgement flag
 exists so the choice is visible in the code rather than discovered in production.
 
@@ -72,14 +72,14 @@ mapResult: (body) => ({
 ## Handle all four states
 
 A server table is in one of four states, and each needs an answer: first load, refetch, empty,
-error. `loadingDisplay` covers the first two, `renderEmptyState` the third — distinguishing "no
-data" from "no matches" — and `error` with `renderErrorState` the fourth. See [Loading and empty
+error. `loadingDisplay` covers the first two, `renderEmptyState` the third (distinguishing "no
+data" from "no matches"), and `error` with `renderErrorState` the fourth. See [Loading and empty
 states](/react-tablekit/loading-and-empty-states/).
 
 ## Facets and exports
 
-Options and counts cannot be computed from one page. Implement `fetchFacets` — see
-[Faceting](/react-tablekit/faceting/) — and decide how "export all matching" should work: the
+Options and counts cannot be computed from one page. Implement `fetchFacets` (see
+[Faceting](/react-tablekit/faceting/)) and decide how "export all matching" should work: the
 table can walk your data source in chunks, or `onExport(query, scope)` can hand the job to a
 backend endpoint. Past a few tens of thousands of rows, the backend endpoint is the right answer.
 
@@ -91,7 +91,7 @@ backend endpoint. Past a few tens of thousands of rows, the backend endpoint is 
 
 ## Checklist
 
-- `getRowId` returns a stable id — selection and expansion depend on it.
+- `getRowId` returns a stable id; selection and expansion depend on it.
 - Sorting and filtering happen where you think they do.
 - The response's real page is adopted.
 - Requests are debounced and deduplicated.
@@ -105,4 +105,4 @@ backend endpoint. Past a few tens of thousands of rows, the backend endpoint is 
 - [Client and server](/react-tablekit/client-and-server/)
 - [React Query](/react-tablekit/integrations/react-query/)
 - [Performance](/react-tablekit/guides/performance/)
-- [Reading history](/react-tablekit/demos/reading-history/) — a working adapter.
+- [Reading history](/react-tablekit/demos/reading-history/): a working adapter.

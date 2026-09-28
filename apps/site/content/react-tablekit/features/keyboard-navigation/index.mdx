@@ -1,6 +1,6 @@
 ---
 title: Keyboard navigation
-description: The WAI-ARIA data grid pattern — arrow keys between cells, one tab stop for the whole table, and Enter to reach interactive content.
+description: 'The WAI-ARIA data grid pattern: arrow keys between cells, one tab stop for the whole table, and Enter to reach interactive content.'
 archetype: capability
 capabilityId: keyboard-navigation
 group: Interaction
@@ -8,7 +8,7 @@ symbols: [DataTableProps, TableInstance]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/react/hooks/useKeyboardNavigation.ts
+  source: packages/react-tablekit/src/react/parts/keyboardGrid.ts
 ---
 
 ## Basics
@@ -16,7 +16,7 @@ links:
 <Demo id="react-tablekit/features/keyboard-navigation/demo-basics" label="Keyboard navigation" />
 
 `enableKeyboardNavigation` turns the table into a grid in the WAI-ARIA sense: the whole table is
-one tab stop, and the arrow keys move between cells inside it. Tab in, navigate, Tab out — rather
+one tab stop, and the arrow keys move between cells inside it. Tab in, navigate, Tab out, rather
 than tabbing through four hundred cells to reach the pagination.
 
 | Key                 | Action                                                                         |
@@ -39,7 +39,7 @@ That is the standard resolution and it is what this implements.
 ### Without it
 
 Turned off, everything is still reachable: buttons, checkboxes, sort buttons and links are all in
-the tab order. Rows are not focusable unless `onRowClick` makes them interactive — a row you
+the tab order. Rows are not focusable unless `onRowClick` makes them interactive; a row you
 cannot activate should not be a tab stop.
 
 ### With virtualization
@@ -50,7 +50,7 @@ not fall off the end of the rendered rows.
 
 ## Customization
 
-`focusCell` and `scrollToRow` drive focus from your own code — after a save, after an insert, or
+`focusCell` and `scrollToRow` drive focus from your own code: after a save, after an insert, or
 from a keyboard shortcut of your own. The focus ring is the `--tk-focus-ring`
 [token](/react-tablekit/customization/tokens/), so it matches the rest of your application rather
 than the browser default.
@@ -66,8 +66,8 @@ than the browser default.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableKeyboardNavigation`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableKeyboardNavigation`,
   `onRowClick`, `onCellClick`, `enableRangeSelection`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `focusCell`, `scrollToRow`.
-- [Accessibility](/react-tablekit/guides/accessibility/) — how this fits the rest of the
+- [`TableInstance`](/react-tablekit/api/table-instance/): `focusCell`, `scrollToRow`.
+- [Accessibility](/react-tablekit/guides/accessibility/): how this fits the rest of the
   accessibility model.

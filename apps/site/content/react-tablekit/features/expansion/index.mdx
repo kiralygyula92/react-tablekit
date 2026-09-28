@@ -8,7 +8,7 @@ symbols: [DataTableProps, TableInstance, Row, useDetailPanelData]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/expanding.ts
+  source: packages/react-tablekit/src/core/rowModels.ts
 ---
 
 ## Basics
@@ -46,14 +46,14 @@ function Panel({ row }) {
 
 ### One at a time
 
-`expandMode: 'single'` collapses the previous panel when another opens — an accordion.
+`expandMode: 'single'` collapses the previous panel when another opens, like an accordion.
 `expandOnRowClick` makes the whole row the toggle, with the same exclusion for buttons and links
 that [row selection](/react-tablekit/row-selection/) uses. `enableExpandAll` puts an expand-all
 toggle in the header.
 
 ### Rows with children
 
-Sub-rows use the same expansion state and the same toggle. That is a capability of its own — see
+Sub-rows use the same expansion state and the same toggle. That is a capability of its own; see
 [Tree data](/react-tablekit/tree-data/).
 
 ## Customization
@@ -68,7 +68,7 @@ the column to the other end. The open/close animation is a CSS grid transition t
 
 ## Limitations
 
-- **A row has one panel.** Two kinds of detail — history and comments — belong in tabs inside the
+- **A row has one panel.** Two kinds of detail (history and comments) belong in tabs inside the
   panel, not in two panels.
 - **A panel is not a cell.** It is a separate row, so it takes no part in sorting, filtering,
   search or CSV export.
@@ -77,11 +77,11 @@ the column to the other end. The open/close animation is a CSS grid transition t
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableExpanding`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableExpanding`,
   `renderDetailPanel`, `detailPanelProps`, `expandMode`, `expandOnRowClick`, `enableExpandAll`,
   `getRowCanExpand`, `positionExpandColumn`, `paginateExpandedRows`, `autoResetExpanded`,
   `manualExpanding`, `onExpandedChange`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setExpanded`, `resetExpanded`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setExpanded`, `resetExpanded`,
   `toggleAllRowsExpanded`, `getIsAllRowsExpanded`, `getExpandedRowModel`.
-- [`Row`](/react-tablekit/api/table-instance/) — `toggleExpanded`, `getIsExpanded`, `getCanExpand`.
-- [Hooks](/react-tablekit/api/hooks/) — `useDetailPanelData`.
+- [`Row`](/react-tablekit/api/table-instance/): `toggleExpanded`, `getIsExpanded`, `getCanExpand`.
+- [Hooks](/react-tablekit/api/hooks/): `useDetailPanelData`.

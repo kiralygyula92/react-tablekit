@@ -15,7 +15,7 @@ The table is interactive, so it is a client component. The page around it does n
 fetch on the server, render the shell there, and pass the rows across.
 
 ```tsx
-// app/people/page.tsx — a server component
+// app/people/page.tsx (a server component)
 import { PeopleTable } from './PeopleTable';
 
 export default async function PeoplePage({ searchParams }) {
@@ -54,7 +54,7 @@ import 'react-tablekit/presets/classic.css';
 
 ## Rendering without a jump
 
-On the server there is no viewport, so the table renders at `ssrBreakpoint` — `lg` by default. If
+On the server there is no viewport, so the table renders at `ssrBreakpoint`, which is `lg` by default. If
 most of your readers are on phones, set it to `sm` and the server-rendered layout will match what
 they hydrate into:
 
@@ -96,7 +96,7 @@ With `scroll: false` the page does not jump to the top when a filter changes. Th
 
 ## Server actions
 
-A bulk action is an ordinary server action. Pass the selection query — not a list of ids — so it
+A bulk action is an ordinary server action. Pass the selection query, not a list of ids, so it
 still works when the reader selected everything matching:
 
 ```tsx
@@ -112,12 +112,12 @@ renderBulkActions={({ selectionQuery }) => (
 - **Columns are not serializable.** `cell`, `format` and `accessorFn` are functions, so the column
   list has to be defined on the client side of the boundary.
 - **Streaming and the first paint.** With `loading.tsx` and a suspended fetch, decide whether the
-  table's own skeleton or the route's fallback is the one the reader should see — showing both is
+  table's own skeleton or the route's fallback is the one the reader should see; showing both is
   worse than either.
 
 ## Related
 
-- [Responsive](/react-tablekit/responsive/) — `ssrBreakpoint`.
+- [Responsive](/react-tablekit/responsive/): `ssrBreakpoint`.
 - [Persistence](/react-tablekit/persistence/)
 - [Server data](/react-tablekit/guides/server-data/)
 - [Installation](/react-tablekit/getting-started/installation/)

@@ -9,7 +9,7 @@ const SCHEMES = ['light', 'dark', 'auto'] as const;
 
 /**
  * The five built-in presets. The preset supplies the token values; `colorScheme`
- * decides whether the light or the dark half of it is used — `'auto'` follows the OS.
+ * decides whether the light or the dark half of it is used; `'auto'` follows the OS.
  */
 export default function ThemingPresetsExample() {
   const [preset, setPreset] = useState<keyof typeof presets>('light');

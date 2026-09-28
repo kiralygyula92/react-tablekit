@@ -16,7 +16,7 @@ const source = createLocalDataSource(serverPeople, {
  * carries a UTF-8 BOM, so Excel opens accented text correctly.
  *
  * In server mode "all matching" is fetched in chunks through the data source, with progress shown
- * in the button — try it on the second table, which has 3 000 rows behind a simulated API.
+ * in the button. Try it on the second table, which has 3 000 rows behind a simulated API.
  */
 export default function ExportExample() {
   return (

@@ -5,13 +5,13 @@ import { peopleColumns } from '@/demo-support/columns';
 const data = generatePeople(90);
 
 /**
- * No table markup at all. `useDataTable` is the whole engine — searching, sorting,
- * selection and pagination — and it renders nothing, so the rows can become anything. Here they
+ * No table markup at all. `useDataTable` is the whole engine (searching, sorting,
+ * selection and pagination), and it renders nothing, so the rows can become anything. Here they
  * are a grid of cards.
  *
  * Note what this example does *not* do: it does not reuse the library's cell components. Those
  * are part of the table's own rendering and need its context. Headless means reading values off
- * the instance and deciding the presentation yourself — here, the column's `format` is applied
+ * the instance and deciding the presentation yourself. Here, the column's `format` is applied
  * so money and dates still read the way they do in a table.
  */
 export default function HeadlessExample() {

@@ -1,6 +1,6 @@
 ---
 title: Client and server
-description: The same table, the same props — with the work done in the browser, on your API, or split feature by feature.
+description: The same table and the same props, with the work done in the browser, on your API, or split feature by feature.
 archetype: capability
 capabilityId: client-and-server
 group: Core features
@@ -8,7 +8,7 @@ symbols: [DataTableProps, TableQuery, DataSource, useDataSource]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/engine
+  source: packages/react-tablekit/src/core/createTable.ts
 ---
 
 ## Basics
@@ -36,7 +36,7 @@ column filters and grouping. That object is what a server mode table sends, and 
 at any time with `table.getQuery()`.
 
 `onQueryChange(query, change)` fires once, after debouncing, whenever something that affects
-server data changes — and it tells you _why_ it changed. It is the single place to hang a fetch,
+server data changes, and it tells you _why_ it changed. It is the single place to hang a fetch,
 instead of six callbacks racing each other.
 
 ```tsx
@@ -48,7 +48,7 @@ instead of six callbacks racing each other.
 />
 ```
 
-The per-slice callbacks — `onSortingChange`, `onPaginationChange` and the rest — still fire
+The per-slice callbacks (`onSortingChange`, `onPaginationChange` and the rest) still fire
 immediately, for controlled state.
 
 ### A data source instead of an effect
@@ -93,7 +93,7 @@ loaded page in the browser:
 ```
 
 That combination sorts _the current page only_, which is sometimes exactly what you want and
-sometimes a bug. The table warns about it in development until you acknowledge it in the props —
+sometimes a bug. The table warns about it in development until you acknowledge it in the props,
 which is also the documentation of the decision for whoever reads the code next.
 
 ## Customization
@@ -107,18 +107,18 @@ table, and [`useDataTable`](/react-tablekit/headless/) gives you the whole engin
 - **Server grouping with client pagination is not supported** and throws in development: the
   table cannot slice group rows it did not build.
 - **Client faceting under server pagination describes the loaded page**, not the result set. Use
-  `fetchFacets` — see [Faceting](/react-tablekit/faceting/).
+  `fetchFacets`; see [Faceting](/react-tablekit/faceting/).
 - **A server that does not return a total** cannot produce page numbers. Pass `rowCount: -1` and
   the table shows `of many` and switches to cursor-style navigation.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `dataMode`, `dataSource`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `dataMode`, `dataSource`,
   `paginationMode`, `sortingMode`, `filterMode`, `searchMode`, `groupingMode`, `facetingMode`,
   the `manual*` flags, `onQueryChange`, `rowCount`, `pageCount`, `keepPreviousData`, `dedupeMs`,
   `fetchOnMount`, `refetchInterval`, `refetchOnWindowFocus`, `acknowledgePageLocalSorting`,
   `acknowledgePageLocalFiltering`.
-- [`TableState`](/react-tablekit/api/table-state/) — `TableQuery` and every state slice.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `getQuery`, `flushQuery`, `refresh`,
+- [`TableState`](/react-tablekit/api/table-state/): `TableQuery` and every state slice.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `getQuery`, `flushQuery`, `refresh`,
   `invalidate`, `getDataStatus`.
-- [Utilities](/react-tablekit/api/utilities/) — `createRestDataSource`, `createLocalDataSource`.
+- [Utilities](/react-tablekit/api/utilities/): `createRestDataSource`, `createLocalDataSource`.

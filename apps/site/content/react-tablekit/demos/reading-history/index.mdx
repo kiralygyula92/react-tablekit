@@ -1,10 +1,11 @@
 ---
 title: Reading history
-description: A server-sorted time series against a REST endpoint whose parameter names are nothing like the table's — mapped in one place.
+description: A server-sorted time series against a REST endpoint whose parameter names are nothing like the table's, mapped in one place.
 archetype: editorial
 group: Demos
 symbols: [createRestDataSource, TableQuery, ColumnDef]
 plan: free
+wide: true
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
 ---
@@ -13,12 +14,12 @@ links:
 
 ## What it shows
 
-A paged, sorted history from an endpoint that was not designed around this table — which is the
+A paged, sorted history from an endpoint that was not designed around this table, which is the
 normal case. The API wants `pageNumber`, `pageSize`, `sortColumn` and `ascending`; the table
 produces a `TableQuery`. One adapter reconciles them.
 
 - **Sorting happens on the server.** Clicking a header sends a new request, not a local
-  reordering — this is a page of a much longer series.
+  reordering; this is a page of a much longer series.
 - **The API's names stay the API's names.** `mapQuery` translates outward and `mapResult`
   translates back, so nothing else in the code has to know about `totalItemCount`.
 - **The response carries the truth about paging.** The server echoes the criteria it actually
@@ -39,15 +40,15 @@ const readingsDataSource = createRestDataSource<Reading, PagedResponse<Reading>>
 });
 ```
 
-That object is the entire integration. The table passes it `dataSource` and everything else —
-loading, errors, refetch, deduplication — is handled.
+That object is the entire integration. The table passes it `dataSource` and everything else
+(loading, errors, refetch, deduplication) is handled.
 
 Column ids are the sort keys the server receives, which is why `sortServerKey` exists for the
 cases where they should differ.
 
 ## Related
 
-- [Client and server](/react-tablekit/client-and-server/) — the query and the data source.
-- [Sorting](/react-tablekit/sorting/) — server sorting and `sortServerKey`.
-- [Pagination](/react-tablekit/pagination/) — page sizes, totals and unknown counts.
-- [Server data](/react-tablekit/guides/server-data/) — the longer version of this pattern.
+- [Client and server](/react-tablekit/client-and-server/): the query and the data source.
+- [Sorting](/react-tablekit/sorting/): server sorting and `sortServerKey`.
+- [Pagination](/react-tablekit/pagination/): page sizes, totals and unknown counts.
+- [Server data](/react-tablekit/guides/server-data/): the longer version of this pattern.

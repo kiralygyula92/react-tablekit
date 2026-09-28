@@ -69,12 +69,12 @@ const columns = [
 ];
 
 /**
- * A picker, as it would appear inside a dialog: client mode throughout — client sorting and
- * paging — with single selection by row click or radio, and a sticky header inside a bounded
+ * A picker, as it would appear inside a dialog: client mode throughout (client sorting and
+ * paging), with single selection by row click or radio, and a sticky header inside a bounded
  * 400px scroll area so the column labels stay visible while you scan.
  */
 export default function ShowcaseAssetPicker() {
-  const { theme, toggle } = useShowcaseTheme();
+  const { theme, colorScheme, toggle } = useShowcaseTheme();
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const rows = useMemo(() => generateAccounts(40).flatMap((a) => getAccountAssets(a)), []);
   const selectedId = Object.keys(selected).find((id) => selected[id]);
@@ -82,13 +82,14 @@ export default function ShowcaseAssetPicker() {
   return (
     <ShowcasePage>
       {toggle}
-      <h3 className="showcase-title">Select an asset</h3>
+      <h2 className="showcase-title">Select an asset</h2>
       <DataTable<Asset>
         aria-label="asset selection table"
         data={rows}
         columns={columns}
         getRowId={(a) => a.id}
         theme={theme}
+        colorScheme={colorScheme}
         toolbar={false}
         enableRowSelection
         enableMultiRowSelection={false}

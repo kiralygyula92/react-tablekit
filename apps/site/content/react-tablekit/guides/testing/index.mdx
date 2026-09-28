@@ -1,6 +1,6 @@
 ---
 title: Testing
-description: How to write tests against a table that survive a redesign — query by role, drive the engine directly, and control the clock.
+description: 'How to write tests against a table that survive a redesign: query by role, drive the engine directly, and control the clock.'
 archetype: editorial
 group: Guides
 symbols: [useDataTable, createTable, createLocalDataSource]
@@ -23,7 +23,7 @@ expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveAttribute(
 ```
 
 Rows are `row`, cells are `cell` or `columnheader`, and a selectable table is a `grid` rather than
-a `table` — that is the ARIA rule, not a quirk, and asserting it is a useful regression test in
+a `table`. That is the ARIA rule, not a quirk, and asserting it is a useful regression test in
 itself.
 
 ## Control the clock
@@ -66,7 +66,7 @@ way the table would:
 />
 ```
 
-The table takes the same path it would in production — query, fetch, loading, empty — which is
+The table takes the same path it would in production (query, fetch, loading, empty), which is
 what makes the test worth having.
 
 ## Wait for what you mean
@@ -76,7 +76,7 @@ until the table has settled; a fixed sleep is either flaky or slow, and usually 
 
 ## Accessibility in the suite
 
-An axe assertion per configuration catches the regressions that reviews miss — a slot that
+An axe assertion per configuration catches the regressions that reviews miss: a slot that
 dropped its props, a custom cell that nested a button inside a button. Run it against the
 configurations you actually ship, not just the defaults.
 
@@ -88,7 +88,7 @@ them in their own suite so a font update does not block a bug fix.
 
 ## Related
 
-- [Headless](/react-tablekit/headless/) — the engine these tests drive.
-- [Accessibility](/react-tablekit/guides/accessibility/) — what the roles mean.
-- [Client and server](/react-tablekit/client-and-server/) — data sources.
+- [Headless](/react-tablekit/headless/): the engine these tests drive.
+- [Accessibility](/react-tablekit/guides/accessibility/): what the roles mean.
+- [Client and server](/react-tablekit/client-and-server/): data sources.
 - [Best practices](/react-tablekit/guides/best-practices/)

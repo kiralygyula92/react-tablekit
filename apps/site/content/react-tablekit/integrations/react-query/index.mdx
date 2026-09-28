@@ -1,6 +1,6 @@
 ---
 title: React Query
-description: Let TanStack Query own the fetching and caching while the table owns the query — one effect, no duplicated state.
+description: 'Let TanStack Query own the fetching and caching while the table owns the query: one effect, no duplicated state.'
 archetype: editorial
 group: Integrations
 symbols: [DataTableProps, TableQuery, useDataTable]
@@ -70,7 +70,7 @@ queryClient.invalidateQueries({ queryKey: ['people'] });
 ### Infinite queries
 
 `useInfiniteQuery` pairs with `paginationType="infinite"` or `"loadMore"`: flatten the pages into
-`data` and let the table accumulate. Keep `appendPages` in mind — the table appends rather than
+`data` and let the table accumulate. Keep `appendPages` in mind: the table appends rather than
 replaces in these modes.
 
 ## Limitations

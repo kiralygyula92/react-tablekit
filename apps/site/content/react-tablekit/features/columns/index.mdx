@@ -1,6 +1,6 @@
 ---
 title: Columns
-description: Accessors, headers, types and formatting — the column definition is where most of a table is decided.
+description: 'Accessors, headers, types and formatting: the column definition is where most of a table is decided.'
 archetype: capability
 capabilityId: columns
 group: Core features
@@ -8,7 +8,7 @@ symbols: [ColumnDef, createColumnHelper, defineColumns, DataTableProps]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/columns
+  source: packages/react-tablekit/src/core/columns.ts
 ---
 
 ## Basics
@@ -30,7 +30,7 @@ const columns = [
 ```
 
 An **accessor column** reads a value and can therefore sort, filter, group and export. A
-**display column** has no value — it renders something, and the table leaves it out of sorting,
+**display column** has no value: it renders something, and the table leaves it out of sorting,
 filtering and CSV. A **group column** has `columns` of its own and produces a second header row.
 
 ### Column types
@@ -50,7 +50,7 @@ Anything you set explicitly still wins; the type only supplies what you left out
 ### Formatting a value
 
 `format(value, row)` changes what is displayed while sorting, filtering, searching and export
-keep the underlying value — which is why a formatted date still sorts chronologically. Use
+keep the underlying value, which is why a formatted date still sorts chronologically. Use
 `cell` when you need markup rather than text.
 
 ```tsx
@@ -92,7 +92,7 @@ through [slots](/react-tablekit/customization/slots/).
 
 ## API
 
-- [`ColumnDef`](/react-tablekit/api/column-def/) — the whole definition.
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `columns`, `columnDefaults`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): the whole definition.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `columns`, `columnDefaults`,
   `defaultColumn`, `displayColumnDefs`, `renderFallbackValue`.
-- [Utilities](/react-tablekit/api/utilities/) — `createColumnHelper`, `defineColumns`.
+- [Utilities](/react-tablekit/api/utilities/): `createColumnHelper`, `defineColumns`.

@@ -33,12 +33,12 @@ export default function StatesExample() {
         <label>
           <span>State</span>
           <select value={state} onChange={(e) => setState(e.target.value as StateName)}>
-            <option value="skeleton">First load — skeleton rows</option>
-            <option value="loading">First load — “Loading…” row</option>
-            <option value="refetching">Refetch — blocking overlay</option>
-            <option value="empty">Empty — no rows at all</option>
-            <option value="noResults">Empty — nothing matches the search</option>
-            <option value="error">Error — with Retry</option>
+            <option value="skeleton">First load: skeleton rows</option>
+            <option value="loading">First load: “Loading…” row</option>
+            <option value="refetching">Refetch: blocking overlay</option>
+            <option value="empty">Empty: no rows at all</option>
+            <option value="noResults">Empty: nothing matches the search</option>
+            <option value="error">Error, with Retry</option>
           </select>
         </label>
         {state === 'noResults' && (

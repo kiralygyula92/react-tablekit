@@ -1,6 +1,6 @@
 ---
 title: Persistence
-description: Put table state in the URL, in storage, or in both — so a link reproduces a view and a reload does not lose one.
+description: Put table state in the URL, in storage, or in both, so a link reproduces a view and a reload does not lose one.
 archetype: capability
 capabilityId: persistence
 group: Automation
@@ -8,7 +8,7 @@ symbols: [DataTableProps, useSyncState, useRouterSync]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/react/hooks/useSyncState.ts
+  source: packages/react-tablekit/src/react/syncState.ts
 ---
 
 ## Basics
@@ -52,12 +52,12 @@ storage: {
 }
 ```
 
-Without a migration, a stored payload from an older version is discarded rather than applied —
+Without a migration, a stored payload from an older version is discarded rather than applied:
 the table would rather start fresh than render a layout that no longer exists.
 
 ### Working with your router
 
-`useRouterSync` connects the URL sync to a router's own history — React Router, Next.js — so a
+`useRouterSync` connects the URL sync to a router's own history (React Router, Next.js), so a
 filter change is a navigation your application knows about rather than a `history.replaceState`
 behind its back. See [React Router](/react-tablekit/integrations/react-router/).
 
@@ -79,7 +79,7 @@ stub in tests.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `syncState`, `initialState`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `syncState`, `initialState`,
   `state`, `onStateChange`.
-- [Hooks](/react-tablekit/api/hooks/) — `useSyncState`, `useRouterSync`, `useTableState`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `getState`, `setState`, `reset`.
+- [Hooks](/react-tablekit/api/hooks/): `useSyncState`, `useRouterSync`, `useTableState`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `getState`, `setState`, `reset`.

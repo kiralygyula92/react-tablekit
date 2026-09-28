@@ -1,6 +1,6 @@
 ---
 title: Density
-description: Three row heights the reader can switch between — compact, standard and comfortable — driven entirely by tokens.
+description: Three row heights the reader can switch between (compact, standard and comfortable), driven entirely by tokens.
 archetype: capability
 capabilityId: density
 group: Display & layout
@@ -8,7 +8,7 @@ symbols: [DataTableProps, TableInstance]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/styles/base
+  source: packages/react-tablekit/src/styles/theme.css
 ---
 
 ## Basics
@@ -16,15 +16,15 @@ links:
 <Demo id="react-tablekit/features/density/demo-basics" label="Density" />
 
 Density changes cell padding and row height, and nothing else. No column moves, no text is
-hidden, no layout is recomputed — which is why switching it feels instant and why it is safe to
+hidden, no layout is recomputed, which is why switching it feels instant and why it is safe to
 let the reader do it.
 
 ```tsx
 <DataTable enableDensityToggle initialState={{ density: 'compact' }} />
 ```
 
-`enableDensityToggle` puts the control in the toolbar. Without it, `state.density` still applies —
-useful when density belongs to your own settings screen rather than the table's toolbar.
+`enableDensityToggle` puts the control in the toolbar. Without it, `state.density` still applies,
+which is useful when density belongs to your own settings screen rather than the table's toolbar.
 
 ### Choosing a default
 
@@ -50,7 +50,7 @@ redefine what "compact" means without forking the component:
 }
 ```
 
-`toggleDensity` and `setDensity` drive it from your own control — a keyboard shortcut, a settings
+`toggleDensity` and `setDensity` drive it from your own control: a keyboard shortcut, a settings
 menu, a global preference applied to every table at once.
 
 ## Limitations
@@ -64,8 +64,8 @@ menu, a global preference applied to every table at once.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableDensityToggle`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableDensityToggle`,
   `initialState.density`, `state.density`, `estimateRowHeight`, `onDensityChange`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setDensity`, `toggleDensity`.
-- [Theme tokens](/react-tablekit/api/theme-tokens/) — the `--tk-cell-*` and `--tk-row-height`
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setDensity`, `toggleDensity`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/): the `--tk-cell-*` and `--tk-row-height`
   families.

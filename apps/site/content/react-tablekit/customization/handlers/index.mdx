@@ -1,6 +1,6 @@
 ---
 title: Handler middleware
-description: Wrap any interaction — observe it, change its input, or cancel it — without reimplementing what it does.
+description: Wrap any interaction to observe it, change its input or cancel it, without reimplementing what it does.
 archetype: capability
 capabilityId: handlers
 group: Customization
@@ -8,7 +8,7 @@ symbols: [DataTableProps, TableHandlers]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/react/handlers.ts
+  source: packages/react-tablekit/src/react/view.ts
 ---
 
 ## Basics
@@ -29,10 +29,10 @@ handlers={{
   // Observe, then proceed
   onSortToggle: (ctx, next) => { track('sort', ctx.column.id); next(); },
 
-  // Change the intent — always pin to the left, whichever side was chosen
+  // Change the intent: always pin to the left, whichever side was chosen
   onColumnPin: (ctx, next) => next({ position: 'left' }),
 
-  // Cancel — a row click navigates instead of selecting
+  // Cancel: a row click navigates instead of selecting
   onRowClick: ({ row }) => navigate('/people/' + row.id),
 }}
 ```
@@ -75,13 +75,13 @@ what lets a handler survive a redesign.
 
 - **Calling `next` twice runs the default twice.** The middleware does not deduplicate.
 - **A cancelled interaction leaves no trace.** If a reader needs to know why their click did
-  nothing, say so — the table will not.
+  nothing, say so; the table will not.
 - **A handler cannot invent an interaction.** It wraps the ones that exist; anything else is your
   own control calling the [instance](/react-tablekit/api/table-instance/).
 
 ## API
 
-- [Handlers](/react-tablekit/api/handlers/) — every handler, its context and its default.
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `handlers`, `onRowClick`,
+- [Handlers](/react-tablekit/api/handlers/): every handler, its context and its default.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `handlers`, `onRowClick`,
   `onStateChange`, `onQueryChange`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — what the defaults call.
+- [`TableInstance`](/react-tablekit/api/table-instance/): what the defaults call.

@@ -42,7 +42,7 @@ const { locale, localization } = usePeopleTableLocalization();
 ```
 
 Two things matter here. The object is memoized on the language, so switching locale rebuilds it
-and nothing else does. And `locale` is passed as well as `localization` — the strings and the
+and nothing else does. And `locale` is passed as well as `localization`: the strings and the
 number, date and sorting behaviour should agree.
 
 ## Plurals
@@ -59,7 +59,7 @@ A language with three plural forms is then i18next's problem, which is the right
 
 ## Only what you translate
 
-The object is merged over the defaults, so an incomplete catalogue is not an error — untranslated
+The object is merged over the defaults, so an incomplete catalogue is not an error; untranslated
 keys fall back to English. That makes incremental translation practical: ship the toolbar first
 and the column menu later.
 
@@ -70,7 +70,7 @@ is less work than discovering the keys by clicking.
 ## Right-to-left
 
 Pass `dir="rtl"` when the language needs it. The layout uses logical properties, so pinned sides
-and alignment flip on their own — but the direction itself has to be told to it.
+and alignment flip on their own, but the direction itself has to be told to it.
 
 ```tsx
 <DataTable dir={i18n.dir()} locale={i18n.language} localization={localization} />

@@ -6,7 +6,7 @@ const col = createColumnHelper<DemoPerson>();
 
 /**
  * Row pinning. A pinned row stays visible while the rows around it are sorted, filtered
- * and paged away — the comparison row you keep referring back to.
+ * and paged away: the comparison row you keep referring back to.
  */
 const columns = [
   col.display({

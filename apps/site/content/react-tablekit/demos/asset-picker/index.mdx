@@ -1,10 +1,11 @@
 ---
 title: Asset picker
-description: A table inside a dialog — single selection with radio semantics, row-click to choose, and a client-side dataset small enough to filter instantly.
+description: 'A table inside a dialog: single selection with radio semantics, row-click to choose, and a client-side dataset small enough to filter instantly.'
 archetype: editorial
 group: Demos
 symbols: [DataTableProps, TableInstance]
 plan: free
+wide: true
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
 ---
@@ -17,7 +18,7 @@ The other kind of table: not a screen, but a control inside a dialog whose job i
 value.
 
 - **Single selection.** `enableMultiRowSelection: false` turns the checkboxes into radios and
-  removes the header checkbox — there is no "select all" in a picker.
+  removes the header checkbox; there is no "select all" in a picker.
 - **The row is the target.** `selectOnRowClick` means the reader does not have to hit a 16-pixel
   radio, while the edit button inside the row still works because interactive descendants are
   excluded.
@@ -41,14 +42,14 @@ value.
 />
 ```
 
-The selection bar is off because the dialog's own footer holds the confirm and cancel buttons —
-two places to act on a selection is one too many.
+The selection bar is off because the dialog's own footer holds the confirm and cancel buttons,
+and two places to act on a selection is one too many.
 
 ## Related
 
-- [Row selection](/react-tablekit/row-selection/) — single, multiple and row-click selection.
-- [Density](/react-tablekit/density/) — why a dialog starts compact.
-- [Client and server](/react-tablekit/client-and-server/) — when loading everything is the right
+- [Row selection](/react-tablekit/row-selection/): single, multiple and row-click selection.
+- [Density](/react-tablekit/density/): why a dialog starts compact.
+- [Client and server](/react-tablekit/client-and-server/): when loading everything is the right
   call.
-- [Cell building blocks](/react-tablekit/customization/cell-building-blocks/) — the action button
+- [Cell building blocks](/react-tablekit/customization/cell-building-blocks/): the action button
   and truncated text used here.

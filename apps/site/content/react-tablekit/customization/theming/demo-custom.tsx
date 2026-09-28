@@ -15,8 +15,8 @@ const brand = createTheme(lightTheme, {
 /**
  * Three ways to change the look:
  *
- * - `theme` with `createTheme` — typed, and the same object works in every table;
- * - a CSS class that sets the `--tk-*` variables — no JavaScript involved;
+ * - `theme` with `createTheme`: typed, and the same object works in every table;
+ * - a CSS class that sets the `--tk-*` variables, with no JavaScript involved;
  * - `unstyled`, which drops the visual layer entirely and keeps the structure, so a
  *   utility framework or a design system can own every class.
  */

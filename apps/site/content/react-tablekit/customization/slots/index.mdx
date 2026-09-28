@@ -16,8 +16,8 @@ links:
 <Demo id="react-tablekit/customization/slots/demo-basics" label="Custom slot components" />
 
 A slot is a named piece of the table you can swap for a component of your own. There are 65 of
-them, from `Root` down to `SortIcon`, and each receives fully computed props — classes, ARIA
-attributes, event handlers, state:
+them, from `Root` down to `SortIcon`, and each receives fully computed props (classes, ARIA
+attributes, event handlers, state):
 
 ```tsx
 <DataTable
@@ -29,8 +29,8 @@ attributes, event handlers, state:
 />
 ```
 
-Those three are worth noticing: about six primitive slots — button, icon button, checkbox, select,
-text input, menu — are enough to make the whole table look like your design system, because
+Those three are worth noticing: about six primitive slots (button, icon button, checkbox, select,
+text input, menu) are enough to make the whole table look like your design system, because
 everything else is built from them.
 
 ### Spread the props
@@ -79,7 +79,7 @@ same slot names in camelCase and merge rather than replace:
 />
 ```
 
-Class names concatenate, styles shallow-merge and event handlers chain — yours first, and it can
+Class names concatenate, styles shallow-merge and event handlers chain. Yours runs first, and it can
 stop the table's with `event.preventTablekitDefault()`.
 
 ## Customization
@@ -101,7 +101,7 @@ structure](/react-tablekit/customization/structure/).
 
 ## API
 
-- [Slots](/react-tablekit/api/slots/) — every slot, its element and its props.
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `slots`, `slotProps`, `classNames`,
+- [TableSlots](/react-tablekit/api/slots/): every slot, its element and its props.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `slots`, `slotProps`, `classNames`,
   `styles`, `unstyled`.
-- [Hooks](/react-tablekit/api/hooks/) — `useTableSlots` for the defaults.
+- [Hooks](/react-tablekit/api/hooks/): `useTableSlots` for the defaults.

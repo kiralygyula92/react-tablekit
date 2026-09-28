@@ -41,7 +41,7 @@ The built-ins are `alphanumeric`, `alphanumericCaseSensitive`, `text`, `textCase
 directions, which is usually what people expect. `sortDescFirst` makes the first click
 descending, which suits money and dates, and `invertSorting` suits ranks where lower is better.
 
-When the value you sort by differs from the value you display — a formatted date, a chip label —
+When the value you sort by differs from the value you display (a formatted date, a chip label),
 give the column a `sortValue`.
 
 ### Sorting on the server
@@ -64,7 +64,7 @@ indicator alone is the common case:
 <DataTable slots={{ SortIcon: ({ direction }) => <MyChevron direction={direction} /> }} />
 ```
 
-To change what a click _does_ rather than how it looks, wrap the `onSortToggle` handler — it can
+To change what a click _does_ rather than how it looks, wrap the `onSortToggle` handler; it can
 observe the intent, change it, or cancel it by not calling `next`. See
 [Handler middleware](/react-tablekit/customization/handlers/).
 
@@ -74,7 +74,7 @@ observe the intent, change it, or cancel it by not calling `next`. See
   it was shift-clicked. To reorder, clear the sort and rebuild it, or set `state.sorting`
   yourself.
 - **Server mode sorts whatever the server returns.** If you enable client sorting alongside
-  server pagination, only the fetched page is ordered — the table warns about this in
+  server pagination, only the fetched page is ordered, and the table warns about this in
   development unless you pass `acknowledgePageLocalSorting`. See
   [Client and server](/react-tablekit/client-and-server/).
 - **Grouped rows sort within their group**, never across groups; the group order comes from the
@@ -82,9 +82,9 @@ observe the intent, change it, or cancel it by not calling `next`. See
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableSorting`, `enableMultiSort`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableSorting`, `enableMultiSort`,
   `enableSortingRemoval`, `sortingMode`, `onSortingChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `sortingFn`, `sortValue`, `sortDescFirst`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `sortingFn`, `sortValue`, `sortDescFirst`,
   `sortUndefined`, `invertSorting`, `sortServerKey`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setSorting`, `resetSorting`.
-- [Utilities](/react-tablekit/api/utilities/) — the `sortingFns` registry.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setSorting`, `resetSorting`.
+- [Utilities](/react-tablekit/api/utilities/): the `sortingFns` registry.

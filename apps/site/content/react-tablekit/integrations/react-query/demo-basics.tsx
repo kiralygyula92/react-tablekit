@@ -25,7 +25,7 @@ const api = createLocalDataSource(generatePeople(500), {
  * have already seen is instant, while the table keeps doing the debouncing, aborting and
  * race-handling it always does.
  *
- * The query itself is the cache key — it is a plain serializable object, which is what makes
+ * The query itself is the cache key: it is a plain serializable object, which is what makes
  * this work at all.
  */
 const dataSource = {

@@ -1,6 +1,6 @@
 ---
 title: Localization
-description: Every string the table can show, in one object — with number, date and currency formatting that follows the same locale.
+description: Every string the table can show, in one object, with number, date and currency formatting that follows the same locale.
 archetype: capability
 capabilityId: localization
 group: Developer tools
@@ -38,7 +38,7 @@ them:
 <DataTable localization={{ searchPlaceholder: 'Find a customer…' }} />
 ```
 
-That is also how you adjust wording for a domain — _records_ instead of _rows_ — without a
+That is also how you adjust wording for a domain (_records_ instead of _rows_) without a
 translation file.
 
 ### Values with a count
@@ -63,8 +63,8 @@ Every key is listed on [Localization keys](/react-tablekit/api/localization-keys
 English default, so a translation can be checked against a complete list rather than discovered
 by clicking around.
 
-`formatters` handles the values rather than the chrome — the row range, numbers, dates and
-currencies — and takes the same locale.
+`formatters` handles the values rather than the chrome (the row range, numbers, dates and
+currencies) and takes the same locale.
 
 Right-to-left needs `dir="rtl"`; the layout uses logical properties, so pinning sides and
 alignment flip on their own.
@@ -80,7 +80,7 @@ alignment flip on their own.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `locale`, `localization`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `locale`, `localization`,
   `formatters`, `dir`, `icons`.
-- [Localization keys](/react-tablekit/api/localization-keys/) — every key and its default.
-- [Icons](/react-tablekit/api/icons/) — the icon set, replaceable the same way.
+- [Localization keys](/react-tablekit/api/localization-keys/): every key and its default.
+- [Icons](/react-tablekit/api/icons/): the icon set, replaceable the same way.

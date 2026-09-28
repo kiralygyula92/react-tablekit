@@ -31,7 +31,7 @@ scrolls, which means it needs a bounded height:
 ### Both directions at once
 
 With [pinned columns](/react-tablekit/column-pinning/), a pinned header cell is stuck vertically
-_and_ horizontally — it stays in the corner while the table scrolls both ways. That is one
+_and_ horizontally: it stays in the corner while the table scrolls both ways. That is one
 position rule, not two features interfering.
 
 ### Pagination stays put
@@ -42,7 +42,7 @@ the last row and finding no way to reach page two is a bug this layout cannot ha
 ## Customization
 
 The header background is `--tk-header-bg` and the shadow that appears when content passes
-underneath is a [token](/react-tablekit/customization/tokens/) as well — so a sticky header can
+underneath is a [token](/react-tablekit/customization/tokens/) as well, so a sticky header can
 be flat, raised or bordered without touching the markup.
 
 Sticky headers and [virtualization](/react-tablekit/virtualization/) compose: the header is
@@ -59,6 +59,6 @@ outside the virtual window, so it does not move as rows are recycled.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableStickyHeader`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableStickyHeader`,
   `enableStickyFooter`, `maxHeight`, `minWidth`, `maxWidth`, `layout`, `bordered`.
-- [Theme tokens](/react-tablekit/api/theme-tokens/) — `--tk-header-bg`, `--tk-z-pinned-header`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/): `--tk-header-bg`, `--tk-z-pinned-header`.

@@ -1,6 +1,6 @@
 ---
 title: Column ordering
-description: Drag headers to reorder, or move them from the columns menu with the keyboard — with pinned groups and locked positions respected.
+description: Drag headers to reorder, or move them from the columns menu with the keyboard. Pinned groups and locked positions are respected.
 archetype: capability
 capabilityId: column-ordering
 group: Display & layout
@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, TableInstance, Column]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/columnOrdering.ts
+  source: packages/react-tablekit/src/core/createTable.ts
 ---
 
 ## Basics
@@ -19,7 +19,7 @@ links:
 events rather than HTML5 drag-and-drop, so it behaves the same with a mouse, a pen and a finger.
 
 The same order is editable from the columns menu, where each column has a drag handle and up and
-down buttons — which is how the feature works without a pointer at all. Every move is announced
+down buttons, which is how the feature works without a pointer at all. Every move is announced
 in the live region: _Moved Company name to position 3 of 8_.
 
 ### What stays put
@@ -45,7 +45,7 @@ makes a "reset layout" button a one-liner, and a saved layout a stored array.
 ## Customization
 
 Pair ordering with [column visibility](/react-tablekit/column-visibility/) and
-[sizing](/react-tablekit/column-sizing/), then persist all three — see
+[sizing](/react-tablekit/column-sizing/), then persist all three; see
 [Persistence](/react-tablekit/persistence/). Those three slices together are what people mean by
 "my table layout".
 
@@ -58,9 +58,9 @@ Pair ordering with [column visibility](/react-tablekit/column-visibility/) and
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnOrdering`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableColumnOrdering`,
   `onColumnOrderChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableOrdering`, `lockPosition`, `static`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnOrder`, `resetColumnOrder`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `enableOrdering`, `lockPosition`, `static`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setColumnOrder`, `resetColumnOrder`,
   `moveColumn`.
-- [`Column`](/react-tablekit/api/table-instance/) — `getIndex`, `getCanOrder`.
+- [`Column`](/react-tablekit/api/table-instance/): `getIndex`, `getCanOrder`.

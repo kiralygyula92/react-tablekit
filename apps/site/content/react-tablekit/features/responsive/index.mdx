@@ -28,7 +28,7 @@ click.
 />
 ```
 
-`cardColumns` chooses what a card shows — a card with nine fields is a table with extra steps.
+`cardColumns` chooses what a card shows; a card with nine fields is a table with extra steps.
 
 ### Scrolling instead
 
@@ -53,7 +53,7 @@ a wide screen and _MRR_ on a narrow one.
 
 ### Server rendering
 
-On the server there is no viewport, so the first render uses `ssrBreakpoint` — `lg` by default.
+On the server there is no viewport, so the first render uses `ssrBreakpoint`, which is `lg` by default.
 Pick the one your typical reader is on and the hydrated layout will match the rendered one
 instead of snapping into place.
 
@@ -74,9 +74,9 @@ disappear on mobile using the table's breakpoints rather than a second set of it
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `responsive` (`breakpoints`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `responsive` (`breakpoints`,
   `mobileBreakpoint`, `mobileLayout`, `cardColumns`, `renderCard`, `ssrBreakpoint`),
   `compactPagination`, `maxWidth`, `minWidth`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `headerShort`, `hideBelow`, `hideAbove`, `pin`.
-- [Hooks](/react-tablekit/api/hooks/) — `useBreakpoint`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `getBreakpoint`.
+- [`ColumnDef`](/react-tablekit/api/column-def/): `headerShort`, `hideBelow`, `hideAbove`, `pin`.
+- [Hooks](/react-tablekit/api/hooks/): `useBreakpoint`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `getBreakpoint`.

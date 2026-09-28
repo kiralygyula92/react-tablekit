@@ -18,15 +18,15 @@ links:
 `enableRowNumbers` inserts a narrow display column of ordinals. There are two ways to count, and
 the difference only shows up on page two:
 
-- `rowNumberMode: 'absolute'` (the default) numbers through the result set, so page two starts at 11. Use it when the number is a position — "the 47th slowest query".
+- `rowNumberMode: 'absolute'` (the default) numbers through the result set, so page two starts at 11. Use it when the number is a position: "the 47th slowest query".
 - `rowNumberMode: 'relative'` restarts at 1 on every page. Use it when the number is a label for
-  talking about what is on screen — "row 3, second from the left".
+  talking about what is on screen: "row 3, second from the left".
 
 ### What the number is not
 
 It is a position, not an identity. Sorting changes it, filtering changes it, and the same record
-has a different number tomorrow. For anything a person might quote back to you — a ticket
-reference, an order id — use a real column.
+has a different number tomorrow. For anything a person might quote back to you (a ticket
+reference, an order id), use a real column.
 
 ## Customization
 
@@ -35,19 +35,19 @@ decide where it sits relative to the selection and expand columns. Its width and
 from the same [tokens](/react-tablekit/customization/tokens/) as the rest, and its header label
 comes from [localization](/react-tablekit/localization/).
 
-If you want something the built-in column does not do — a rank that survives sorting, say — a
+If you want something the built-in column does not do (a rank that survives sorting, say), a
 display column with your own `cell` is a few lines and gives you full control.
 
 ## Limitations
 
-- **Absolute numbering needs a page size and index**, so in cursor mode — where there is no page
-  number — it counts from the start of the loaded rows.
+- **Absolute numbering needs a page size and index**, so in cursor mode, where there is no page
+  number, it counts from the start of the loaded rows.
 - **The column is excluded from CSV export**, as every display column is. Export the value it
   derives from instead.
 - **It is not a rank.** Two rows with the same value get consecutive numbers, not a shared one.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowNumbers`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableRowNumbers`,
   `rowNumberMode`, `positionSelectionColumn`, `positionExpandColumn`, `displayColumnDefs`.
-- [Localization keys](/react-tablekit/api/localization-keys/) — the header label.
+- [Localization keys](/react-tablekit/api/localization-keys/): the header label.

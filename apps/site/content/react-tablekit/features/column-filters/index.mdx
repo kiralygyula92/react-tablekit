@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, TableInstance, filterFns]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/columnFilters.ts
+  source: packages/react-tablekit/src/core/fns/filterFns.ts
 ---
 
 ## Basics
@@ -35,7 +35,7 @@ glance.
 | `'panel'`   | A collapsible grid of controls under the toolbar. The default. |
 | `'popover'` | The same grid, anchored to the Filters button.                 |
 | `'row'`     | A second header row with one input per column.                 |
-| `'none'`    | No built-in UI — drive `state.columnFilters` yourself.         |
+| `'none'`    | No built-in UI; drive `state.columnFilters` yourself.          |
 
 <Demo
   id="react-tablekit/features/column-filters/demo-popover-mode"
@@ -68,7 +68,7 @@ col.accessor('price', { type: 'number', filterVariant: 'rangeSlider' });
 
 Filters serialize into the `filters` array of the `TableQuery`, using `filterServerKey` when your
 API names a field differently. Option lists come from `dataSource.fetchFacets` instead of the
-loaded rows — see [Faceting](/react-tablekit/faceting/).
+loaded rows; see [Faceting](/react-tablekit/faceting/).
 
 ## Customization
 
@@ -86,8 +86,8 @@ and `<DataTable.FilterPanel />` places the panel anywhere on the page.
 
 ## Limitations
 
-- **A column has one active filter at a time.** Two conditions on the same column — "after March
-  and before June" — belong in a `range` or `dateRange` variant, or in a custom `filterFn`.
+- **A column has one active filter at a time.** Two conditions on the same column ("after March
+  and before June") belong in a `range` or `dateRange` variant, or in a custom `filterFn`.
 - **Filters combine with AND.** There is no OR builder across columns; express that on the
   server, or with a single custom filter over a computed column.
 - **`'row'` mode has no operator dropdown.** It is one input per column by design; use `'panel'`
@@ -95,11 +95,11 @@ and `<DataTable.FilterPanel />` places the panel anywhere on the page.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnFilters`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableColumnFilters`,
   `enableFilters`, `filterDisplayMode`, `filterApplyMode`, `filterDebounceMs`, `filterMode`,
   `filterFns`, `showActiveFilterChips`, `datePresets`, `onColumnFiltersChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableColumnFilter`, `filterVariant`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `enableColumnFilter`, `filterVariant`,
   `filterFn`, `filterOperators`, `filterOptions`, `filterPlaceholder`, `filterServerKey`,
   `renderFilter`, `multiSelectDisplay`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnFilters`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setColumnFilters`,
   `resetColumnFilters`, `clearAllFilters`, `getActiveFilterCount`.

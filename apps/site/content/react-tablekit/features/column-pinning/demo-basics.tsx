@@ -12,7 +12,7 @@ const money = new Intl.NumberFormat('en-US', {
 
 /**
  * `pin` on a column is the declarative form; `lockPin` stops the user changing it from the
- * column menu. A pin may also be responsive — here the name stays pinned only from `md` up,
+ * column menu. A pin may also be responsive: here the name stays pinned only from `md` up,
  * because on a phone a pinned column would eat most of the screen.
  */
 const columns = [

@@ -13,7 +13,7 @@ links:
 
 Cell values are rendered as React children, so they are escaped. A value containing `<script>`
 appears as text. The table never sets `dangerouslySetInnerHTML`, and neither should a cell
-renderer unless you have sanitized the value yourself — at which point the risk is yours, not the
+renderer unless you have sanitized the value yourself, at which point the risk is yours, not the
 table's.
 
 The same applies to `format`: it returns a string that React escapes.
@@ -38,7 +38,7 @@ good place to enforce the whitelist.
 ## Export leaves your application
 
 CSV is opened in spreadsheets, and spreadsheets execute formulas. A value beginning with `=`,
-`+`, `-` or `@` can become a formula in Excel — CSV injection — and a formula such as
+`+`, `-` or `@` can become a formula in Excel (CSV injection), and a formula such as
 `=HYPERLINK(...)` is enough to send the reader somewhere else. Correct CSV is not the same as
 safe-to-open-in-Excel.
 
@@ -61,7 +61,7 @@ server-side.
 is a secret store:
 
 - A **URL** is shared, logged by proxies and stored in history. Do not sync a filter value that is
-  itself sensitive — a national id being searched for, for instance.
+  itself sensitive: a national id being searched for, for instance.
 - **Storage** persists after logout on a shared machine. Keep layout preferences there and nothing
   else, and clear the key on sign-out if the layout itself is sensitive.
 

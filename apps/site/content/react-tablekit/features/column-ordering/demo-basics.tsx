@@ -26,7 +26,7 @@ const columns = [
 /**
  * Ordering and visibility. Drag a header to move a column, or use the Columns button
  * to show and hide them. Both are personal preferences rather than something you would share
- * in a link, so they persist to `localStorage` instead of the URL — reload and the layout you
+ * in a link, so they persist to `localStorage` instead of the URL. Reload and the layout you
  * arranged is still there.
  */
 export default function ColumnOrderingVisibilityExample() {

@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, TableInstance, Column]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/columnPinning.ts
+  source: packages/react-tablekit/src/core/createTable.ts
 ---
 
 ## Basics
@@ -28,7 +28,7 @@ column sits exactly after the first however wide it is.
 
 ### The edge shadow
 
-The shadow at the boundary is not decoration that is always there — it appears only when content
+The shadow at the boundary is not decoration that is always there: it appears only when content
 is actually scrolled underneath, which is what makes it mean something. It is the
 `--tk-pinned-shadow` [token](/react-tablekit/customization/tokens/), and the classic preset sets
 it to `none`.
@@ -42,7 +42,7 @@ there is not:
 col.display({ id: 'actions', pin: { base: false, md: 'right' } });
 ```
 
-`stickyActions` is the shorthand for the common case — an actions column pinned right on desktop.
+`stickyActions` is the shorthand for the common case: an actions column pinned right on desktop.
 
 ### Columns a reader may not move
 
@@ -53,7 +53,7 @@ only the pinning.
 ## Customization
 
 Pinned cells take their background from `--tk-row-bg`, which follows hover, striping and
-selection — so a selected row stays selected across the frozen edge. In right-to-left text the
+selection, so a selected row stays selected across the frozen edge. In right-to-left text the
 sides swap, because the layout uses logical properties rather than left and right.
 
 ## Limitations
@@ -67,10 +67,10 @@ sides swap, because the layout uses logical properties rather than left and righ
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnPinning`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableColumnPinning`,
   `stickyActions`, `rowActionsColumn`, `positionActionsColumn`, `onColumnPinningChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `pin`, `lockPin`, `static`, `lockPosition`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnPinning`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `pin`, `lockPin`, `static`, `lockPosition`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setColumnPinning`,
   `resetColumnPinning`, `getEffectiveColumnPinning`, `getLeftHeaderGroups`,
   `getRightHeaderGroups`.
-- [`Column`](/react-tablekit/api/table-instance/) — `pin`, `getIsPinned`, `getCanPin`.
+- [`Column`](/react-tablekit/api/table-instance/): `pin`, `getIsPinned`, `getCanPin`.

@@ -49,11 +49,11 @@ const readingsDataSource: DataSource<Reading> = createRestDataSource<
 
 /**
  * A deliberately wide table: 18 columns inside a horizontal scroll, sorted on the server, with
- * pinned right actions whose disabled states follow the row — "Resend" needs a report id and
+ * pinned right actions whose disabled states follow the row: "Resend" needs a report id and
  * "View report" needs a URL, and plenty of rows have neither.
  */
 export default function ShowcaseReadings() {
-  const { theme, toggle } = useShowcaseTheme();
+  const { theme, colorScheme, toggle } = useShowcaseTheme();
   const [message, setMessage] = useState<string | null>(null);
   const meta: ReadingsMeta = {
     onResend: (r) => setMessage(`Resending the report of ${r.date}…`),
@@ -67,6 +67,7 @@ export default function ShowcaseReadings() {
     sortingMode: 'server',
     initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
     theme,
+    colorScheme,
     meta,
     toolbar: false,
     enableGlobalFilter: false,
@@ -80,7 +81,7 @@ export default function ShowcaseReadings() {
       {toggle}
       <DataTable.Root table={table}>
         <header className="showcase-header">
-          <h3 className="showcase-title">Reading history</h3>
+          <h2 className="showcase-title">Reading history</h2>
         </header>
         <div className="showcase-content">
           <DataTable.Container />

@@ -8,7 +8,7 @@ symbols: [DataTableProps, TableInstance, Row, SelectionQuery]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/rowSelection.ts
+  source: packages/react-tablekit/src/core/createTable.ts
 ---
 
 ## Basics
@@ -16,12 +16,12 @@ links:
 <Demo id="react-tablekit/features/row-selection/demo-basics" label="Row selection" />
 
 `enableRowSelection` inserts a selection column and a selection bar. The header checkbox is
-tri-state — all, some, none — and shift-clicking a second row selects the range between them.
+tri-state (all, some, none), and shift-clicking a second row selects the range between them.
 
 Set `enableMultiRowSelection: false` for picker semantics: radios instead of checkboxes, no
 header checkbox, one row at a time. `selectOnRowClick` makes the whole row the target, and it
 still ignores clicks that land on a button, a link, an input, or anything marked
-`data-tk-stop` — so the row menu keeps working.
+`data-tk-stop`, so the row menu keeps working.
 
 ### Which rows may be selected
 
@@ -53,14 +53,14 @@ renderBulkActions={({ selectedRows, selectionQuery }) => (
 
 "Select all 235 matching" cannot mean 235 ids when the browser holds ten rows. It is recorded as
 the current query plus the rows the reader has since _deselected_, and `getSelectionQuery()`
-hands that to you — so a bulk action applies to the filter, not to a page. `selectAllMode`
+hands that to you, so a bulk action applies to the filter, not to a page. `selectAllMode`
 chooses between the page and the whole result set.
 
 ## Customization
 
 The checkbox, the selection column and the selection bar are [slots](/react-tablekit/customization/slots/).
 `positionSelectionColumn` moves the column, and `<DataTable.SelectionBar />` renders the bar
-outside the table — at the bottom of a dialog, for instance.
+outside the table, at the bottom of a dialog, for instance.
 
 Selected rows carry `aria-selected` and `data-selected`, and their background is the
 `--tk-row-selected-bg` [token](/react-tablekit/customization/tokens/); pinned cells inherit it,
@@ -77,12 +77,12 @@ so a selected row looks selected all the way across.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableRowSelection`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableRowSelection`,
   `enableMultiRowSelection`, `enableSubRowSelection`, `enableRangeSelection`, `selectOnRowClick`,
   `selectAllMode`, `showSelectionBar`, `renderBulkActions`, `getRowCanSelect`, `isRowDisabled`,
   `positionSelectionColumn`, `clearSelectionOnQueryChange`, `autoResetSelection`,
   `onRowSelectionChange`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setRowSelection`, `resetRowSelection`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setRowSelection`, `resetRowSelection`,
   `toggleAllRowsSelected`, `toggleAllPageRowsSelected`, `selectAllMatching`, `selectRange`,
   `getSelectedRowModel`, `getSelectedRowIds`, `getSelectedCount`, `getSelectionQuery`.
-- [`Row`](/react-tablekit/api/table-instance/) — `toggleSelected`, `getIsSelected`, `getCanSelect`.
+- [`Row`](/react-tablekit/api/table-instance/): `toggleSelected`, `getIsSelected`, `getCanSelect`.

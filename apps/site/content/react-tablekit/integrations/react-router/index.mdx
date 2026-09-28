@@ -37,7 +37,7 @@ reproduces it, and a loader can read it.
 
 ### Replace, not push
 
-Use `replace: true` for anything that changes while the reader types or clicks around — search,
+Use `replace: true` for anything that changes while the reader types or clicks around: search,
 filters, sorting. Otherwise the back button walks through every keystroke's worth of history.
 Pushing is reasonable for page changes, where going back to the previous page is what a reader
 expects.
@@ -61,7 +61,7 @@ Pair that with `dataMode="server"` and the table renders what the loader returne
 ### What belongs in storage instead
 
 Visible columns, their order, their widths and the density are the reader's own preferences, not
-part of the address. Keep those in `syncState.storage` so links stay short and shareable — see
+part of the address. Keep those in `syncState.storage` so links stay short and shareable; see
 [Persistence](/react-tablekit/persistence/).
 
 ## Limitations
@@ -71,7 +71,7 @@ part of the address. Keep those in `syncState.storage` so links stay short and s
 - **Loaders run before hydration**, so a table whose state is loader-driven should receive
   `initialState` from the loader rather than discovering it after mount.
 - **Router APIs differ between major versions.** `useRouterSync` takes the params and a setter, so
-  it works with anything that has those two — but you supply the adapter.
+  it works with anything that has those two, but you supply the adapter.
 
 ## Related
 

@@ -21,8 +21,8 @@ pnpm install
 pnpm dev     # the site at http://localhost:5173, against the library source
 ```
 
-`pnpm dev` generates what it needs first — the API reference from the library's TSDoc, the
-content index, the machine surface and the redirect table — so a fresh checkout needs no setup
+`pnpm dev` generates what it needs first (the API reference from the library's TSDoc, the
+content index, the machine surface and the redirect table), so a fresh checkout needs no setup
 step. Editing a page under `apps/site/content/` hot-reloads; adding, renaming or deleting one
 changes the route table, so restart the server.
 
@@ -35,7 +35,7 @@ pnpm verify                     # every gate, in the order CI runs them
 
 Playwright needs its browser once: `pnpm --filter site exec playwright install chromium`.
 
-To look at exactly what deploys — prerendered HTML, the Markdown twins, `llms.txt` — build and
+To look at exactly what deploys (prerendered HTML, the Markdown twins, `llms.txt`), build and
 serve it:
 
 ```sh
@@ -48,7 +48,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
 ## Deploying the site
 
 The site is a static build plus one edge function (`apps/site/api/og.tsx`, the social preview
-images), configured entirely by `apps/site/vercel.json` — build command, output directory,
+images), configured entirely by `apps/site/vercel.json`: build command, output directory,
 trailing-slash canonicalisation, cache headers and the permanent redirects generated from
 `apps/site/content/react-tablekit/migration/url-map.csv`.
 
@@ -62,7 +62,7 @@ pnpm run build
 
 run in `apps/site`. pnpm finds the workspace root two levels up and installs all of it; the site
 aliases the library to its source and generates its own reference data, so nothing has to run
-first — in particular, the library's own `dist/` is never built or read. It produces
+first. In particular, the library's own `dist/` is never built or read. It produces
 `apps/site/dist`: an HTML document per route with its metadata in `<head>`, the Markdown twin of
 every page, `llms.txt`, `llms-full.md` / `llms-full.txt`, `sitemap.xml`, `robots.txt` and
 `changelog.xml`.
@@ -75,7 +75,7 @@ place.
 **Analytics.** Vercel Web Analytics and Speed Insights are injected only in builds made on Vercel
 (`VERCEL=1`); anywhere else both packages are compiled out, because their scripts exist only on a
 Vercel deployment. Each product must be enabled in the project's Analytics tab, and enabling one
-takes effect on the **next** deployment — the route is written into a deployment when it is built.
+takes effect on the **next** deployment, because the route is written into a deployment when it is built.
 If `/_vercel/insights/script.js` answers 404 with `text/html`, redeploy.
 
 ```sh
@@ -88,4 +88,4 @@ changes how the site builds, run `pnpm run build` in `apps/site` of a fresh clon
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

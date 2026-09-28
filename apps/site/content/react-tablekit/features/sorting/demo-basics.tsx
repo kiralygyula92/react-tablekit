@@ -39,7 +39,7 @@ const columns = [
 
 /**
  * Client sorting. Click a header to sort, click again to reverse, and a third time to
- * clear it. Hold Shift and click to add a second and third column — the badge on each header
+ * clear it. Hold Shift and click to add a second and third column; the badge on each header
  * shows its priority, and the whole thing is one comparison chain.
  */
 export default function ClientSortingExample() {

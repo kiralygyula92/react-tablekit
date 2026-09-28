@@ -8,7 +8,7 @@ const data = generatePeople(60);
 /**
  * Handler middleware: every interaction runs through an overridable handler that receives
  * the intent and a `next` to run the default. You can observe it, change it, or cancel it by not
- * calling `next` — here sorting is logged, paging past page 3 is blocked, and a search shorter
+ * calling `next`. Here sorting is logged, paging past page 3 is blocked, and a search shorter
  * than two characters is rewritten to an empty one.
  */
 export default function HandlersMiddlewareExample() {

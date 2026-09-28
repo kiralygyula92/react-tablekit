@@ -26,7 +26,7 @@ export default function UrlSyncExample() {
   return (
     <div className="example-stack">
       <p className="site-muted">
-        Sort, search, filter or page, then reload — the view comes back. Current URL state:{' '}
+        Sort, search, filter or page, then reload: the view comes back. Current URL state:{' '}
         <code>{url}</code>
       </p>
       <DataTable<DemoPerson>

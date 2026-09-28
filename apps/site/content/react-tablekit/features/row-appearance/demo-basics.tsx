@@ -6,7 +6,7 @@ const data = generatePeople(40);
 
 /**
  * Row appearance. Striping and hover are table-wide switches; `getRowClassName` and
- * `getRowStyle` decorate individual rows from their data — here, suspended people are dimmed and
+ * `getRowStyle` decorate individual rows from their data. Here, suspended people are dimmed and
  * remote workers carry an accent border.
  */
 export default function RowAppearanceExample() {

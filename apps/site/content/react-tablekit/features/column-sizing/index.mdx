@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, TableInstance, Column]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/columnSizing.ts
+  source: packages/react-tablekit/src/core/createTable.ts
 ---
 
 ## Basics
@@ -24,7 +24,7 @@ pixels, and they are applied through a `colgroup` so the header and the body alw
 col.accessor('name', { width: '30%', minWidth: 160 });
 ```
 
-With `enableColumnResizing`, the table switches to pixels — `size`, `minSize`, `maxSize` — and
+With `enableColumnResizing`, the table switches to pixels (`size`, `minSize`, `maxSize`) and
 converts any percentage on first measurement. A dragged column needs a number to drag from.
 
 ### The resize handle
@@ -39,7 +39,7 @@ the width when you let go, which is the calmer choice for a table with expensive
 ### Letting a column take the slack
 
 `grow` distributes leftover width. `truncate` and `noWrap` decide what a narrow column does with
-text that does not fit — clip with a tooltip, or refuse to wrap.
+text that does not fit: clip with a tooltip, or refuse to wrap.
 
 ### Remembering the widths
 
@@ -64,11 +64,11 @@ measurement the double-click uses, so a toolbar button can offer "fit to content
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnResizing`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableColumnResizing`,
   `columnResizeMode`, `columnResizeDirection`, `tableLayout`, `minWidth`, `maxWidth`,
   `onColumnSizingChange`, `onColumnSizingInfoChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `width`, `minWidth`, `maxWidth`, `size`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `width`, `minWidth`, `maxWidth`, `size`,
   `minSize`, `maxSize`, `grow`, `enableResizing`, `truncate`, `noWrap`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setColumnSizing`, `resetColumnSizing`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setColumnSizing`, `resetColumnSizing`,
   `autosizeColumn`, `autosizeAllColumns`, `getTotalSize`.
-- [`Column`](/react-tablekit/api/table-instance/) — `getSize`, `resetSize`, `getIsResizing`.
+- [`Column`](/react-tablekit/api/table-instance/): `getSize`, `resetSize`, `getIsResizing`.

@@ -8,7 +8,7 @@ symbols: [TableTheme, toCssVars]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/styles/base
+  source: packages/react-tablekit/src/styles/tokens.css
 ---
 
 ## Basics
@@ -30,15 +30,15 @@ follows.
 
 ### The families
 
-- **Colour** — `--tk-color-*` for the palette, plus the semantic pairs the rows use:
+- **Colour**: `--tk-color-*` for the palette, plus the semantic pairs the rows use:
   `--tk-row-bg`, `--tk-row-hover-bg`, `--tk-row-selected-bg`, `--tk-row-stripe-bg`,
   `--tk-header-bg`.
-- **Spacing** — `--tk-cell-py` and `--tk-cell-px` and their header counterparts. These are what
+- **Spacing**: `--tk-cell-py` and `--tk-cell-px` and their header counterparts. These are what
   [density](/react-tablekit/density/) switches between.
-- **Typography** — `--tk-font-family`, `--tk-font-size`, `--tk-font-weight-header`.
-- **Border and radius** — `--tk-border-color`, `--tk-border-width`, `--tk-radius-container`.
-- **Elevation** — `--tk-pinned-shadow`, `--tk-overlay-bg`, `--tk-focus-ring`.
-- **Layering** — `--tk-z-pinned`, `--tk-z-pinned-header`, `--tk-z-overlay`, for when the table
+- **Typography**: `--tk-font-family`, `--tk-font-size`, `--tk-font-weight-header`.
+- **Border and radius**: `--tk-border-color`, `--tk-border-width`, `--tk-radius-container`.
+- **Elevation**: `--tk-pinned-shadow`, `--tk-overlay-bg`, `--tk-focus-ring`.
+- **Layering**: `--tk-z-pinned`, `--tk-z-pinned-header`, `--tk-z-overlay`, for when the table
   sits inside your own stacking context.
 
 The generated list with every value per preset is on [Theme
@@ -70,8 +70,8 @@ editor](/react-tablekit/demos/theme-editor/) is the fastest way to find the toke
 
 ## Limitations
 
-- **A token is a value, not a rule.** There is no token for "hide the border on the last row" —
-  that is CSS you write.
+- **A token is a value, not a rule.** There is no token for "hide the border on the last row".
+  That is CSS you write.
 - **Custom properties do not animate like colours** unless registered with `@property`; a
   transition between two token values may step rather than blend.
 - **Renaming tokens is a breaking change**, so they follow the same
@@ -79,6 +79,6 @@ editor](/react-tablekit/demos/theme-editor/) is the fastest way to find the toke
 
 ## API
 
-- [Theme tokens](/react-tablekit/api/theme-tokens/) — the complete generated catalogue.
-- [Utilities](/react-tablekit/api/utilities/) — `createTheme`, `toCssVars`.
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `theme`, `darkTheme`, `unstyled`.
+- [Theme tokens](/react-tablekit/api/theme-tokens/): the complete generated catalogue.
+- [Utilities](/react-tablekit/api/utilities/): `createTheme`, `toCssVars`.
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `theme`, `darkTheme`, `unstyled`.

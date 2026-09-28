@@ -8,15 +8,15 @@ symbols: [DataTableProps, ColumnDef, TableInstance]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/grouping.ts
+  source: packages/react-tablekit/src/core/fns/aggregationFns.ts
 ---
 
 ## Basics
 
 <Demo id="react-tablekit/features/column-footers/demo-basics" label="Column footers" />
 
-`enableColumnFooters` renders a `tfoot`. Each column fills its cell either with an aggregate —
-the same `aggregationFn` [grouping](/react-tablekit/grouping/) uses — or with whatever `footer`
+`enableColumnFooters` renders a `tfoot`. Each column fills its cell either with an aggregate
+(the same `aggregationFn` [grouping](/react-tablekit/grouping/) uses) or with whatever `footer`
 returns.
 
 ```tsx
@@ -29,7 +29,7 @@ col.accessor('name', {
 ### Which rows count
 
 `footerAggregationScope` is the whole question a total has to answer. `'filtered'` sums
-everything the filters left, across pages — the number a reader usually means. `'page'` sums what
+everything the filters left, across pages, the number a reader usually means. `'page'` sums what
 is on screen, which is what you want when the footer is a per-page subtotal.
 
 Filter the demo above and watch the total move: the count follows the filters, not the page.
@@ -42,7 +42,7 @@ footer](/react-tablekit/sticky-header-and-footer/).
 
 ## Customization
 
-A footer cell is a normal renderer, so it can hold anything — a formatted currency, a small bar,
+A footer cell is a normal renderer, so it can hold anything: a formatted currency, a small bar,
 a link to a report. `formatters` keeps number and date formatting consistent between the body and
 the footer without repeating an `Intl` instance in every column.
 
@@ -56,8 +56,8 @@ the footer without repeating an `Intl` instance in every column.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableColumnFooters`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableColumnFooters`,
   `footerAggregationScope`, `enableStickyFooter`, `aggregationFns`, `formatters`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `footer`, `aggregationFn`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `getFooterGroups`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `footer`, `aggregationFn`.
+- [`TableInstance`](/react-tablekit/api/table-instance/): `getFooterGroups`,
   `getFilteredRowModel`, `getPrePaginationRowModel`.

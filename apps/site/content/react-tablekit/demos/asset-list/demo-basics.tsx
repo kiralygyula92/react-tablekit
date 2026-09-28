@@ -9,10 +9,10 @@ import { assetLabel, assetListColumns, type AssetListMeta } from './basics-colum
 /**
  * The same server-mode account search, with a chip list in the widest column: at most three
  * assets are shown and the rest collapse into a `+N` chip. Each chip is a button, which is the
- * point — a cell can hold interactive content without the row swallowing the click.
+ * point: a cell can hold interactive content without the row swallowing the click.
  */
 export default function ShowcaseAssetList() {
-  const { theme, toggle } = useShowcaseTheme();
+  const { theme, colorScheme, toggle } = useShowcaseTheme();
   const [inspecting, setInspecting] = useState<Account | null>(null);
   const [selected, setSelected] = useState<Asset | null>(null);
   const meta: AssetListMeta = { onInspect: setInspecting, onSelectAsset: setSelected };
@@ -27,6 +27,7 @@ export default function ShowcaseAssetList() {
     searchHotkey: 'mod+k',
     initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
     theme,
+    colorScheme,
     meta,
     toolbar: false,
     'aria-label': 'asset list table',
@@ -42,7 +43,7 @@ export default function ShowcaseAssetList() {
       {toggle}
       <DataTable.Root table={table}>
         <header className="showcase-header">
-          <h3 className="showcase-title">Assets by account</h3>
+          <h2 className="showcase-title">Assets by account</h2>
           <DataTable.Search />
         </header>
         <div className="showcase-content">

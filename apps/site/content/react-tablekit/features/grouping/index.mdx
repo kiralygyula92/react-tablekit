@@ -8,7 +8,7 @@ symbols: [DataTableProps, ColumnDef, TableInstance, Column]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/grouping.ts
+  source: packages/react-tablekit/src/core/rowModels.ts
 ---
 
 ## Basics
@@ -17,7 +17,7 @@ links:
 
 `enableGrouping` lets a column collapse its rows into groups. A group row shows the value, the
 number of rows under it and a toggle; the other columns show whatever their `aggregationFn`
-computes — a sum for an amount, an average for a rating, a count for anything.
+computes: a sum for an amount, an average for a rating, a count for anything.
 
 ```tsx
 col.accessor('country', { enableGrouping: true });
@@ -33,8 +33,8 @@ the group rows nest.
 the front, `'remove'` hides it because the group row already says it, and `false` leaves it where
 it is.
 
-A reader can group from the column menu, and — when [column
-ordering](/react-tablekit/column-ordering/) is on — by dragging a header into the toolbar drop
+A reader can group from the column menu, and, when [column
+ordering](/react-tablekit/column-ordering/) is on, by dragging a header into the toolbar drop
 zone.
 
 ### Aggregating a custom value
@@ -52,7 +52,7 @@ col.accessor('status', {
 ### Footers
 
 `enableColumnFooters` renders a `tfoot` with the same aggregates across the whole table.
-`footerAggregationScope` chooses between the current page and everything the filters left — see
+`footerAggregationScope` chooses between the current page and everything the filters left; see
 [Column footers](/react-tablekit/column-footers/).
 
 ### Grouping on the server
@@ -63,7 +63,7 @@ arrive. It does not re-group anything locally.
 ## Customization
 
 `groupedCell` replaces the group row's leading cell, `getGroupingValue` changes what a row groups
-_by_ without changing what it displays — bucketing dates by month, for instance — and the group
+_by_ without changing what it displays (bucketing dates by month, for instance), and the group
 toggle is a [slot](/react-tablekit/customization/slots/).
 
 ## Limitations
@@ -77,12 +77,12 @@ toggle is a [slot](/react-tablekit/customization/slots/).
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enableGrouping`, `groupingMode`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enableGrouping`, `groupingMode`,
   `manualGrouping`, `groupedColumnMode`, `aggregationFns`, `enableColumnFooters`,
   `footerAggregationScope`, `onGroupingChange`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `enableGrouping`, `aggregationFn`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `enableGrouping`, `aggregationFn`,
   `aggregatedCell`, `groupedCell`, `getGroupingValue`, `footer`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setGrouping`, `resetGrouping`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setGrouping`, `resetGrouping`,
   `getGroupedRowModel`, `getFooterGroups`.
-- [`Column`](/react-tablekit/api/table-instance/) — `toggleGrouping`, `getIsGrouped`,
+- [`Column`](/react-tablekit/api/table-instance/): `toggleGrouping`, `getIsGrouped`,
   `getAggregationFn`.

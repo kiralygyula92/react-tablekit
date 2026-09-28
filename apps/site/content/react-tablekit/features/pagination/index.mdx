@@ -1,6 +1,6 @@
 ---
 title: Pagination
-description: Six presentations of the same state — numbered, compact, simple, load-more, infinite or none — including cursor-based paging.
+description: Six presentations of the same state (numbered, compact, simple, load-more, infinite or none), including cursor-based paging.
 archetype: capability
 capabilityId: pagination
 group: Core features
@@ -8,14 +8,14 @@ symbols: [DataTableProps, TableInstance, getPageItems]
 plan: free
 links:
   issues: https://github.com/kiralygyula92/react-tablekit/issues
-  source: packages/react-tablekit/src/core/features/pagination.ts
+  source: packages/react-tablekit/src/react/parts/Pagination.tsx
 ---
 
 ## Basics
 
 <Demo id="react-tablekit/features/pagination/demo-basics" label="Pagination variants" />
 
-Pagination is one piece of state — page index and page size — and several ways to show it.
+Pagination is one piece of state (page index and page size) and several ways to show it.
 `paginationType` picks the presentation:
 
 | Variant    | Shape                                                                      |
@@ -28,13 +28,13 @@ Pagination is one piece of state — page index and page size — and several wa
 | `none`     | No control; the state still applies.                                       |
 
 The variant accepts a responsive value, so the classic default is literally
-`{ base: 'compact', md: 'numbered' }` — small screens get icons, wide screens get page numbers.
+`{ base: 'compact', md: 'numbered' }`: small screens get icons, wide screens get page numbers.
 
 ### Rows per page
 
 `pageSizeOptions` fills the "Rows per page" select. Changing the size keeps the first visible row
 on screen rather than throwing the reader back to page 1. `showRowRange` prints the range and
-total, and when the total is unknown — a server that does not count — it says `11–20 of many`
+total, and when the total is unknown (a server that does not count) it says `11–20 of many`
 instead of inventing a number.
 
 ### Which page buttons appear
@@ -62,7 +62,7 @@ accumulated rows still render a screenful at a time.
 
 ## Customization
 
-The whole control is a slot, and `<DataTable.Pagination />` places it anywhere — above the table,
+The whole control is a slot, and `<DataTable.Pagination />` places it anywhere: above the table,
 in a sticky page footer, beside a summary. `formatters.rowRange` rewrites the range text, and
 every label comes from [localization](/react-tablekit/localization/).
 
@@ -80,11 +80,11 @@ disappears and the container takes its bottom border back.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `enablePagination`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `enablePagination`,
   `paginationType`, `paginationMode`, `pagination`, `pageCount`, `rowCount`, `manualPagination`,
   `appendPages`, `resetPageOn`, `autoResetPageIndex`, `scrollToTopOnPageChange`,
   `disablePaginationWhileFetching`, `compactPagination`, `onPaginationChange`.
-- [`TableInstance`](/react-tablekit/api/table-instance/) — `setPageIndex`, `setPageSize`,
+- [`TableInstance`](/react-tablekit/api/table-instance/): `setPageIndex`, `setPageSize`,
   `nextPage`, `previousPage`, `firstPage`, `lastPage`, `getPageCount`, `getPageItems`,
   `getCursors`.
-- [Utilities](/react-tablekit/api/utilities/) — `getPageItems`.
+- [Utilities](/react-tablekit/api/utilities/): `getPageItems`.

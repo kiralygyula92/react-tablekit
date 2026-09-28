@@ -70,7 +70,7 @@ The row model is memoized per stage, so changing the page does not re-sort and c
 does not re-filter. Feature modules are tree-shakeable: a table that never groups does not ship
 the grouping code.
 
-The published bundle is measured on every build with hard limits — around 58 kB min+gzip for
+The published bundle is measured on every build with hard limits: around 58 kB min+gzip for
 `import { DataTable }`, about 61.5 kB for the full import, 21 kB for the headless core and under
 10 kB for the stylesheet. Those are regression guards: they fail the build when a change makes the
 library bigger, rather than being aspirations in a document.

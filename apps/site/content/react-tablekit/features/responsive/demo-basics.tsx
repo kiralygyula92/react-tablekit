@@ -6,7 +6,7 @@ const data = generatePeople(40);
 
 /**
  * The cards layout: below the mobile breakpoint each row renders as a card with
- * label/value pairs instead of a horizontally scrolling table — semantically a list of articles.
+ * label/value pairs instead of a horizontally scrolling table; semantically a list of articles.
  * Narrow the preview (or your window) below 960px to see it switch.
  */
 export default function ResponsiveCardsExample() {

@@ -10,7 +10,7 @@ const money = new Intl.NumberFormat('en-US', {
 });
 
 /**
- * Column footers. A footer is either a renderer or an aggregate over the filtered rows —
+ * Column footers. A footer is either a renderer or an aggregate over the filtered rows:
  * `footerAggregationScope` is what decides whether "total" means this page or the whole result.
  */
 const columns = [

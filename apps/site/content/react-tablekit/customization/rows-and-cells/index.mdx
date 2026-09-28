@@ -32,7 +32,7 @@ cell:
 without a class name per case.
 
 **Content.** A column's `cell`, `header` and `footer` decide what is rendered inside. That is
-where links, chips, avatars and formatted numbers belong — see
+where links, chips, avatars and formatted numbers belong; see
 [Columns](/react-tablekit/columns/).
 
 **Structural.** `renderRow` replaces the row, and hands you `defaultRender()` so you can wrap
@@ -72,7 +72,7 @@ not count as a row click.
 ## Customization
 
 For markup that belongs to the whole table rather than to one column, use
-[slots](/react-tablekit/customization/slots/) — `Row` and `Cell` are slots too. For behaviour, use
+[slots](/react-tablekit/customization/slots/); `Row` and `Cell` are slots too. For behaviour, use
 [handlers](/react-tablekit/customization/handlers/): a click that should navigate is a handler,
 not a renderer.
 
@@ -87,8 +87,8 @@ not a renderer.
 
 ## API
 
-- [`DataTableProps`](/react-tablekit/api/data-table-props/) — `getRowProps`, `getRowClassName`,
+- [`DataTableProps`](/react-tablekit/api/data-table-props/): `getRowProps`, `getRowClassName`,
   `getRowStyle`, `renderRow`, `renderDetailPanel`, `meta`, `slotProps`, `classNames`, `styles`.
-- [`ColumnDef`](/react-tablekit/api/column-def/) — `cell`, `header`, `footer`, `getCellProps`,
+- [`ColumnDef`](/react-tablekit/api/column-def/): `cell`, `header`, `footer`, `getCellProps`,
   `cellClassName`, `cellStyle`, `headerClassName`, `headerStyle`, `align`, `verticalAlign`.
-- [Slots](/react-tablekit/api/slots/) — `Row`, `Cell`, `HeaderCell`, `DetailRow`.
+- [TableSlots](/react-tablekit/api/slots/): `Row`, `Cell`, `HeaderCell`, `DetailRow`.
