@@ -64,10 +64,19 @@ for (const page of pages) {
   written++;
 }
 
-// The page a host serves for a URL that matches nothing. It carries no `data-route`, so the
-// browser renders it client-side at whatever URL was asked for — which is how the not-found page
-// keeps the real address in the bar instead of pretending to be the home page.
-writeFileSync(path.join(dist, '404.html'), template);
+// The page a host serves for a URL that matches nothing: the not-found page itself, rendered, so
+// the first paint is the site with its title rather than an empty shell. It carries no
+// `data-route`, so the browser renders it again at whatever URL was asked for, which is how the
+// real address stays in the bar instead of the page pretending to be somewhere else.
+const notFound = splitHead(await render('/404/'));
+writeFileSync(
+  path.join(dist, '404.html'),
+  template
+    .replace(/\n\s*<meta\s+name="description"[\s\S]*?\/>/, '')
+    .replace(/\n\s*<title>[\s\S]*?<\/title>/, '')
+    .replace('</head>', `  ${notFound.head}\n  </head>`)
+    .replace('<div id="root"></div>', `<div id="root">${notFound.body}</div>`),
+);
 
 // The SSR bundle is a build artefact, not something to deploy.
 rmSync(ssrDist, { recursive: true, force: true });

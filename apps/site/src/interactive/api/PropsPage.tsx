@@ -109,7 +109,7 @@ export function PropsPage({ symbols }: { symbols: ApiSymbol[] }) {
     <>
       {symbols.length === 0 ? (
         <p className="site-muted">
-          Nothing generated yet — run <code>pnpm docs:json</code> and{' '}
+          Nothing generated yet. Run <code>pnpm docs:json</code> and{' '}
           <code>node scripts/build-api.mjs</code>.
         </p>
       ) : (

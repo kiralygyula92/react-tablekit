@@ -10,6 +10,8 @@ import titles from '../../content/react-tablekit/titles.json';
 export interface PluginConfig {
   id: string;
   name: string;
+  /** The front page's title after the name: short enough for a tab and a search result. */
+  shortTagline: string;
   tagline: string;
   description: string;
   categoryId?: string;

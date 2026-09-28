@@ -1,9 +1,8 @@
 /*
- * The documentation layout.
+ * The documentation layout: the three-column page and the blocks a page is built from.
  *
- * `site.css` carries the tokens, the shared chrome and the interactive surfaces that predate the
- * restructure; everything here belongs to the page shape the plugin docs standard describes —
- * the three-column docs page and the blocks a page is built from.
+ * `site.css` carries the tokens, the header and the interactive surfaces (search, playground,
+ * theme editor); this file carries the shape of a page.
  */
 
 /* ── Documentation shell ─────────────────────────────────────────────────── */
@@ -304,27 +303,33 @@
  * demo belongs to the library and is styled by the library. Unlayered site CSS beats the
  * library's `@layer tablekit`, so an unscoped `.site-prose table` rule silently restyles every
  * demo on the site — which is exactly what it did: cell borders, padding and a 20px top margin
- * that looked like a gap above the header.
+ * that looked like a gap above the header. The `.prose-table` box is what the MDX `table` renders.
  */
-.site-prose > table {
+.site-prose > .prose-table {
+  margin: 20px 0;
+  overflow-x: auto;
+}
+.site-prose > .prose-table > table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px 0;
   font-size: 0.9375rem;
 }
-.site-prose > table :is(th, td) {
+.site-prose > .prose-table > table :is(th, td) {
   padding: 8px 12px;
   border: 1px solid var(--site-border);
   text-align: start;
   vertical-align: top;
 }
-.site-prose > table th {
+.site-prose > .prose-table > table th {
   background: var(--site-bg-muted);
 }
 .site-prose :not(pre) > code {
   padding: 1px 5px;
   border-radius: 4px;
   background: var(--site-code-bg);
+  /* A long identifier breaks rather than pushing a phone-width page sideways. `break-word`, not
+     `anywhere`: it leaves a table column's minimum width alone, so a table scrolls instead. */
+  overflow-wrap: break-word;
 }
 .site-prose blockquote {
   margin: 20px 0;
@@ -366,7 +371,7 @@
 .demo {
   margin: 24px 0 32px;
   border: 1px solid var(--site-border);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--site-surface);
   overflow: hidden;
 }

@@ -1,3 +1,4 @@
+import { toPlainLatin } from '../format';
 import { createRandom, type Random } from '../prng';
 import type { Account, Address, Asset, AssetKind, PhoneType, Site } from '../types';
 
@@ -236,9 +237,7 @@ function makeAccount(r: Random, index: number): Account {
   if (r.chance(0.95)) {
     const emailCount = r.chance(0.1) ? 0 : r.int(1, 3);
     const phoneCount = r.chance(0.1) ? 0 : r.int(1, 3);
-    const handle = `${firstName}.${lastName}`
-      .normalize('NFD')
-      .replace(/\p{M}/gu, '')
+    const handle = toPlainLatin(`${firstName}.${lastName}`)
       .replace(/[^A-Za-z.]/g, '')
       .toLowerCase();
     account.contactInformation = {

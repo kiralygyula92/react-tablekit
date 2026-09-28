@@ -4,25 +4,30 @@ import { useNavDrawer } from './navDrawer';
 
 const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
   {
-    title: 'Products',
-    links: [{ label: pluginConfig.name, href: '/react-tablekit/' }],
+    title: 'Get started',
+    links: [
+      { label: 'Installation', href: '/react-tablekit/getting-started/installation/' },
+      { label: 'Quickstart', href: '/react-tablekit/getting-started/quickstart/' },
+      { label: 'Requirements', href: '/react-tablekit/getting-started/requirements/' },
+      { label: 'FAQ', href: '/react-tablekit/getting-started/faq/' },
+    ],
   },
   {
-    title: 'Resources',
+    title: 'Learn',
     links: [
       { label: 'All features', href: '/react-tablekit/all-features/' },
       { label: 'Customization', href: '/react-tablekit/customization/' },
-      { label: 'Requirements', href: '/react-tablekit/getting-started/requirements/' },
+      { label: 'Guides', href: '/react-tablekit/guides/' },
       { label: 'Integrations', href: '/react-tablekit/integrations/' },
     ],
   },
   {
     title: 'Explore',
     links: [
-      { label: 'Documentation', href: '/react-tablekit/' },
       { label: 'Demos', href: '/react-tablekit/demos/' },
+      { label: 'Playground', href: '/react-tablekit/demos/playground/' },
+      { label: 'Theme editor', href: '/react-tablekit/demos/theme-editor/' },
       { label: 'API reference', href: '/react-tablekit/api/' },
-      { label: 'Roadmap', href: '/react-tablekit/discover-more/roadmap/' },
     ],
   },
   {
@@ -30,8 +35,8 @@ const COLUMNS: { title: string; links: { label: string; href: string }[] }[] = [
     links: [
       { label: 'Support', href: '/react-tablekit/getting-started/support/' },
       { label: 'Changelog', href: '/react-tablekit/discover-more/changelog/' },
-      { label: 'Versions', href: '/react-tablekit/getting-started/versions/' },
-      { label: 'Licence (MIT)', href: '/react-tablekit/getting-started/faq/#licence' },
+      { label: 'Roadmap', href: '/react-tablekit/discover-more/roadmap/' },
+      { label: 'Licence (MIT)', href: `${pluginConfig.repo}/blob/main/LICENSE` },
     ],
   },
 ];
@@ -48,7 +53,13 @@ export function SiteFooter() {
             <ul>
               {column.links.map((link) => (
                 <li key={link.href}>
-                  <Link to={link.href}>{link.label}</Link>
+                  {link.href.startsWith('/') ? (
+                    <Link to={link.href}>{link.label}</Link>
+                  ) : (
+                    <a href={link.href} target="_blank" rel="noreferrer">
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

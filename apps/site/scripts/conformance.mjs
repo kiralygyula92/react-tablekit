@@ -276,8 +276,11 @@ const REQUIRED_META = [
   'name="twitter:title"',
   'name="twitter:description"',
   'name="twitter:image"',
-  'name="search:version"',
-  'name="plugin:id"',
+  'property="og:site_name"',
+  'property="og:image:alt"',
+  'name="theme-color"',
+  'rel="icon"',
+  'rel="apple-touch-icon"',
 ];
 
 check(16, 'Metadata', 'Every page emits the full metadata set', () =>

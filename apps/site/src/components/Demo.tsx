@@ -9,6 +9,7 @@ import {
   type LazyExoticComponent,
 } from 'react';
 import { ClientOnly } from './ClientOnly';
+import { ErrorBoundary, FailureNotice } from './ErrorBoundary';
 
 interface DemoModule {
   default: ComponentType;
@@ -39,9 +40,15 @@ function useDemoSource(id: string): string {
     let live = true;
     const load = sourceLoaders[keyFor(id)];
     if (!load) return;
-    void load().then((text) => {
-      if (live) setSource(text);
-    });
+    load().then(
+      (text) => {
+        if (live) setSource(text);
+      },
+      () => {
+        // The source is a convenience. If it cannot be fetched, Copy and Show source stay
+        // disabled and the demo itself is unaffected.
+      },
+    );
     return () => {
       live = false;
     };
@@ -49,10 +56,10 @@ function useDemoSource(id: string): string {
   return source;
 }
 
-/** Everything a viewer needs to take the code away: copy, read, fork, or start over. */
+/** Everything a viewer needs to take the code away: copy it, read it, or start over. */
 function Toolbar({ source, onReset }: { source: string; onReset: () => void }) {
   const [showSource, setShowSource] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<'copied' | 'failed' | null>(null);
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const mounted = useRef(false);
 
@@ -65,49 +72,19 @@ function Toolbar({ source, onReset }: { source: string; onReset: () => void }) {
   }, []);
 
   const copy = useCallback(async () => {
+    let outcome: 'copied' | 'failed';
     try {
       await navigator.clipboard.writeText(source);
-      if (!mounted.current) return;
-      clearTimeout(copyTimer.current);
-      setCopied(true);
-      copyTimer.current = setTimeout(() => setCopied(false), 1500);
+      outcome = 'copied';
     } catch {
-      // Clipboard access can be blocked; the source remains available through Show source.
+      // Clipboard access can be blocked. Saying so beats a button that silently does nothing, and
+      // the source is still one click away through Show source.
+      outcome = 'failed';
     }
-  }, [source]);
-
-  // StackBlitz accepts a project as a form POST, so a live sandbox needs no SDK.
-  const openSandbox = useCallback(() => {
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = 'https://stackblitz.com/run';
-    form.target = '_blank';
-    const add = (name: string, value: string) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value;
-      form.appendChild(input);
-    };
-    add('project[title]', 'react-tablekit demo');
-    add('project[template]', 'node');
-    add('project[files][src/Demo.tsx]', source);
-    add(
-      'project[files][package.json]',
-      JSON.stringify(
-        {
-          name: 'react-tablekit-demo',
-          scripts: { dev: 'vite', build: 'vite build' },
-          dependencies: { react: '^19.2.0', 'react-dom': '^19.2.0', 'react-tablekit': 'latest' },
-          devDependencies: { vite: '^8.3.0', '@vitejs/plugin-react': '^6.1.1' },
-        },
-        null,
-        2,
-      ),
-    );
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
+    if (!mounted.current) return;
+    clearTimeout(copyTimer.current);
+    setCopied(outcome);
+    copyTimer.current = setTimeout(() => setCopied(null), 2000);
   }, [source]);
 
   return (
@@ -115,7 +92,7 @@ function Toolbar({ source, onReset }: { source: string; onReset: () => void }) {
       <div className="demo__toolbar">
         {/* The source arrives in its own chunk, so these wait for it; Reset never does. */}
         <button type="button" onClick={() => void copy()} disabled={!source}>
-          {copied ? 'Copied' : 'Copy'}
+          {copied === 'copied' ? 'Copied' : copied === 'failed' ? 'Copy failed' : 'Copy'}
         </button>
         <button
           type="button"
@@ -124,9 +101,6 @@ function Toolbar({ source, onReset }: { source: string; onReset: () => void }) {
           disabled={!source}
         >
           {showSource ? 'Hide source' : 'Show source'}
-        </button>
-        <button type="button" onClick={openSandbox} disabled={!source}>
-          Open in StackBlitz
         </button>
         <button type="button" onClick={onReset}>
           Reset
@@ -162,13 +136,21 @@ export function Demo({ id, label }: { id: string; label?: string }) {
     <section className="demo" aria-label={label ?? 'Example'}>
       <div className="demo__stage">
         <ClientOnly placeholder={<p className="site-muted">Loading example…</p>}>
-          <Suspense fallback={<p className="site-muted">Loading example…</p>}>
-            {/* `nonce` is the reset: a new key throws the old tree away and starts over. */}
-            {/* eslint-disable-next-line react-hooks/static-components --
-                a lookup, not a creation: every lazy component is built once at module scope, so
-                its identity is stable and its state survives re-renders. */}
-            <Component key={nonce} />
-          </Suspense>
+          {/* A failing example stays inside its frame; the rest of the page carries on. */}
+          <ErrorBoundary
+            resetKey={`${id}:${String(nonce)}`}
+            fallback={(error, retry) => (
+              <FailureNotice title="This example could not be shown." error={error} retry={retry} />
+            )}
+          >
+            <Suspense fallback={<p className="site-muted">Loading example…</p>}>
+              {/* `nonce` is the reset: a new key throws the old tree away and starts over. */}
+              {/* eslint-disable-next-line react-hooks/static-components --
+                  a lookup, not a creation: every lazy component is built once at module scope, so
+                  its identity is stable and its state survives re-renders. */}
+              <Component key={nonce} />
+            </Suspense>
+          </ErrorBoundary>
         </ClientOnly>
       </div>
       <Toolbar source={source} onReset={reset} />

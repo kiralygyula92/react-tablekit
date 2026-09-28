@@ -1,4 +1,5 @@
 import { formatAccountName, getAccountAssets } from '../data/accounts';
+import { toPlainLatin } from '../format';
 import type { Account, ListingCriteria, PagedResponse, SearchAccountRequest } from '../types';
 
 export const DEFAULT_PAGE_SIZE = 10;
@@ -33,9 +34,9 @@ export function normalizeListingCriteria(
   return normalized;
 }
 
-/** Case- and diacritic-insensitive folding. */
+/** Case- and diacritic-insensitive folding: "ostergaard" finds "Østergaard". */
 export function fold(value: string): string {
-  return value.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+  return toPlainLatin(value).toLowerCase();
 }
 
 function accountSearchText(a: Account): string {

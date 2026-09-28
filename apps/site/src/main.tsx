@@ -3,9 +3,16 @@ import { createRoot, hydrateRoot } from 'react-dom/client';
 import '@fontsource-variable/open-sans';
 import 'react-tablekit/styles.css';
 import { App } from './App';
+import { reloadOnceForNewBuild } from './components/ErrorBoundary';
 import { preloadPage } from './content/pages';
 import './styles/site.css';
 import './styles/layout.css';
+
+// Vite reports a code chunk that failed to load. After a deploy that means this tab predates the
+// new build, and reloading is the fix; the error boundaries show a message if it was something else.
+window.addEventListener('vite:preloadError', (event) => {
+  if (reloadOnceForNewBuild()) event.preventDefault();
+});
 
 const container = document.getElementById('root');
 if (!container) throw new Error('#root not found');

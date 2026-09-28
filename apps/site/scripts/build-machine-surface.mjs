@@ -131,7 +131,7 @@ function symbolMarkdown(symbol) {
       .map((p) => `${p.name}${p.optional ? '?' : ''}: ${p.type}`)
       .join(', ');
     const line = codeSpan(`${signature.name}(${params}): ${signature.returns}`);
-    out.push(signature.description ? `${line} — ${signature.description}` : line);
+    out.push(signature.description ? `${line}: ${signature.description}` : line);
   }
   if (symbol.members.length > 0) {
     out.push(

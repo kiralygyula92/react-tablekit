@@ -20,6 +20,14 @@ export const SITE_THEMES: readonly SiteTheme[] = ['light', 'dark'];
 
 const STORAGE_KEY = 'tk-site:theme';
 
+/** The page background of each appearance, which the browser's own chrome is tinted to match. */
+const CHROME_COLOR: Record<SiteTheme, string> = { light: '#ffffff', dark: '#0b1220' };
+
+function applyTheme(theme: SiteTheme): void {
+  document.documentElement.dataset.siteTheme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', CHROME_COLOR[theme]);
+}
+
 interface SiteThemeValue {
   theme: SiteTheme;
   setTheme: (theme: SiteTheme) => void;
@@ -46,7 +54,7 @@ function subscribe(listener: () => void): () => void {
     if (event.key !== STORAGE_KEY && event.key !== null) return;
     const next = event.newValue;
     if (next !== null && next !== 'light' && next !== 'dark') return;
-    document.documentElement.dataset.siteTheme = next ?? 'light';
+    applyTheme(next ?? 'light');
     listener();
   };
   window.addEventListener('storage', onStorage);
@@ -67,7 +75,7 @@ export function SiteThemeProvider({ children }: { children: ReactNode }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const setTheme = useCallback((next: SiteTheme) => {
-    document.documentElement.dataset.siteTheme = next;
+    applyTheme(next);
     try {
       localStorage.setItem(STORAGE_KEY, next);
     } catch {

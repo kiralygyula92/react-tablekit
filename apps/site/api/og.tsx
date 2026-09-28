@@ -4,7 +4,7 @@ import { ImageResponse } from '@vercel/og';
  * The social preview image for a page, drawn from its title and description.
  *
  * `PageMeta` points every page's `og:image` here, so a link to any of the 84 pages previews as
- * itself rather than as one generic card — and nobody has to draw 84 images.
+ * itself rather than as one generic card, and nobody has to draw 84 images.
  *
  * It runs on the edge because it is pure rendering: no data, no secrets, nothing to keep warm.
  */
@@ -13,9 +13,42 @@ export const config = { runtime: 'edge' };
 const clamp = (value: string | null, max: number) =>
   !value ? '' : value.length > max ? `${value.slice(0, max - 1).trimEnd()}…` : value;
 
+/** The favicon (`public/favicon.svg`, drawn on a 32-unit grid) at 1.5×. */
+function Mark() {
+  const bar = (top: number, height: number, opacity: number) => (
+    <div
+      style={{
+        position: 'absolute',
+        left: 10.5,
+        top,
+        width: 27,
+        height,
+        borderRadius: height / 3,
+        background: `rgba(255, 255, 255, ${String(opacity)})`,
+      }}
+    />
+  );
+  return (
+    <div
+      style={{
+        position: 'relative',
+        display: 'flex',
+        width: 48,
+        height: 48,
+        borderRadius: 10.5,
+        background: '#2563eb',
+      }}
+    >
+      {bar(12, 6.75, 1)}
+      {bar(23.25, 4.125, 0.8)}
+      {bar(31.875, 4.125, 0.8)}
+    </div>
+  );
+}
+
 export default function handler(request: Request): ImageResponse {
   const params = new URL(request.url).searchParams;
-  const title = clamp(params.get('title'), 70) || 'react-tablekit';
+  const title = clamp(params.get('title'), 70) || 'React Tablekit';
   const description = clamp(params.get('description'), 180);
 
   return new ImageResponse(
@@ -33,16 +66,10 @@ export default function handler(request: Request): ImageResponse {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 10,
-            background: '#1769c2',
-            display: 'flex',
-          }}
-        />
-        <div style={{ fontSize: 30, letterSpacing: -0.5, color: '#94a3b8' }}>react-tablekit</div>
+        <Mark />
+        <div style={{ fontSize: 30, fontWeight: 600, letterSpacing: -0.5, color: '#e2e8f0' }}>
+          React Tablekit
+        </div>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -55,7 +82,7 @@ export default function handler(request: Request): ImageResponse {
       </div>
 
       <div style={{ display: 'flex', fontSize: 24, color: '#64748b' }}>
-        A React data table that works the same on the client and on the server
+        npm install react-tablekit
       </div>
     </div>,
     {

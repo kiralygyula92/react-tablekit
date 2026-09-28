@@ -1,3 +1,4 @@
+import { toPlainLatin } from '../format';
 import { createRandom } from '../prng';
 
 /** A generic person record for the feature demos. */
@@ -79,7 +80,7 @@ export function generatePeople(count: number, seed = 42): DemoPerson[] {
   const people = Array.from({ length: count }, (_, i): DemoPerson => {
     const firstName = r.pick(FIRST);
     const lastName = r.pick(LAST);
-    const handle = `${firstName}.${lastName}`.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+    const handle = toPlainLatin(`${firstName}.${lastName}`).toLowerCase();
     const person: DemoPerson = {
       id: `u${String(i + 1).padStart(5, '0')}`,
       firstName,

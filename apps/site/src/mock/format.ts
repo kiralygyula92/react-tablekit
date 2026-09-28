@@ -24,3 +24,28 @@ export function getShortFormatAddress(address: Address | undefined): string {
   if (!address) return '';
   return `${address.city}, ${address.region} ${address.postalCode}`;
 }
+
+/** Letters that are not a base letter plus a combining mark, so NFD alone leaves them in place. */
+const TRANSLITERATE: Record<string, string> = {
+  ø: 'o',
+  Ø: 'O',
+  æ: 'ae',
+  Æ: 'Ae',
+  œ: 'oe',
+  Œ: 'Oe',
+  ß: 'ss',
+  ł: 'l',
+  Ł: 'L',
+  đ: 'd',
+  Đ: 'D',
+  þ: 'th',
+  Þ: 'Th',
+};
+
+/** Plain Latin letters for a name: "Bjørn Østergaard" becomes "Bjorn Ostergaard". */
+export function toPlainLatin(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[øØæÆœŒßłŁđĐþÞ]/g, (letter) => TRANSLITERATE[letter] ?? letter);
+}

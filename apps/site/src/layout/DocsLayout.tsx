@@ -2,6 +2,7 @@ import { MDXProvider } from '@mdx-js/react';
 import { Suspense, useMemo, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router';
 import { Badge } from '../components/Badge';
+import { ErrorBoundary, FailureNotice } from '../components/ErrorBoundary';
 import { mdxComponents } from '../components/mdx';
 import { componentFor, pageByPath } from '../content/pages';
 import { PageMeta } from '../head/PageMeta';
@@ -20,6 +21,10 @@ import { SiteHeader } from './SiteHeader';
 
 const REPO_EDIT_BASE = `${pluginConfig.repo}/edit/main/apps/site/content`;
 
+/** GitHub shows a file under `blob/` and a folder under `tree/`, and redirects the wrong one. */
+const sourceUrl = (path: string) =>
+  `${pluginConfig.repo}/${/\.[a-z0-9]+$/i.test(path) ? 'blob' : 'tree'}/main/${path}`;
+
 /** Prev/next follow sidebar order, which is the order a reader is expected to meet the pages. */
 function PageNav({ pathname }: { pathname: string }) {
   const index = orderedPages.findIndex((p) => p.pathname === pathname);
@@ -37,7 +42,7 @@ function PageNav({ pathname }: { pathname: string }) {
   );
 }
 
-/** Edit-this-page and per-page feedback. Layout, never content. */
+/** Edit this page, and report a problem with it. Layout, never content. */
 function FooterActions({ pathname, sourceFile }: { pathname: string; sourceFile: string }) {
   const feedback = `${pluginConfig.links?.issues ?? pluginConfig.repo}/new?title=${encodeURIComponent(
     `Docs feedback: ${pathname}`,
@@ -48,7 +53,7 @@ function FooterActions({ pathname, sourceFile }: { pathname: string; sourceFile:
         Edit this page
       </a>
       <a href={feedback} target="_blank" rel="noreferrer">
-        Was this page helpful?
+        Report a problem with this page
       </a>
     </div>
   );
@@ -66,7 +71,12 @@ export function DocsPage({ pathname }: { pathname: string }) {
 
   return (
     <>
-      <PageMeta title={fm.title} description={fm.description} pathname={pathname} />
+      <PageMeta
+        title={fm.title}
+        description={fm.description}
+        pathname={pathname}
+        type={pathname === '/react-tablekit/' ? 'website' : 'article'}
+      />
       <div className={fm.wide ? 'docs-body docs-body--wide' : 'docs-body'}>
         <Sidebar pathname={pathname} />
 
@@ -94,11 +104,7 @@ export function DocsPage({ pathname }: { pathname: string }) {
                     </a>
                   )}
                   {fm.links.source && (
-                    <a
-                      href={`${pluginConfig.repo}/tree/main/${fm.links.source}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a href={sourceUrl(fm.links.source)} target="_blank" rel="noreferrer">
                       Source
                     </a>
                   )}
@@ -111,12 +117,24 @@ export function DocsPage({ pathname }: { pathname: string }) {
               )}
             </header>
             <MDXProvider components={mdxComponents}>
-              <Suspense fallback={<p className="site-muted">Loading…</p>}>
-                {/* eslint-disable-next-line react-hooks/static-components --
-                    a lookup, not a creation: every lazy component is built once at module scope, so
-                    its identity is stable and its state survives re-renders. */}
-                <Component />
-              </Suspense>
+              {/* A page that fails keeps the header, the sidebar and a way forward. */}
+              <ErrorBoundary
+                resetKey={pathname}
+                fallback={(error, retry) => (
+                  <FailureNotice
+                    title="This page could not be shown."
+                    error={error}
+                    retry={retry}
+                  />
+                )}
+              >
+                <Suspense fallback={<p className="site-muted">Loading…</p>}>
+                  {/* eslint-disable-next-line react-hooks/static-components --
+                      a lookup, not a creation: every lazy component is built once at module scope,
+                      so its identity is stable and its state survives re-renders. */}
+                  <Component />
+                </Suspense>
+              </ErrorBoundary>
             </MDXProvider>
             <FooterActions pathname={pathname} sourceFile={page.file} />
             <PageNav pathname={pathname} />

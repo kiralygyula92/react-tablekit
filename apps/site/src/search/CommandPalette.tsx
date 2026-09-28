@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { groupEntries, searchEntries, type SearchEntry } from './buildIndex';
+import { SearchIcon } from './SearchIcon';
 
 export interface CommandPaletteProps {
   open: boolean;
@@ -8,7 +9,7 @@ export interface CommandPaletteProps {
 }
 
 /**
- * The Ctrl+K palette: one in-memory index over the pages, guide headings, examples,
+ * The search palette (Ctrl K, or ⌘ K on a Mac): one in-memory index over the pages, guide headings, examples,
  * API symbols, tokens and icons.
  *
  * It is a native `<dialog>`, so the browser supplies the modality, the focus trap, the backdrop
@@ -112,7 +113,9 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       onClose={onClose}
     >
       <div className="palette__form">
-        <span aria-hidden="true">⌕</span>
+        <span className="palette__icon">
+          <SearchIcon size={18} />
+        </span>
         <input
           ref={inputRef}
           className="palette__input"

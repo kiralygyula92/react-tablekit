@@ -1,5 +1,7 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
+import { SearchIcon } from '../search/SearchIcon';
+import { OPEN_SEARCH_EVENT, useSearchShortcut } from '../search/shortcut';
 import { useHotkey } from '../search/useHotkey';
 import { pluginConfig } from '../nav/nav';
 import { useNavDrawer } from './navDrawer';
@@ -19,18 +21,6 @@ function MenuIcon() {
   );
 }
 
-function SearchIcon() {
-  return (
-    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
-      <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
-      <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-// The palette carries the whole search index, including the generated API reference, so it is
-// not part of the app shell: it arrives when a reader first reaches for it. Hovering the trigger
-// starts the download, which usually hides the wait entirely.
 function GitHubIcon() {
   return (
     <svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true" focusable="false">
@@ -57,23 +47,35 @@ function ChevronDownIcon() {
   );
 }
 
+// The palette carries the whole search index, including the generated API reference, so it is
+// not part of the app shell: it arrives when a reader first reaches for it. Hovering the trigger
+// starts the download, which usually hides the wait entirely.
 const load = () => import('../search/CommandPalette');
 const CommandPalette = lazy(() => load().then((m) => ({ default: m.CommandPalette })));
 
 /**
- * The site header: the product, the version it documents, and the three tools — search, source,
- * appearance. There are no section links here because the sidebar already lists every section;
+ * The site header: the product, the version it documents, and the three tools: search, source
+ * and appearance. There are no section links here because the sidebar already lists every section;
  * a second copy in the header would be one more thing to keep in step with the nav data.
  */
 export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
   // Once requested, the palette stays mounted so re-opening is instant.
   const [paletteRequested, setPaletteRequested] = useState(false);
-  const openSearch = () => {
+  const openSearch = useCallback(() => {
     setPaletteRequested(true);
     setSearchOpen(true);
-  };
+  }, []);
   useHotkey(openSearch);
+  const shortcut = useSearchShortcut();
+
+  // Other parts of the page (the 404 page, for one) open search by asking for it.
+  useEffect(() => {
+    window.addEventListener(OPEN_SEARCH_EVENT, openSearch);
+    return () => {
+      window.removeEventListener(OPEN_SEARCH_EVENT, openSearch);
+    };
+  }, [openSearch]);
 
   // On a narrow screen the sidebar is a drawer behind this button. Escape closes it and puts focus
   // back where the reader opened it from, rather than dropping it on the page behind.
@@ -147,7 +149,7 @@ export function SiteHeader() {
           {/* Hidden visually on a narrow screen, where the button is just the icon; it stays the
               button's name either way. */}
           <span className="palette-trigger__label">Search</span>
-          <kbd className="palette__kbd">Ctrl K</kbd>
+          <kbd className="palette__kbd">{shortcut}</kbd>
         </button>
         <a
           className="icon-link"

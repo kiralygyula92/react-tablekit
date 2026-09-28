@@ -1,6 +1,7 @@
 {
   "id": "react-tablekit",
   "name": "React Tablekit",
+  "shortTagline": "Headless React table for client and server",
   "tagline": "A headless-core React data table where every feature works on the client and on the server.",
   "description": "A React data table with a framework-agnostic core. Pagination, search, filters, sorting, grouping, expansion, selection and faceting each run in the browser or on your server. Every part is a replaceable slot, every interaction is overridable, and every visual value is a CSS variable.",
   "categoryId": "data-display",
@@ -79,7 +80,7 @@
     "command": "pnpm --filter react-tablekit docs:json && pnpm --filter site build:api"
   },
   "branding": {
-    "accentColor": "#1769c2",
-    "ogImageTemplate": "/api/og?title={title}&description={description}"
+    "accentColor": "#2563eb",
+    "ogImageTemplate": "/api/og/?title={title}&description={description}"
   }
 }

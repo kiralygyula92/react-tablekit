@@ -29,9 +29,9 @@ export function SiteRoutes() {
             element={<DocsPage pathname={page.pathname} />}
           />
         ))}
+        {/* Inside the layout: a wrong address still gets the header, the sidebar and the footer. */}
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
-
-      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
