@@ -42,7 +42,13 @@ test('the rows-per-page dropdown can be switched off, and the link keeps it off'
   await panel.getByLabel('pagination.pageSizeOptions', { exact: true }).fill('5, 15');
   const select = page.getByLabel('Rows per page:');
   await expect(select).toBeVisible();
+  // The table still shows 10 rows, which the new list does not offer. The control says so rather
+  // than claiming 5, until the reader picks one of the offered sizes.
+  await expect(select.locator('option')).toHaveText(['5', '10', '15']);
+  await expect(select).toHaveValue('10');
+  await select.selectOption('5');
   await expect(select.locator('option')).toHaveText(['5', '15']);
+  await expect(select).toHaveValue('5');
 });
 
 test('resetting a prop removes it from the code', async ({ page }) => {

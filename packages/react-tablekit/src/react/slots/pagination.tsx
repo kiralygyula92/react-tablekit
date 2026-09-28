@@ -134,6 +134,9 @@ export function PageSizeSelect({
 }: P<'PageSizeSelect'>) {
   const id = useId();
   const { slots } = useView();
+  // A page size the list does not offer (set in code, or restored) must still show as selected:
+  // a native select with no matching option displays its first one, and would misstate the page.
+  const sizes = options.includes(value) ? options : [...options, value].sort((a, b) => a - b);
   return (
     <span className={cx('tk-page-size', className)} style={style}>
       <label htmlFor={id} className="tk-page-size__label">
@@ -143,7 +146,7 @@ export function PageSizeSelect({
         id={id}
         value={String(value)}
         disabled={disabled}
-        options={options.map((o) => ({ value: String(o), label: String(o) }))}
+        options={sizes.map((o) => ({ value: String(o), label: String(o) }))}
         onValueChange={(v) => onChange(Number(v))}
       />
     </span>

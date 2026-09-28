@@ -178,6 +178,21 @@ describe('pagination UI', () => {
     expect(within(nav).queryByRole('button', { name: 'Page 5' })).toBeNull();
   });
 
+  it('shows a page size the list does not offer, instead of claiming the first option', () => {
+    const { container } = renderTable({
+      data,
+      toolbar: false,
+      initialState: { pagination: { pageIndex: 0, pageSize: 8 } },
+      pagination: { pageSizeOptions: [10, 25], showRowRange: true },
+    });
+    const nav = screen.getByRole('navigation', { name: 'Pagination' });
+    const select = within(nav).getByLabelText<HTMLSelectElement>('Rows per page:');
+    expect(select.value).toBe('8');
+    expect([...select.options].map((o) => o.value)).toEqual(['8', '10', '25']);
+    expect(bodyRows(container)).toHaveLength(8);
+    expect(within(nav).getByText('1–8 of 95')).toBeInTheDocument();
+  });
+
   it('compact variant: icon-only nav with first/last buttons', () => {
     renderTable({ data, toolbar: false, pagination: { variant: 'compact', showFirstLast: true } });
     const nav = screen.getByRole('navigation', { name: 'Pagination' });
