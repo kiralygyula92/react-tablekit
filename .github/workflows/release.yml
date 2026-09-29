@@ -32,10 +32,9 @@ jobs:
       - name: Create the "Version Packages" PR, or publish when there is nothing left to version
         uses: changesets/action@v2
         with:
-          version: pnpm version-packages
-          publish: pnpm release
-          createGithubReleases: true
+          version-script: pnpm version-packages
+          publish-script: pnpm release
+          create-github-releases: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
