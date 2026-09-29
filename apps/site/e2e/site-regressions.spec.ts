@@ -32,8 +32,13 @@ test('denied clipboard access leaves the demo usable without an unhandled reject
   await expect(demo.locator('.demo__source')).toContainText('export default function');
 });
 
-test('copy feedback stays visible for the latest copy operation', async ({ page, context }) => {
-  await context.grantPermissions(['clipboard-write']);
+test('copy feedback stays visible for the latest copy operation', async ({
+  page,
+  context,
+  browserName,
+}) => {
+  // Only Chromium models a clipboard permission; Firefox and WebKit allow the write on a click.
+  if (browserName === 'chromium') await context.grantPermissions(['clipboard-write']);
   await page.clock.install();
   await page.goto('/react-tablekit/sorting/?mockLatency=0');
   const demo = page.getByRole('region', { name: 'Sorting', exact: true });
