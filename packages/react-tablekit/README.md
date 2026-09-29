@@ -115,4 +115,4 @@ Guides, an example gallery, a playground, a theme editor and the full API refere
 
 ## License
 
-MIT
+[MIT](./LICENSE) © kiralygyula92.

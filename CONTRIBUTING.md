@@ -1,14 +1,24 @@
 # Contributing
 
-## Setup
+Thanks for helping improve `react-tablekit`! Bug reports, docs fixes and pull requests are all
+welcome.
 
-- Node ≥ 20 (CI uses 22) and pnpm 11 (`corepack enable` picks up the `packageManager` field).
-- `pnpm install`
-- `pnpm --filter site exec playwright install chromium` (once, for e2e)
+## Getting started
 
-## Scripts (repo root)
+Requirements: Node 20+ (CI uses 22) and pnpm (run `corepack enable` to use the pinned version).
 
-| Script                      | What it does                                                                    |
+```sh
+git clone https://github.com/kiralygyula92/react-tablekit.git
+cd react-tablekit
+pnpm install
+pnpm dev
+```
+
+`pnpm dev` generates what it needs first and starts the site at http://localhost:5173, against the
+library source. Playwright needs its browser once:
+`pnpm --filter site exec playwright install chromium`.
+
+| Command                     | What it does                                                                    |
 | --------------------------- | ------------------------------------------------------------------------------- |
 | `pnpm dev`                  | Starts the site against the library source                                      |
 | `pnpm lint` / `pnpm format` | ESLint (strict, type-checked, react-hooks, jsx-a11y) / Prettier                 |
@@ -24,22 +34,61 @@
 under `apps/site/src/generated/` is not committed, so lint and typecheck would otherwise run
 against files a clean checkout does not have.
 
-## Policies
+## Making a change
 
-- **Tests alongside code.** Core ≥ 90% lines / 85% branches, React ≥ 80%. Every fixed bug gets
-  a regression test that names what it guards.
-- **Tokens are the API.** Visual CSS in `theme.css` must only read `--tk-*` variables
+1. Open an issue first for larger changes, so we can agree on the API before you build it.
+2. Create a branch from `main`.
+3. Add or update tests: unit and component tests in `packages/react-tablekit/test` (Vitest),
+   end-to-end tests in `apps/site/e2e` (Playwright). Coverage stays at core ≥ 90% lines / 85%
+   branches and React ≥ 80%, and every fixed bug gets a regression test that names what it guards.
+4. Run the checks:
+
+   ```sh
+   pnpm verify
+   ```
+
+   If you changed the layout, check the locked visual baselines with
+   `pnpm --filter site e2e:visual`.
+
+5. Add a changeset for anything users will notice: `pnpm changeset`. Pick `patch` for fixes,
+   `minor` for new features and `major` for breaking changes. Every pull request touching the
+   library adds one.
+6. For public API changes, update the documentation (see below).
+7. Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, e.g.
+   `feat(site): a menu button and a sidebar drawer on narrow screens` or
+   `fix(build): keep the TypeDoc dump out of the published dist`.
+
+## Documentation
+
+The site's content lives in [`apps/site/content/react-tablekit`](apps/site/content/react-tablekit):
+
+- **The API reference is generated** from the library's TSDoc. `pnpm docs:check` fails when a
+  public symbol has no description.
+- **Pages hot-reload** in `pnpm dev`; adding, renaming or deleting one changes the route table, so
+  restart the server.
+- **URLs never break.** A moved page gets a permanent redirect from
+  `migration/url-map.csv`.
+
+After a docs change, `pnpm verify` must pass; it includes the site's conformance checks.
+
+## Design principles
+
+- **Opt-in by default:** new behavior goes behind a prop, so upgrades never change existing
+  tables.
+- **Zero runtime dependencies** besides the peer dependencies `react` and `react-dom`.
+- **Headless core:** the core never imports React.
+- **Tokens are the API:** visual CSS in `theme.css` only reads `--tk-*` variables
   (`pnpm --filter react-tablekit lint:css-tokens`).
-- **Core never imports React.**
-- **No `any` in `src/**`** without an `eslint-disable-next-line` and a reason.
-- **Changesets.** Every PR touching the library adds one (`pnpm changeset`).
-- **Commits** follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
+- **Typed:** no `any` in `src/**` without an `eslint-disable-next-line` and a reason.
+- **Accessible:** keyboard operable and labeled; axe checks run in the end-to-end suite.
 
-## Releasing
+## Licensing of contributions
 
-Publishing to npm is manual. When a version is ready, run **Actions → Release → Run workflow** on
-`main`. With changesets pending it opens the "Version Packages" pull request; merge that, then run
-the workflow again to publish. With none pending, it publishes straight away, with npm provenance
-and a GitHub release. It needs the `NPM_TOKEN` repository secret.
+By contributing, you agree that your contributions are licensed under the [MIT License](LICENSE).
+Only submit code and assets you wrote yourself or that are available under a compatible
+permissive license. Note any third-party material in the pull request so it can be added to
+`packages/react-tablekit/NOTICE`.
 
-The documentation site is separate: Vercel deploys it on every push to `main`.
+## Code of conduct
+
+Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
