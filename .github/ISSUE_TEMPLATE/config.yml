@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://react-tablekit.vercel.app/react-tablekit/
+    about: Guides, live examples and the API reference.
+  - name: Report a security vulnerability
+    url: https://github.com/kiralygyula92/react-tablekit/security/advisories/new
+    about: Please report vulnerabilities privately.

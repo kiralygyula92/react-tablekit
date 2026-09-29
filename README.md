@@ -88,4 +88,4 @@ changes how the site builds, run `pnpm run build` in `apps/site` of a fresh clon
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[MIT](LICENSE) © kiralygyula92.
