@@ -14,7 +14,7 @@ jobs:
     name: Lint, typecheck, test, build, size, package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - uses: pnpm/action-setup@v6
@@ -50,7 +50,7 @@ jobs:
     env:
       E2E_ALL_BROWSERS: ${{ github.event_name == 'push' && '1' || '0' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
