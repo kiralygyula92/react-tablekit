@@ -14,6 +14,10 @@ updates:
       # by an automated pull request.
       - dependency-name: typescript
         update-types: ['version-update:semver-major']
+      # The Vercel deployment failed as soon as @vercel/og 1.0 landed (the deploy before it
+      # succeeded), so its majors wait until the social-image edge function is checked against them.
+      - dependency-name: '@vercel/og'
+        update-types: ['version-update:semver-major']
       # Node type definitions track the Node version the repo runs, so that code cannot use APIs
       # the runtime does not have.
       - dependency-name: '@types/node'
