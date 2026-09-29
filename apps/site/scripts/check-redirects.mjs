@@ -33,7 +33,7 @@ let failures = 0;
 
 for (const redirect of vercel.redirects) {
   const target = redirect.destination;
-  let status = 0;
+  let status;
   try {
     const response = await fetch(`${base}${target}`, { redirect: 'manual' });
     status = response.status;
