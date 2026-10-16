@@ -1,37 +1,60 @@
 # Releasing
 
-Releases use [Changesets](https://github.com/changesets/changesets) and the `Release` workflow
-(`.github/workflows/release.yml`), which runs only by hand.
+A release is a version bump merged to `main` plus a `v*` tag on that commit. Pushing the tag runs
+the `Release` workflow (`.github/workflows/release.yml`), which tests and builds the library and
+stages it on npm through [trusted publishing](https://docs.npmjs.com/trusted-publishers). No npm
+token exists anywhere, and every version carries
+[provenance](https://docs.npmjs.com/generating-provenance-statements). A staged version goes live
+only after a maintainer approves it on npmjs.com with a passkey.
 
-## One-time setup
+## How it is wired
 
-1. **npm account:** the unscoped `react-tablekit` name must be free or already owned by the
-   publishing npm account. Check with `npm login`, `npm whoami` and `npm view react-tablekit`.
-2. **Token:** create an npm _granular access token_ with read and write access to the
-   `react-tablekit` package, and add it as the `NPM_TOKEN` repository secret
-   (_Settings → Secrets and variables → Actions_). The workflow requests `id-token: write`, so
-   the package is published with
-   [provenance](https://docs.npmjs.com/generating-provenance-statements).
-3. **GitHub:** in _Settings → Actions → General → Workflow permissions_, tick **Allow GitHub
-   Actions to create and approve pull requests**. Without it the workflow cannot open the
-   "Version Packages" pull request.
-4. **Private vulnerability reporting:** turn it on (_Settings → Advanced Security_);
-   [SECURITY.md](SECURITY.md) sends reporters there.
-5. **Documentation site:** Vercel deploys it on every push to `main`; see
-   [Deploying the site](README.md#deploying-the-site).
+- **npm:** `@kingtech/react-tablekit` trusts this repository's `release.yml`, run in the `npm`
+  environment, for staged publishing only, and its publishing access requires two-factor
+  authentication and disallows tokens. Check with `npm trust list @kingtech/react-tablekit`.
+- **GitHub:** the `npm` environment accepts deployments from `v*` tags only, and a ruleset stops
+  anyone but an admin from creating, moving or deleting those tags. The workflow also refuses a
+  tag that isn't on `main` or doesn't match the version in `packages/react-tablekit/package.json`.
+- **Private vulnerability reporting** is on; [SECURITY.md](SECURITY.md) sends reporters there.
+- **Documentation site:** Vercel deploys it on every push to `main`; see
+  [Deploying the site](README.md#deploying-the-site).
 
 ## Every release
 
-1. Pull requests that touch the library add changesets (`pnpm changeset`).
-2. Run **Actions → Release → Run workflow** on `main`. With changesets pending, it opens the
-   **Version Packages** pull request; its `pnpm version-packages` step bumps the version, writes
-   `CHANGELOG.md` and copies the version into the library's `src/version.ts`.
-3. Review and merge that pull request, then run the workflow again. With no changesets pending, it
-   publishes straight away, with npm provenance and a GitHub release.
+1. Check that CI is green on `main`, then pick the bump from the commits since the last tag:
+   `patch` for fixes, `minor` for features, `major` when a commit is marked breaking (`feat!:`).
+2. Bump the version on a release branch:
+
+   ```sh
+   cd packages/react-tablekit
+   npm version patch --no-git-tag-version   # or minor, major
+   git switch -c release/vX.Y.Z
+   ```
+
+   The package's `version` script copies the new version into `src/version.ts`; a unit test fails
+   if the two drift apart.
+
+3. Add a `## X.Y.Z` section at the top of `packages/react-tablekit/CHANGELOG.md`, written from
+   `git log vPREVIOUS..HEAD --oneline`. Keep the heading to the bare version, because the site's
+   release feed only reads headings of that form.
+4. Commit as `release: vX.Y.Z`, open a pull request and merge it once CI passes.
+5. Tag the merged commit on `main` and push the tag:
+
+   ```sh
+   git switch main && git pull --ff-only
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+
+6. When **Actions → Release** finishes, approve the staged version on npmjs.com (_Staged
+   Packages_), then create the GitHub release from the changelog section:
+   `gh release create vX.Y.Z --title vX.Y.Z --notes-file <section.md>`.
+
+Tags can't be moved and npm never accepts a version number twice, so if a release run fails, fix
+the cause and release the next patch version.
 
 ## Before a release, check
 
-- CI is green on `main`.
 - `pnpm size && pnpm check:package` passes.
 - `pnpm --filter react-tablekit pack --dry-run` lists only `dist/`, `README.md`, `CHANGELOG.md`,
   `LICENSE` and `package.json`.

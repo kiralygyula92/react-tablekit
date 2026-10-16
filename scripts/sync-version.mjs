@@ -1,5 +1,5 @@
 // Copies packages/react-tablekit/package.json#version into src/version.ts.
-// Runs after `changeset version` (see the root "version-packages" script).
+// Runs as the package's npm `version` script, so `npm version <bump>` updates both.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const pkgDir = new URL('../packages/react-tablekit/', import.meta.url);
