@@ -50,9 +50,9 @@ against files a clean checkout does not have.
    If you changed the layout, check the locked visual baselines with
    `pnpm --filter site e2e:visual`.
 
-5. Add a changeset for anything users will notice: `pnpm changeset`. Pick `patch` for fixes,
-   `minor` for new features and `major` for breaking changes. Every pull request touching the
-   library adds one.
+5. Leave the version and `CHANGELOG.md` alone: both are written when a release is cut, from the
+   commit messages (see [RELEASING.md](RELEASING.md)). Mark a breaking change with `!` after the
+   type (`feat!: …`) so the release picks the right version.
 6. For public API changes, update the documentation (see below).
 7. Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages, e.g.
    `feat(site): a menu button and a sidebar drawer on narrow screens` or

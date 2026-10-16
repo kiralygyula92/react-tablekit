@@ -37,11 +37,13 @@ A pnpm monorepo:
 
 - Run `pnpm verify` before committing.
 - Conventional Commits (`feat(site): …`, `fix(build): …`), small and focused.
-- Every pull request touching the library adds a changeset (`pnpm changeset`): `patch` for fixes,
-  `minor` for features, `major` for breaking changes.
+- Pull requests don't bump the version or edit `CHANGELOG.md`. The release pull request does both
+  and writes the changelog from the commit subjects, so make each one read as a changelog line,
+  with `!` for breaking changes (`feat!: …`).
 - Public API changes: TSDoc on the export, `pnpm docs:check`, and the matching page in
   `apps/site/content/react-tablekit`.
 - A moved page needs a permanent redirect in
   `apps/site/content/react-tablekit/migration/url-map.csv`.
-- Never publish to npm, push tags or bump versions yourself; releases go through the Release
-  workflow (see [RELEASING.md](RELEASING.md)).
+- Never publish to npm or approve a staged version. Bump versions and push `v*` tags only when the
+  maintainer asks for a release; the Release workflow then stages it on npm (see
+  [RELEASING.md](RELEASING.md)).

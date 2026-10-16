@@ -97,6 +97,7 @@
     "docs:json": "typedoc --json .typedoc/api.json",
     "docs:check": "node scripts/docs-check.mjs",
     "prepublishOnly": "npm run build",
+    "version": "node ../../scripts/sync-version.mjs",
     "gen:tokens": "node scripts/gen-tokens.mjs"
   },
   "peerDependencies": {

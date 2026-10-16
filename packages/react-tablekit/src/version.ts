@@ -1,7 +1,7 @@
 /**
  * The installed version of react-tablekit.
  *
- * Kept in sync with `package.json` by `scripts/sync-version.mjs` (run by `pnpm version-packages`);
+ * Kept in sync with `package.json` by `scripts/sync-version.mjs` (run by `npm version`);
  * a unit test fails if the two drift apart.
  *
  * @example

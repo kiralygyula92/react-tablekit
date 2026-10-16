@@ -23,13 +23,9 @@
     "docs:check": "pnpm --filter react-tablekit run docs:check",
     "docs:json": "pnpm --filter react-tablekit run docs:json",
     "verify": "pnpm --filter site run build:data && pnpm lint && pnpm format:check && pnpm typecheck && pnpm --filter react-tablekit run lint:css-tokens && pnpm test && pnpm build && pnpm size && pnpm check:package && pnpm docs:check && pnpm conformance && pnpm e2e",
-    "changeset": "changeset",
-    "version-packages": "changeset version && node scripts/sync-version.mjs && pnpm install --lockfile-only",
-    "release": "pnpm build && changeset publish",
     "conformance": "pnpm --filter site run conformance"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.3",
     "@eslint/js": "^10.0.1",
     "eslint": "^10.11.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",

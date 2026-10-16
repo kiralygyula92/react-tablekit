@@ -8,7 +8,7 @@ const pkg = JSON.parse(readFileSync(new URL('../../package.json', import.meta.ur
 };
 
 describe('version', () => {
-  it('matches package.json (run `pnpm version-packages` to sync)', () => {
+  it('matches package.json (bump with `npm version` to keep them in sync)', () => {
     expect(version).toBe(pkg.version);
   });
 
