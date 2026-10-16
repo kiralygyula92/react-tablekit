@@ -1,5 +1,9 @@
 # react-tablekit
 
+## 1.0.1
+
+- Publish from GitHub Actions with provenance. The library's code and API are unchanged.
+
 ## 1.0.0
 
 The first stable release: a React data table with a framework-agnostic core and no runtime
