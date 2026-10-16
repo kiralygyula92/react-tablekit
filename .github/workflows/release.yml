@@ -31,9 +31,12 @@ jobs:
       # `packageManager`) is installed with the runner's npm, as in ci.yml.
       - run: npm install -g "$(node -p "require('./package.json').packageManager")"
 
+      # Node 22, as in ci.yml: the release tests and builds in the environment CI verified. On
+      # Node 24 runners the render budget in test/perf failed twice (3.6x and 3.8x against its
+      # 3.5x limit, where Node 22 measures about 2.5x).
       - uses: actions/setup-node@v7
         with:
-          node-version: '24'
+          node-version: 22
           registry-url: 'https://registry.npmjs.org'
           package-manager-cache: false # never cache in release builds
 
@@ -48,6 +51,9 @@ jobs:
             echo "Tag $GITHUB_REF_NAME does not match package.json ($expected)"
             exit 1
           fi
+
+      # Node 22 ships npm 10; staged publishing needs npm 11.
+      - run: npm install -g npm@11
 
       - name: npm must support staged publishing (11.15.0+)
         run: |
