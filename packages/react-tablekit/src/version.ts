@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { version } from 'react-tablekit';
+ * import { version } from '@kingtech/react-tablekit';
  * console.log(`react-tablekit v${version}`);
  * ```
  */

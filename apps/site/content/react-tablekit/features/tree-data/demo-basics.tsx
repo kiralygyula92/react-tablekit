@@ -1,4 +1,4 @@
-import { createColumnHelper, DataTable } from 'react-tablekit';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
 import { buildOrgTree, type OrgNode } from '@/demo-support/orgTree';
 
 const col = createColumnHelper<OrgNode>();

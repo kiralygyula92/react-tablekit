@@ -1,4 +1,4 @@
-import { createColumnHelper, DataTable, TruncatedText } from 'react-tablekit';
+import { createColumnHelper, DataTable, TruncatedText } from '@kingtech/react-tablekit';
 import { UsedBy } from './UsedBy';
 
 /** One member of a documented symbol, as produced by `scripts/build-api.mjs`. */

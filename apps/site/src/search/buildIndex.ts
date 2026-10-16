@@ -1,4 +1,10 @@
-import { handlerMeta, iconNames, localeMeta, slotMeta, tokenMeta } from 'react-tablekit/meta';
+import {
+  handlerMeta,
+  iconNames,
+  localeMeta,
+  slotMeta,
+  tokenMeta,
+} from '@kingtech/react-tablekit/meta';
 import columnDef from '../../src/generated/api/column-def.json';
 import dataTable from '../../src/generated/api/data-table.json';
 import hooks from '../../src/generated/api/hooks.json';

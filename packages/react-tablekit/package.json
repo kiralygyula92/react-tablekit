@@ -1,5 +1,5 @@
 {
-  "name": "react-tablekit",
+  "name": "@kingtech/react-tablekit",
   "version": "1.0.0",
   "description": "Headless-core React data table: client & server modes, slots, handler middleware, CSS-variable theming. Zero runtime dependencies.",
   "keywords": [
@@ -15,7 +15,7 @@
     "virtualization"
   ],
   "license": "MIT",
-  "author": "kiralygyula92 (https://github.com/kiralygyula92)",
+  "author": "Gyula Kiraly (https://github.com/kiralygyula92)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kiralygyula92/react-tablekit.git",
@@ -83,13 +83,8 @@
   },
   "files": [
     "dist",
-    "README.md",
-    "CHANGELOG.md",
-    "LICENSE"
+    "CHANGELOG.md"
   ],
-  "engines": {
-    "node": ">=18"
-  },
   "scripts": {
     "build": "node scripts/clean.mjs && tsup && node scripts/build-css.mjs",
     "dev": "tsup --watch",
@@ -101,7 +96,7 @@
     "lint:css-tokens": "node scripts/check-css-tokens.mjs",
     "docs:json": "typedoc --json .typedoc/api.json",
     "docs:check": "node scripts/docs-check.mjs",
-    "prepublishOnly": "pnpm build",
+    "prepublishOnly": "npm run build",
     "gen:tokens": "node scripts/gen-tokens.mjs"
   },
   "peerDependencies": {
@@ -133,7 +128,6 @@
     "vitest-axe": "^0.1.0"
   },
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   }
 }

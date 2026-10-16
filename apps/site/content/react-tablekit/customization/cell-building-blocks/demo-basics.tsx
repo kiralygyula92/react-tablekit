@@ -7,7 +7,7 @@ import {
   RowActionsMenu,
   TruncatedText,
   TwoLineText,
-} from 'react-tablekit';
+} from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 
 const data = generatePeople(30);

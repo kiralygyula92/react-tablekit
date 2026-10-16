@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { classicTheme, lightTheme, type TableTheme } from 'react-tablekit';
+import { classicTheme, lightTheme, type TableTheme } from '@kingtech/react-tablekit';
 
 /**
  * The theme switch shared by the showcase pages: the dense `classic` preset against the modern

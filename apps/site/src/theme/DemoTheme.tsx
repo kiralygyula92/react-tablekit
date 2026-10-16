@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react';
-import { darkTheme, lightTheme, TableThemeProvider } from 'react-tablekit';
+import { darkTheme, lightTheme, TableThemeProvider } from '@kingtech/react-tablekit';
 import { useSiteTheme } from './SiteTheme';
 
 /**

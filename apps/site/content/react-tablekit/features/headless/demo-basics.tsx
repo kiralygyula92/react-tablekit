@@ -1,4 +1,4 @@
-import { useDataTable } from 'react-tablekit';
+import { useDataTable } from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 

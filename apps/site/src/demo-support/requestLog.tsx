@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { DataSource, TableQuery } from 'react-tablekit';
+import type { DataSource, TableQuery } from '@kingtech/react-tablekit';
 
 export interface LoggedRequest {
   at: string;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { DataTable, useDataTable } from 'react-tablekit';
+import { DataTable, useDataTable } from '@kingtech/react-tablekit';
 import { formatAccountName } from '@/mock/data/accounts';
 import type { Account, Asset } from '@/mock/types';
 import { accountsDataSource } from '@/demo-support/api';

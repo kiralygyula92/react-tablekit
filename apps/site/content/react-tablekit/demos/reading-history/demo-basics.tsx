@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { createRestDataSource, DataTable, useDataTable, type DataSource } from 'react-tablekit';
+import {
+  createRestDataSource,
+  DataTable,
+  useDataTable,
+  type DataSource,
+} from '@kingtech/react-tablekit';
 import { mockFetch } from '@/mock/ready';
 import type { PagedResponse, Reading } from '@/mock/types';
 import { ShowcasePage, useShowcaseTheme } from '@/demo-support/ShowcaseFrame';

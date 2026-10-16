@@ -17,13 +17,16 @@ const lib = (p: string) =>
  */
 export const libraryAliases: Alias[] = [
   { find: /^@\//, replacement: fileURLToPath(new URL('./src/', import.meta.url)) },
-  { find: /^react-tablekit\/core$/, replacement: lib('core/index.ts') },
-  { find: /^react-tablekit\/meta$/, replacement: lib('meta.ts') },
-  { find: /^react-tablekit\/locales\/(.+)$/, replacement: lib('locales/$1.ts') },
-  { find: /^react-tablekit\/styles\.css$/, replacement: lib('styles/index.css') },
-  { find: /^react-tablekit\/base\.css$/, replacement: lib('styles/base-entry.css') },
-  { find: /^react-tablekit\/presets\/(.+)\.css$/, replacement: lib('styles/presets/$1.css') },
-  { find: /^react-tablekit$/, replacement: lib('index.ts') },
+  { find: /^@kingtech\/react-tablekit\/core$/, replacement: lib('core/index.ts') },
+  { find: /^@kingtech\/react-tablekit\/meta$/, replacement: lib('meta.ts') },
+  { find: /^@kingtech\/react-tablekit\/locales\/(.+)$/, replacement: lib('locales/$1.ts') },
+  { find: /^@kingtech\/react-tablekit\/styles\.css$/, replacement: lib('styles/index.css') },
+  { find: /^@kingtech\/react-tablekit\/base\.css$/, replacement: lib('styles/base-entry.css') },
+  {
+    find: /^@kingtech\/react-tablekit\/presets\/(.+)\.css$/,
+    replacement: lib('styles/presets/$1.css'),
+  },
+  { find: /^@kingtech\/react-tablekit$/, replacement: lib('index.ts') },
 ];
 
 /**

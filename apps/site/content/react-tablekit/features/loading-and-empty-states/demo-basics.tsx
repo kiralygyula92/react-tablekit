@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { createLocalDataSource, DataTable } from 'react-tablekit';
+import { createLocalDataSource, DataTable } from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 

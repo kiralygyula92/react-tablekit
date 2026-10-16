@@ -11,7 +11,7 @@ const production = (config) => ({
 
 module.exports = [
   {
-    name: "import { DataTable } from 'react-tablekit'",
+    name: "import { DataTable } from '@kingtech/react-tablekit'",
     path: 'dist/index.js',
     import: '{ DataTable }',
     limit: '58 kB',
@@ -20,7 +20,7 @@ module.exports = [
     ignore: ['react', 'react-dom'],
   },
   {
-    name: 'react-tablekit (full import)',
+    name: '@kingtech/react-tablekit (full import)',
     path: 'dist/index.js',
     import: '*',
     limit: '61.5 kB',
@@ -29,7 +29,7 @@ module.exports = [
     ignore: ['react', 'react-dom'],
   },
   {
-    name: 'react-tablekit/core',
+    name: '@kingtech/react-tablekit/core',
     path: 'dist/core/index.js',
     import: '*',
     // 21 → 21.5 kB: CSV export neutralizes spreadsheet formulas (CSV injection) in core, where

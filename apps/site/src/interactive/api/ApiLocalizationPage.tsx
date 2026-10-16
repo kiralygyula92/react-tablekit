@@ -1,5 +1,5 @@
-import { createColumnHelper, DataTable } from 'react-tablekit';
-import { localeMeta } from 'react-tablekit/meta';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
+import { localeMeta } from '@kingtech/react-tablekit/meta';
 import { UsedBy } from './UsedBy';
 
 type Entry = (typeof localeMeta)[number];

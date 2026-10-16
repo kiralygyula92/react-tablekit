@@ -4,7 +4,7 @@ export type * from './types';
 
 /**
  * Token path → CSS variable. The single source of truth for the token catalogue;
- * `tokenMeta` in `react-tablekit/meta` and the preset CSS files are derived from it.
+ * `tokenMeta` in `@kingtech/react-tablekit/meta` and the preset CSS files are derived from it.
  */
 export const TOKEN_VARS = {
   'font.family': '--tk-font-family',

@@ -365,7 +365,7 @@ export type AggregationFnName =
 
 /**
  * Free-form column metadata. Augment it to type your own keys:
- * `declare module 'react-tablekit' { interface ColumnMeta<TData, TValue> { exportHeader?: string } }`
+ * `declare module '@kingtech/react-tablekit' { interface ColumnMeta<TData, TValue> { exportHeader?: string } }`
  */
 // @ts-expect-error -- the type parameters exist so augmentations can use them
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type -- augmentation point

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DataTable, presets } from 'react-tablekit';
+import { DataTable, presets } from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 

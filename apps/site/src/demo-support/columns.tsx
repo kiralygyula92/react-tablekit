@@ -1,4 +1,4 @@
-import { createColumnHelper } from 'react-tablekit';
+import { createColumnHelper } from '@kingtech/react-tablekit';
 import type { DemoPerson } from '@/mock/data/people';
 
 const col = createColumnHelper<DemoPerson>();

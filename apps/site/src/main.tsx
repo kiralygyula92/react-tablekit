@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import '@fontsource-variable/open-sans';
-import 'react-tablekit/styles.css';
+import '@kingtech/react-tablekit/styles.css';
 import { App } from './App';
 import { reloadOnceForNewBuild } from './components/ErrorBoundary';
 import { preloadPage } from './content/pages';

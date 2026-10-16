@@ -82,7 +82,7 @@ export default function handler(request: Request): ImageResponse {
       </div>
 
       <div style={{ display: 'flex', fontSize: 24, color: '#64748b' }}>
-        npm install react-tablekit
+        npm install @kingtech/react-tablekit
       </div>
     </div>,
     {

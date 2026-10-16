@@ -7,14 +7,14 @@ interaction goes through overridable handler middleware, and every visual value 
 Zero runtime dependencies.
 
 ```sh
-pnpm add react-tablekit
+npm install @kingtech/react-tablekit
 ```
 
 ## Quick start
 
 ```tsx
-import 'react-tablekit/styles.css';
-import { createColumnHelper, DataTable } from 'react-tablekit';
+import '@kingtech/react-tablekit/styles.css';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
 
 const col = createColumnHelper<Person>();
 
@@ -42,7 +42,7 @@ requests, ignoring out-of-order responses, adopting the server's echo of the que
 correcting a page that no longer exists.
 
 ```tsx
-import { createRestDataSource } from 'react-tablekit';
+import { createRestDataSource } from '@kingtech/react-tablekit';
 
 interface PeopleResponse {
   items: Person[];
@@ -86,21 +86,21 @@ fetched page, for example.
 
 Measured min+gzip, React external:
 
-| Entry                                        | Size     |
-| -------------------------------------------- | -------- |
-| `import { DataTable } from 'react-tablekit'` | 57.47 kB |
-| Full import                                  | 61.1 kB  |
-| `react-tablekit/core`                        | 21.06 kB |
-| `react-tablekit/styles.css`                  | 6.15 kB  |
+| Entry                                                  | Size     |
+| ------------------------------------------------------ | -------- |
+| `import { DataTable } from '@kingtech/react-tablekit'` | 57.47 kB |
+| Full import                                            | 61.1 kB  |
+| `@kingtech/react-tablekit/core`                        | 21.06 kB |
+| `@kingtech/react-tablekit/styles.css`                  | 6.15 kB  |
 
 `DataTable` is batteries-included by design: its default layout reaches the toolbar, filter panel,
 selection bar and pagination, so the first two numbers are close together. If you need a small
-bundle, use **`react-tablekit/core`** (the engine with your own markup) or `useDataTable`, which
-renders nothing. A lean React entry (`DataTableLite` with an explicit feature list) is planned for
-a 1.x release.
+bundle, use **`@kingtech/react-tablekit/core`** (the engine with your own markup) or
+`useDataTable`, which renders nothing. A lean React entry (`DataTableLite` with an explicit feature
+list) is planned for a 1.x release.
 
-Locale packs (`react-tablekit/locales/*`) and the CSS presets are separate entry points, so you
-only pay for the ones you import.
+Locale packs (`@kingtech/react-tablekit/locales/*`) and the CSS presets are separate entry points,
+so you only pay for the ones you import.
 
 ## Requirements
 

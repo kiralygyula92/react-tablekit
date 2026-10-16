@@ -7,8 +7,9 @@ Instructions for AI coding agents working in this repository. Claude Code reads 
 
 A pnpm monorepo:
 
-- `packages/react-tablekit`: the published library `react-tablekit`, a headless-core React data
-  table with client and server modes, slots, handler middleware and CSS-variable theming.
+- `packages/react-tablekit`: the published library `@kingtech/react-tablekit`, a headless-core
+  React data table with client and server modes, slots, handler middleware and CSS-variable
+  theming.
 - `apps/site`: the documentation site (prerendered guides, live demos, playground, generated
   reference), which doubles as the Playwright test bed.
 - `apps/site/api`: the one serverless function, for per-page social images.
