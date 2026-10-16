@@ -1,5 +1,5 @@
-import { defaultIcons } from 'react-tablekit';
-import { iconNames } from 'react-tablekit/meta';
+import { defaultIcons } from '@kingtech/react-tablekit';
+import { iconNames } from '@kingtech/react-tablekit/meta';
 import { UsedBy } from './UsedBy';
 
 /** `/api/icons`: every built-in icon, previewed from the package's own icon set. */

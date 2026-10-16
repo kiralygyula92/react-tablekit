@@ -46,6 +46,9 @@ importers:
       '@fontsource-variable/open-sans':
         specifier: ^5.3.0
         version: 5.3.0
+      '@kingtech/react-tablekit':
+        specifier: workspace:*
+        version: link:../../packages/react-tablekit
       '@vercel/analytics':
         specifier: ^2.0.1
         version: 2.0.1(react@19.3.0)
@@ -64,9 +67,6 @@ importers:
       react-router:
         specifier: ^8.4.0
         version: 8.4.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react-tablekit:
-        specifier: workspace:*
-        version: link:../../packages/react-tablekit
     devDependencies:
       '@axe-core/playwright':
         specifier: ^4.13.0

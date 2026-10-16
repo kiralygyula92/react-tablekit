@@ -6,8 +6,8 @@ import {
   toCssVars,
   type TableTheme,
   type TokenPath,
-} from 'react-tablekit';
-import { tokenMeta } from 'react-tablekit/meta';
+} from '@kingtech/react-tablekit';
+import { tokenMeta } from '@kingtech/react-tablekit/meta';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 
@@ -105,7 +105,7 @@ export function ThemeEditorPage() {
   const cssBlock = `:root {\n${Object.entries(cssVars)
     .map(([name, value]) => `  ${name}: ${value};`)
     .join('\n')}\n}`;
-  const snippet = `import { createTheme, ${base}Theme } from 'react-tablekit';\n\nexport const myTheme = createTheme(${base}Theme, ${JSON.stringify(
+  const snippet = `import { createTheme, ${base}Theme } from '@kingtech/react-tablekit';\n\nexport const myTheme = createTheme(${base}Theme, ${JSON.stringify(
     Object.entries(overrides).reduce<Record<string, Record<string, string>>>((acc, [path, v]) => {
       const [g, k] = path.split('.');
       if (g && k) (acc[g] ??= {})[k] = v;

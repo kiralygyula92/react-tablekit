@@ -1,4 +1,4 @@
-import { ActionButton, createColumnHelper } from 'react-tablekit';
+import { ActionButton, createColumnHelper } from '@kingtech/react-tablekit';
 import type { Reading } from '@/mock/types';
 import { FileIcon, PaperPlaneIcon } from '@/demo-support/icons';
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createColumnHelper, DataTable } from 'react-tablekit';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 
 const data = generatePeople(40);

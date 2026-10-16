@@ -4,10 +4,10 @@
     "types": ["vite/client", "node"],
     "allowImportingTsExtensions": true,
     "paths": {
-      "react-tablekit": ["../../packages/react-tablekit/src/index.ts"],
-      "react-tablekit/core": ["../../packages/react-tablekit/src/core/index.ts"],
-      "react-tablekit/meta": ["../../packages/react-tablekit/src/meta.ts"],
-      "react-tablekit/locales/*": ["../../packages/react-tablekit/src/locales/*"],
+      "@kingtech/react-tablekit": ["../../packages/react-tablekit/src/index.ts"],
+      "@kingtech/react-tablekit/core": ["../../packages/react-tablekit/src/core/index.ts"],
+      "@kingtech/react-tablekit/meta": ["../../packages/react-tablekit/src/meta.ts"],
+      "@kingtech/react-tablekit/locales/*": ["../../packages/react-tablekit/src/locales/*"],
       "@/*": ["./src/*"]
     }
   },

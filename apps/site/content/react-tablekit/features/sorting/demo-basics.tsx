@@ -1,4 +1,4 @@
-import { createColumnHelper, DataTable, type SortingFn } from 'react-tablekit';
+import { createColumnHelper, DataTable, type SortingFn } from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 
 const data = generatePeople(60);

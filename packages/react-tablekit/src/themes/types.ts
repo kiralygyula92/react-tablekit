@@ -23,7 +23,7 @@ export type DeepPartial<T> = T extends (...args: never[]) => unknown
 
 /**
  * Design tokens. Every leaf maps to one `--tk-*` CSS variable (see `tokenMeta` in
- * `react-tablekit/meta`). Values are CSS strings.
+ * `@kingtech/react-tablekit/meta`). Values are CSS strings.
  */
 export interface TableThemeTokens {
   font: {

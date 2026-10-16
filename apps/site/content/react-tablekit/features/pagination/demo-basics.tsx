@@ -1,5 +1,10 @@
 import { useId, useState } from 'react';
-import { DataTable, getPageItems, type PageItem, type PaginationVariant } from 'react-tablekit';
+import {
+  DataTable,
+  getPageItems,
+  type PageItem,
+  type PaginationVariant,
+} from '@kingtech/react-tablekit';
 import { generatePeople } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 

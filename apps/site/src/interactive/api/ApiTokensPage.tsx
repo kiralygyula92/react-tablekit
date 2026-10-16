@@ -1,5 +1,5 @@
-import { createColumnHelper, DataTable } from 'react-tablekit';
-import { tokenMeta } from 'react-tablekit/meta';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
+import { tokenMeta } from '@kingtech/react-tablekit/meta';
 import { UsedBy } from './UsedBy';
 
 type Token = (typeof tokenMeta)[number];

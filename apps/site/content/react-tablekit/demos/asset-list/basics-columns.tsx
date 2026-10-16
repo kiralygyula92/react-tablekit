@@ -4,7 +4,7 @@ import {
   createColumnHelper,
   MultiLineList,
   TwoLineText,
-} from 'react-tablekit';
+} from '@kingtech/react-tablekit';
 import { formatAccountName, getAccountAssets } from '@/mock/data/accounts';
 import { formatPhoneLines, getShortFormatAddress } from '@/mock/format';
 import type { Account, Asset } from '@/mock/types';

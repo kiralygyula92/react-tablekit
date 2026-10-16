@@ -34,7 +34,7 @@ including `role="grid"` for a selectable table and the cards layout under a smal
 Packaging passes `publint --strict` and `@arethetypeswrong/cli` on the packed tarball.
 
 **Bundle budgets.** The measured sizes are the guards: about 58 kB min+gzip for
-`import { DataTable }`, 61.5 kB for the full import, 21 kB for `react-tablekit/core`, and under
+`import { DataTable }`, 61.5 kB for the full import, 21 kB for `@kingtech/react-tablekit/core`, and under
 7 kB for `styles.css`. The originally specified 24 kB basic-usage target needs the feature modules
 split apart, a refactor deferred to 1.x rather than landed immediately before a stable release.
 Locale packs and CSS presets are separate entry points and are never reachable from the main one.

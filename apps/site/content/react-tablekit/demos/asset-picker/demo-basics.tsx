@@ -1,5 +1,10 @@
 import { useMemo, useState } from 'react';
-import { ActionButton, createColumnHelper, DataTable, TruncatedText } from 'react-tablekit';
+import {
+  ActionButton,
+  createColumnHelper,
+  DataTable,
+  TruncatedText,
+} from '@kingtech/react-tablekit';
 import { generateAccounts, getAccountAssets } from '@/mock/data/accounts';
 import type { Asset } from '@/mock/types';
 import { PenIcon } from '@/demo-support/icons';

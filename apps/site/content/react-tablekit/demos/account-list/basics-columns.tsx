@@ -1,4 +1,9 @@
-import { ActionButton, createColumnHelper, MultiLineList, TwoLineText } from 'react-tablekit';
+import {
+  ActionButton,
+  createColumnHelper,
+  MultiLineList,
+  TwoLineText,
+} from '@kingtech/react-tablekit';
 import { formatAccountName, getAccountAssets } from '@/mock/data/accounts';
 import { formatPhoneLines, getShortFormatAddress } from '@/mock/format';
 import type { Account } from '@/mock/types';

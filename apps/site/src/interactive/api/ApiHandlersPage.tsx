@@ -1,4 +1,4 @@
-import { createColumnHelper, DataTable } from 'react-tablekit';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
 import { HANDLERS_EXAMPLE, handlerRows, type HandlerRow } from './handlerDetails';
 import { UsedBy } from './UsedBy';
 

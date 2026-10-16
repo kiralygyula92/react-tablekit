@@ -5,7 +5,7 @@ import {
   useDataTable,
   type SortingState,
   type TableInstance,
-} from 'react-tablekit';
+} from '@kingtech/react-tablekit';
 import { generatePeople, type DemoPerson } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 

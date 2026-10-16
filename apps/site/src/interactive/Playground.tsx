@@ -9,10 +9,10 @@ import {
   minimalTheme,
   type TableQuery,
   type TableTheme,
-} from 'react-tablekit';
-import de from 'react-tablekit/locales/de';
-import es from 'react-tablekit/locales/es';
-import hu from 'react-tablekit/locales/hu';
+} from '@kingtech/react-tablekit';
+import de from '@kingtech/react-tablekit/locales/de';
+import es from '@kingtech/react-tablekit/locales/es';
+import hu from '@kingtech/react-tablekit/locales/hu';
 import { peopleColumns } from '@/demo-support/columns';
 import { buildOrgTree, type OrgNode } from '@/demo-support/orgTree';
 import { generateAccounts } from '@/mock/data/accounts';

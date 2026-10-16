@@ -1,5 +1,5 @@
-import { createColumnHelper, DataTable } from 'react-tablekit';
-import { slotMeta } from 'react-tablekit/meta';
+import { createColumnHelper, DataTable } from '@kingtech/react-tablekit';
+import { slotMeta } from '@kingtech/react-tablekit/meta';
 import { UsedBy } from './UsedBy';
 
 type Slot = (typeof slotMeta)[number];

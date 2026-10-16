@@ -27,7 +27,7 @@ export default async function PeoplePage({ searchParams }) {
 ```tsx
 // app/people/PeopleTable.tsx
 'use client';
-import { DataTable } from 'react-tablekit';
+import { DataTable } from '@kingtech/react-tablekit';
 
 export function PeopleTable({ initialData }) {
   return <DataTable data={initialData.items} rowCount={initialData.total} columns={columns} />;
@@ -42,14 +42,14 @@ in the client module.
 Import it once, in the root layout:
 
 ```tsx
-import 'react-tablekit/styles.css';
+import '@kingtech/react-tablekit/styles.css';
 ```
 
 That is plain CSS, so it works with the App Router's own CSS handling without a transform. It
 carries the default look; a preset is a second import on top of it, and only when you want one:
 
 ```tsx
-import 'react-tablekit/presets/classic.css';
+import '@kingtech/react-tablekit/presets/classic.css';
 ```
 
 ## Rendering without a jump
@@ -73,7 +73,7 @@ instance, so build one with `useDataTable` and render it with `<DataTable table=
 ```tsx
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { DataTable, useDataTable, useRouterSync } from 'react-tablekit';
+import { DataTable, useDataTable, useRouterSync } from '@kingtech/react-tablekit';
 
 export function PeopleTable({ data }: { data: Person[] }) {
   const searchParams = useSearchParams();

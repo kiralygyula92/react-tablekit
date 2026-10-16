@@ -9,15 +9,22 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
+# Only GitHub-made actions may run in this repository, so pnpm (the version in package.json's
+# `packageManager`) is installed with the runner's npm rather than with pnpm/action-setup.
+# The `build` job id is the status check the main branch ruleset requires: keep it, and give the
+# job no `name`, or the check reports under the new name and pull requests wait forever.
 jobs:
-  checks:
-    name: Lint, typecheck, test, build, size, package
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: pnpm/action-setup@v6
+          persist-credentials: false
+      - run: npm install -g "$(node -p "require('./package.json').packageManager")"
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -51,7 +58,9 @@ jobs:
       E2E_ALL_BROWSERS: ${{ github.event_name == 'push' && '1' || '0' }}
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
+        with:
+          persist-credentials: false
+      - run: npm install -g "$(node -p "require('./package.json').packageManager")"
       - uses: actions/setup-node@v7
         with:
           node-version: 22

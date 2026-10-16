@@ -1,4 +1,4 @@
-import { createRestDataSource, type DataSource } from 'react-tablekit';
+import { createRestDataSource, type DataSource } from '@kingtech/react-tablekit';
 import { mockFetch } from '@/mock/ready';
 import type { Account, PagedResponse, SearchAccountRequest } from '@/mock/types';
 

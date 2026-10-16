@@ -1,4 +1,4 @@
-import { handlerMeta } from 'react-tablekit/meta';
+import { handlerMeta } from '@kingtech/react-tablekit/meta';
 
 /*
  * The handlers reference as data, with no React in it. The page renders it as a table, and the

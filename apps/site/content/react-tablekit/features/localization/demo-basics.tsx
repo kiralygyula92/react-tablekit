@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { DataTable, defaultLocalization, type TableLocalization } from 'react-tablekit';
-import de from 'react-tablekit/locales/de';
-import es from 'react-tablekit/locales/es';
-import hu from 'react-tablekit/locales/hu';
+import { DataTable, defaultLocalization, type TableLocalization } from '@kingtech/react-tablekit';
+import de from '@kingtech/react-tablekit/locales/de';
+import es from '@kingtech/react-tablekit/locales/es';
+import hu from '@kingtech/react-tablekit/locales/hu';
 import { generatePeople } from '@/mock/data/people';
 import { peopleColumns } from '@/demo-support/columns';
 
