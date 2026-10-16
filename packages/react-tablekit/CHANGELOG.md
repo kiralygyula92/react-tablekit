@@ -1,6 +1,6 @@
 # react-tablekit
 
-## 1.0.1
+## 1.0.2
 
 - Publish from GitHub Actions with provenance. The library's code and API are unchanged.
 
