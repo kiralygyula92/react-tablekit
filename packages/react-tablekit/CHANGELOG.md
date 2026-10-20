@@ -1,5 +1,13 @@
 # react-tablekit
 
+## 1.0.3
+
+- Export the `Breakpoints` type from `@kingtech/react-tablekit/core` and `TableLocalization` from
+  each `@kingtech/react-tablekit/locales/*` entry. Code that re-exports a value from those
+  entries, such as `export const strings = de;`, failed with TS2883 when emitting declaration
+  files.
+- Build and test tooling updated (tsup 9 among them); the published JavaScript is unchanged.
+
 ## 1.0.2
 
 - Publish from GitHub Actions with provenance. The library's code and API are unchanged.
