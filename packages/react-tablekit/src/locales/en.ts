@@ -1,5 +1,7 @@
 import type { TableLocalization } from './types';
 
+export type { TableLocalization } from './types';
+
 /** English (the default localization). */
 export const en: TableLocalization = {
   search: 'Search',

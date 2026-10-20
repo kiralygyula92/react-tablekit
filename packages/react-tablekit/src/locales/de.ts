@@ -1,5 +1,7 @@
 import type { TableLocalization } from './types';
 
+export type { TableLocalization } from './types';
+
 /** German (Deutsch). */
 export const de: TableLocalization = {
   search: 'Suche',
