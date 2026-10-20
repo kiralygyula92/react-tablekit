@@ -10,4 +10,4 @@
  * console.log(`react-tablekit v${version}`);
  * ```
  */
-export const version = '1.0.2';
+export const version = '1.0.3';

@@ -15,6 +15,13 @@ in the package. Each release adds a section to it, written from the commits that
 release. GitHub
 [releases](https://github.com/kiralygyula92/react-tablekit/releases) carry the same notes.
 
+## 1.0.3
+
+A type fix. `@kingtech/react-tablekit/core` now exports the `Breakpoints` type, and each
+`@kingtech/react-tablekit/locales/*` entry exports `TableLocalization`. Before, code that passed
+one of their values on (`export const strings = de;`) failed with TS2883 when the build emitted
+declaration files. The published JavaScript is unchanged.
+
 ## 1.0.2
 
 Published from GitHub Actions with

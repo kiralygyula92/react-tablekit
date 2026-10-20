@@ -1,6 +1,6 @@
 {
   "name": "@kingtech/react-tablekit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Headless-core React data table: client & server modes, slots, handler middleware, CSS-variable theming. Zero runtime dependencies.",
   "keywords": [
     "react",
