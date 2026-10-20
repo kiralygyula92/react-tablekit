@@ -5,6 +5,11 @@ updates:
     schedule:
       interval: weekly
     groups:
+      # React throws unless react and react-dom are the exact same version, so a pull request that
+      # bumps only one of them can never pass. The site lists them as production dependencies, so
+      # the development group below does not catch them.
+      react:
+        patterns: ['react', 'react-dom']
       dev-dependencies:
         dependency-type: development
     open-pull-requests-limit: 5
