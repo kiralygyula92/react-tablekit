@@ -9,6 +9,10 @@ import { generatePeople, type BenchPerson } from './data';
  * run several times and the **median** is compared with the budget, so one unlucky GC pause does
  * not fail the suite. The numbers are generous on CI hardware; a real regression moves them by
  * much more than the margin.
+ *
+ * They run on their own, after the other tests and without coverage (see the package's `test`
+ * script). Sharing the CPU with the other projects' workers and with coverage instrumentation
+ * made them about 2.5x slower, enough to fail now and then on CI runners.
  */
 const median = (values: number[]) => {
   const sorted = [...values].sort((a, b) => a - b);
@@ -55,6 +59,7 @@ describe('performance budgets', () => {
       table.setSorting([{ id: 'name', desc }]);
       table.getRowModel();
     });
+    console.info(`[perf] sort 10k rows: ${ms.toFixed(1)}ms (budget 50ms)`);
     expect(ms, `sort 10k took ${ms.toFixed(1)}ms`).toBeLessThan(50);
   });
 
@@ -74,6 +79,7 @@ describe('performance budgets', () => {
       table.flushQuery();
       table.getRowModel();
     });
+    console.info(`[perf] search 10k rows: ${ms.toFixed(1)}ms (budget 30ms)`);
     expect(ms, `search 10k took ${ms.toFixed(1)}ms`).toBeLessThan(30);
   });
 
