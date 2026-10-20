@@ -89,7 +89,7 @@
     "build": "node scripts/clean.mjs && tsup && node scripts/build-css.mjs",
     "dev": "tsup --watch",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run --coverage",
+    "test": "vitest run --coverage --project core --project react && vitest run --project perf",
     "test:watch": "vitest",
     "size": "size-limit",
     "check:package": "node scripts/verify-dist.mjs && publint --strict && node scripts/attw.mjs",

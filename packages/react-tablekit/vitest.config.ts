@@ -31,7 +31,8 @@ export default defineConfig({
         extends: true,
         test: {
           // The performance budgets. Single-threaded and serial, so timings are not distorted by
-          // workers competing for the CPU.
+          // workers competing for the CPU; the package's `test` script also runs them on their
+          // own, after the other projects and without coverage instrumentation.
           name: 'perf',
           environment: 'jsdom',
           include: ['test/perf/**/*.test.{ts,tsx}'],
