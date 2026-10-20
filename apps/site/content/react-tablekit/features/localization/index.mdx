@@ -29,6 +29,9 @@ import { hu } from '@kingtech/react-tablekit/locales/hu';
 `text`-sorted columns all follow it. Setting the strings without the locale gives you translated
 labels beside American dates, which is worse than either.
 
+Each locale entry also exports the `TableLocalization` type, so a module that passes a locale on
+(`export const strings = hu;`) still compiles when your build emits declaration files.
+
 ### Changing a few strings
 
 The object is merged over the defaults, so overriding one label does not mean supplying all of

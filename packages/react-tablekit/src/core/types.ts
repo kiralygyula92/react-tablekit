@@ -1,6 +1,6 @@
 import type { Breakpoint, ResolvedTableTheme, ResponsiveValue } from '../themes/types';
 
-export type { Breakpoint, ResponsiveValue } from '../themes/types';
+export type { Breakpoint, Breakpoints, ResponsiveValue } from '../themes/types';
 
 /* ────────────────────────────────────────────────────────────────────────────
  * Generic helpers

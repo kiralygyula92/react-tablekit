@@ -1,5 +1,7 @@
 import type { TableLocalization } from './types';
 
+export type { TableLocalization } from './types';
+
 /** Hungarian (magyar). */
 export const hu: TableLocalization = {
   search: 'Keresés',

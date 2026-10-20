@@ -1,5 +1,7 @@
 import type { TableLocalization } from './types';
 
+export type { TableLocalization } from './types';
+
 /** Spanish (español). */
 export const es: TableLocalization = {
   search: 'Buscar',
